@@ -1,0 +1,4 @@
+[submodule "Assets/UnityGameFramework"]
+	path = Assets/UnityGameFramework
+	url = https://github.com/coding2233/UnityGameFramework.git
+	branch = develop
