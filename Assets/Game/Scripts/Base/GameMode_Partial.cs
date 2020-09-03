@@ -1,14 +1,21 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Wanderer.GameFramework;
 
-public partial class GameMode
+namespace Wanderer.GameFramework
 {
-    [RuntimeInitializeOnLoadMethod]
-    private static void OnAwakeAfter()
+    public partial class GameMode
     {
 
+        [RuntimeInitializeOnLoadMethod]
+        private static void OnAwakeAfter()
+        {
+            Debug.Log($"GameMode OnAwakeAfter");
+          
+        }
+
+
     }
-
-
 }
+
