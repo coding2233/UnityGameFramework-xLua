@@ -136,8 +136,9 @@ namespace Wanderer.GameEditor
 
         private HashSet<string> _allUnityNamespaces = new HashSet<string>();
         private List<string> _selectNamespace = new List<string>();
+        private HashSet<string> _allCustomAssembly = new HashSet<string>();
         private List<string> _customAssembly = new List<string>();
-        private string _newAssembly = "";
+        //  private string _newAssembly = "";
 
         [MenuItem("Tools/XLua Export Editor")]
         static void Main()
@@ -159,6 +160,24 @@ namespace Wanderer.GameEditor
             foreach (var item in unityNamespaces)
             {
                 _allUnityNamespaces.Add(item);
+            }
+
+            // var temp = from assembly in AppDomain.CurrentDomain.GetAssemblies()
+            //            where !(assembly.ManifestModule is System.Reflection.Emit.ModuleBuilder) && !assembly.FullName.StartsWith("Unity")
+            //            select assembly;
+
+            // foreach (var item in temp)
+            // {
+            //     Debug.Log($"{item.FullName}");
+            // }
+            _allCustomAssembly.Clear();
+            var compilationAssemblies = UnityEditor.Compilation.CompilationPipeline.GetAssemblies();
+            foreach (var item in compilationAssemblies)
+            {
+                if (item.flags != UnityEditor.Compilation.AssemblyFlags.EditorAssembly)
+                {
+                    _allCustomAssembly.Add(item.name);
+                }
             }
         }
 
@@ -230,31 +249,23 @@ namespace Wanderer.GameEditor
                 GUILayout.EndHorizontal();
 
                 _customScrollPos = GUILayout.BeginScrollView(_customScrollPos, "helpbox");
-                foreach (var item in _customAssembly)
+
+                foreach (var item in _allCustomAssembly)
                 {
-                    string result = GUILayout.TextField(item);
-                    if (string.IsNullOrEmpty(result))
+                    bool select = _customAssembly.Contains(item);
+                    bool result = GUILayout.Toggle(select, item);
+                    if (select != result)
                     {
-                        _customAssembly.Remove(item);
-                        break;
-                    }
-                    if (result != item)
-                    {
-                        _customAssembly.Remove(item);
-                        _customAssembly.Add(result);
-                        break;
+                        if (result)
+                        {
+                            _customAssembly.Add(item);
+                        }
+                        else
+                        {
+                            _customAssembly.Remove(item);
+                        }
                     }
                 }
-                GUILayout.BeginHorizontal();
-                _newAssembly = GUILayout.TextField(_newAssembly);
-                if (GUILayout.Button("+", GUILayout.Width(50)))
-                {
-                    if (!string.IsNullOrEmpty(_newAssembly))
-                    {
-                        _customAssembly.Add(_newAssembly);
-                    }
-                }
-                GUILayout.EndHorizontal();
                 GUILayout.EndScrollView();
             }
 
@@ -349,7 +360,7 @@ namespace Wanderer.GameEditor
                 var customTypes = (from assembly in customAssemblys.Select(s => Assembly.Load(s))
                                    from type in assembly.GetExportedTypes()
                                    where type.Namespace == null || !type.Namespace.StartsWith("XLua")
-                                           && type.BaseType != typeof(MulticastDelegate) && !type.IsInterface && !type.IsEnum
+                                           && type.BaseType != typeof(MulticastDelegate) && !type.IsInterface
                                    select type);
                 return unityTypes.Concat(customTypes);
 
