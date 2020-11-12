@@ -1,0 +1,5 @@
+require "MainUIView"
+
+function OnStart()
+	print("OnStart")
+end
