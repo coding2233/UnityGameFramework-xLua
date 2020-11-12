@@ -14,8 +14,6 @@ namespace Wanderer.GameFramework
             Debug.Log($"GameMode OnAwakeAfter");
           
         }
-
-
     }
 }
 
