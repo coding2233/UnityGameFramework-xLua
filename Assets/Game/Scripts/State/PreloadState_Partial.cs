@@ -27,7 +27,7 @@ namespace Wanderer.GameFramework
         //    GameMode.Event.AddListener<LoadDataTableEventArgs>(OnLoadDataTable);
 
              Debug.Log("PreloadState");
-            GameMode.UI.Push(new LuaMainUIContext());
+            
             // GameMode.DataTable.LoadDataTable("Assets/Game/DataTable/GameCheckpoint.txt");
             //  GameMode.DataTable.LoadDataTable("Assets/Game/DataTable/SmallGamesGradeTwo.txt");
             // TextAsset txt = await GameMode.Resource.LoadAsset<TextAsset>("Assets/Game/DataTable/fdsf.txt");
@@ -60,9 +60,10 @@ namespace Wanderer.GameFramework
             //             .RunAnimation(false);
             //});
 
-
             GameMode.XLua.DoMainLua();
-		}
+
+            GameMode.UI.Push(new LuaMainUIContext());
+        }
         public override void OnExit(FSM<GameStateContext> fsm)
         {
             GameMode.Event.RemoveListener<LoadDataTableEventArgs>(OnLoadDataTable);

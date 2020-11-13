@@ -96,10 +96,6 @@ namespace Wanderer.GameFramework
 			return default(T);
 		}
 
-		public void CallXLuaInPath()
-		{
-
-		}
 
 		public void OnUpdate()
 		{
@@ -136,7 +132,7 @@ namespace Wanderer.GameFramework
 		private void CSharpCallXLuaBind()
 		{
 			UGUIViewCallXLua uGUIViewCallXLua = new UGUIViewCallXLua();
-			uGUIViewCallXLua.Bind("UISystem");
+			uGUIViewCallXLua.Bind("UIAdpterSystem");
 			_allCsharpCallXLua.Add((typeof(UGUIViewCallXLua)),uGUIViewCallXLua);
 		}
 

@@ -7,18 +7,25 @@ namespace Wanderer.GameFramework
 {
     public class XLuaUGUIView : UGUIView
     {
-     
+        private IUIContext _uiContext;
 
-        protected virtual void Start()
-        {
-            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnInit();
+        public override void OnInit(IUIContext uiContext)
+		{
+			base.OnInit(uiContext);
+            _uiContext = uiContext;
+            //初始化
+            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnInit(transform, uiContext);
         }
+	
 
-        protected override void Update()
+        /// <summary>
+        /// 更新界面
+        /// </summary>
+        /// <param name="uiContext"></param>
+        public override void OnUpdate(IUIContext uiContext, float deltaTime)
         {
-            base.Update();
-
-            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnUpdate(Time.deltaTime);
+            base.OnUpdate(uiContext, deltaTime);
+            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnUpdate(uiContext, Time.deltaTime);
         }
 
         /// <summary>
@@ -28,7 +35,7 @@ namespace Wanderer.GameFramework
         public override void OnEnter(IUIContext uiConext, Action<string> callBack = null, params object[] parameters)
         {
             base.OnEnter(uiConext, callBack, parameters);
-            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnEnter(uiConext, callBack, parameters);
+            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnEnter(transform,uiConext, callBack, parameters);
         }
         /// <summary>
         /// 退出界面
@@ -62,7 +69,7 @@ namespace Wanderer.GameFramework
         public override void OnAnimationStart(IUIAnimation uiAnim)
         {
             base.OnAnimationStart(uiAnim);
-            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnAnimationStart(uiAnim);
+            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnAnimationStart(_uiContext, uiAnim);
         }
         /// <summary>
         /// 动画结束
@@ -71,7 +78,7 @@ namespace Wanderer.GameFramework
         public override void OnAnimationComplete(IUIAnimation uiAnim)
         {
             base.OnAnimationComplete(uiAnim);
-            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnAnimationComplete(uiAnim);
+            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnAnimationComplete(_uiContext, uiAnim);
         }
 
         /// <summary>

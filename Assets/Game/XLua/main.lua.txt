@@ -1,4 +1,5 @@
-require "MainUIView"
+-- require "MainUIView"
+require "UI/UIAdpterSystem"
 
 function OnStart()
 	print("OnStart")

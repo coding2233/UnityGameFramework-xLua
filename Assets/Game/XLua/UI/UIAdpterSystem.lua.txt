@@ -1,0 +1,29 @@
+﻿--- XLuaUGUI的事件适配器
+
+UIAdpterSystem = {}
+
+local this = UIAdpterSystem
+
+function UIAdpterSystem.OnInit(transform, uiContext)
+end
+
+function UIAdpterSystem.OnUpdate(uiContext, deltaTime)
+end
+
+function UIAdpterSystem.OnEnter(transform, uiContext, callback, userData)
+end
+
+function UIAdpterSystem.OnExit(uiContext)
+end
+
+function UIAdpterSystem.OnPause(uiContext)
+end
+
+function UIAdpterSystem.OnResume(uiContext)
+end
+
+function UIAdpterSystem.OnAnimationStart(uiContext, uiAnimation)
+end
+
+function UIAdpterSystem.OnAnimationComplete(uiContext, uiAnimation)
+end
