@@ -188,6 +188,19 @@ namespace Wanderer.GameEditor
 
         void OnGUI()
         {
+            //xlua的生成工具
+            GUILayout.BeginHorizontal();
+            if (GUILayout.Button("Clear Generated Code"))
+            {
+                CSObjectWrapEditor.Generator.ClearAll();
+            }
+            if (GUILayout.Button("Generate Code"))
+            {
+                CSObjectWrapEditor.Generator.GenAll();
+            }
+            GUILayout.EndHorizontal();
+            
+            //xlua生成筛选
             GUILayout.BeginHorizontal();
             //需要包含的命名空间
             NamespaceDraw();
