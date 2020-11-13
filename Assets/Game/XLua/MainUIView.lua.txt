@@ -1,6 +1,0 @@
-MainUIView={}
-
-
-function MainUIView.OnInit()
-	print("MainUIView.OnInit")
-end

@@ -1,29 +1,66 @@
 ﻿--- XLuaUGUI的事件适配器
-
 UIAdpterSystem = {}
-
 local this = UIAdpterSystem
 
-function UIAdpterSystem.OnInit(transform, uiContext)
+--- xlua的uiview
+---@type table
+local _xluaUIViewScripts = {}
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnInit(transform, uiContext)
+    local luaUIView = this.LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnInit(transform, uiContext)
 end
 
-function UIAdpterSystem.OnUpdate(uiContext, deltaTime)
+--- 更新
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param deltaTime number
+function this.OnUpdate(uiContext, deltaTime)
 end
 
-function UIAdpterSystem.OnEnter(transform, uiContext, callback, userData)
+--- 进入
+---@param transform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this.OnEnter(transform, uiContext, callback, userData)
 end
 
-function UIAdpterSystem.OnExit(uiContext)
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnExit(uiContext)
+end
+--- 暂停
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnPause(uiContext)
 end
 
-function UIAdpterSystem.OnPause(uiContext)
+--- 恢复
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnResume(uiContext)
 end
 
-function UIAdpterSystem.OnResume(uiContext)
+--- 动画进入
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this.OnAnimationStart(uiContext, uiAnimation)
 end
 
-function UIAdpterSystem.OnAnimationStart(uiContext, uiAnimation)
+--- 动画退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this.OnAnimationComplete(uiContext, uiAnimation)
 end
 
-function UIAdpterSystem.OnAnimationComplete(uiContext, uiAnimation)
+--- 加载xlua uiview 脚本
+---@param luaScriptsName string
+function this.LoadXLuaUIView(luaScriptsName)
+    local xluaUIView = _xluaUIViewScripts[luaScriptsName]
+    if xluaUIView == nil then
+        xluaUIView = require(luaScriptsName)
+        _xluaUIViewScripts[luaScriptsName] = xluaUIView
+    end
+    return xluaUIView
 end
