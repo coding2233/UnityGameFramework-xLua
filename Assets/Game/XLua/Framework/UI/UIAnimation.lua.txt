@@ -1,0 +1,95 @@
+-- *******************************************************************
+-- ui动画
+-- 从XLuaUIAnimPool.Get()获取的XLuaUIAnimation在动画执行完成由XLuaUIAnimPool自动回收
+-- 不需要在手动Release,以下Release被全部注释
+
+RectTransform = CS.UnityEngine.RectTransform
+
+UIAnimation = {}
+local this = UIAnimation
+
+--- 移动位置的动画
+---@param  target GF.UIView
+---@param point Vector2
+---@param time number
+function this:MoveAnim(target, point, time)
+    if time == nil then
+        time = 0.5
+    end
+    target = target:GetComponent(typeof(RectTransform))
+    local tweener = target:DOAnchorPos(point, time)
+    local uiAnim = XLuaUIAnimPool.Get():SetAnimation(tweener)
+    return uiAnim
+end
+
+-- 缩放的动画
+function this:ScaleAnim(target,point,time,animType)
+    local animationType = nil
+    if(animType == nil)then
+        animationType = doTween_ease.InCirc
+    else
+        animationType = animType
+    end
+    if time == nil then
+        time = 0.5
+    end
+    local tweener = target.transform:DOScale(point, time):SetEase(animationType)
+    local uiAnim = XLuaUIAnimPool.Get():SetAnimation(tweener)
+    return uiAnim
+end
+
+--渐显的动画
+function this:FadeAnim(target,value,time)
+    target = target:GetComponent(typeof(CanvasGroup))
+    local tweener = target:DOFade(value, time):SetEase(doTween_ease.Linear)
+    local uiAnim = XLuaUIAnimPool.Get():SetAnimation(tweener)
+    return uiAnim
+end
+
+--颜色渐变的动画
+function this:ColorAnim(target,color,time)
+    local temp = target.transform:GetComponent("Mask")
+    --- 不是mask，再继续查找
+    if temp == nil then
+        temp = target.transform:GetComponent("Image")
+        if temp ~= nil then
+            target = temp.color
+        else
+            temp = target.transform:GetComponent("SkeletonGraphic")
+            if temp ~= nil then
+                target = temp.color
+            end
+        end
+    end
+    local tweener = target:DOColor(color,time):SetEase(doTween_ease.Linear)
+    local uiAnim = XLuaUIAnimPool.Get():SetAnimation(tweener)
+    return uiAnim
+end
+
+-- --- 回收动画
+-- ---@param anim GF.XLuaUIAnimation 单个或者数据
+-- function this:ReleaseAnim(anim)
+--     for i = 1, #_ativeUIAnims do
+--         if anim == _ativeUIAnims[i] then
+--             table.remove(_ativeUIAnims, i)
+--         end
+--     end
+--     XLuaUIAnimPool.Release(anim)
+-- end
+
+-- --- 回收所有的动画
+-- function this:ReleaseAll(anim)
+--     for i = 1, _ativeUIAnims do
+--         XLuaUIAnimPool.Release(_ativeUIAnims[i])
+--     end
+--     _ativeUIAnims = {}
+-- end
+
+-- --- 回收最新的动画
+-- function this:ReleaseTop()
+--     local count = #_ativeUIAnims
+--     if count > 0 then
+--         XLuaUIAnimPool.Release(_ativeUIAnims[count])
+--         table.remove(_ativeUIAnims, count)
+--     end
+-- end

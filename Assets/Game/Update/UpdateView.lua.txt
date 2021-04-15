@@ -1,0 +1,199 @@
+-- 更新界面的逻辑
+local GF = CS.Wanderer.GameFramework
+local GameMode = GF.GameMode
+local File = CS.System.IO.File
+local Slider = CS.UnityEngine.UI.Slider
+local Text = CS.UnityEngine.UI.Text
+local Application = CS.UnityEngine.Application
+local AudioSource = CS.UnityEngine.AudioSource
+local Time = CS.UnityEngine.Time
+local VideoPlayer = CS.UnityEngine.Video.VideoPlayer
+local RawImage = CS.UnityEngine.UI.RawImage
+
+--- 视频播放
+---@type VideoPlayer
+local _videoPlayer = nil
+--- 视频图片
+---@type RawImage
+local _videoRawImage = nil
+
+---下载的Slider
+---@type Slider
+local _downloadSlider = nil
+
+--- 下载的提示文本
+---@type Text
+local _downloadTipText = nil
+
+--- 资源加载的优先级
+---@type int
+local _backgroundLoadingPriority
+
+--- 错误提示文本
+---@type table
+local tab_tipVaule = {
+    versionWrong = "无可用的版本资源，\n请更新应用程序",
+    outLine = "网络错误，\n请检查网络后重启应用程序",
+    resourError = "下载资源出错，\n请重新下载或重启应用程序"
+}
+
+function OnAwake()
+    _backgroundLoadingPriority = Application.backgroundLoadingPriority
+
+    -- 视频播放器
+    local videoTrans = self.transform:Find("Panel/Video")
+    _videoPlayer = videoTrans:GetComponent(typeof(VideoPlayer))
+    _videoRawImage = videoTrans:GetComponent(typeof(RawImage))
+    -- _videoPlayer.isLooping = true
+    -- _videoPlayer.url =
+    --     "https://onedrive.gimhoy.com/1drv/aHR0cHM6Ly8xZHJ2Lm1zL3YvcyFBaTFjQUlRcjd2ejhkalNsZEcwQzN1NFl6Wjg/ZT1VQ1pXYkw=.mp4"
+    -- _videoPlayer:prepareCompleted("+", OnVideoPrepare)
+    -- _videoPlayer:Prepare()
+
+    _downloadSlider = self.transform:Find("Panel/Slider"):GetComponent(typeof(Slider))
+    _downloadTipText = self.transform:Find("Panel/Slider/Text"):GetComponent(typeof(Text))
+end
+
+function OnStart()
+    -- 编辑器模板
+    if GameMode.Resource.ResUpdateType == GF.ResourceUpdateType.Editor then
+        -- GameMode.Resource.Version:CheckResource(OnCheckVersionCallback)
+        self:LuaCallCSharp("Complete")
+    else
+        --检查资源
+        GameMode.Resource.Version:CheckResource(OnCheckVersionCallback)
+    end
+end
+
+function OnDestroy()
+end
+
+function OnUpdate()
+    -- 更新图片资源
+    if _videoRawImage.texture ~= _videoPlayer.texture then
+        _videoRawImage.texture = _videoPlayer.texture
+    end
+
+    --断网提示
+    -- if (Application.internetReachability == CS.UnityEngine.NetworkReachability.NotReachable) then
+    --     txt_Tips.text = tab_tipVaule.outLine
+    --     btn_Reload.gameObject:SetActive(false)
+    --     btn_Exit.transform.localPosition = CS.UnityEngine.Vector3(0, -190, 0)
+    --     trans_tipPanel.gameObject:SetActive(true)
+    -- end
+end
+
+function OnEnable()
+end
+
+function OnDisable()
+end
+
+---检查了本地和远程的版本信息
+---@param localVersion GF.AssetBundleVersionInfo
+---@param remoteVersion GF.AssetBundleVersionInfo
+---@return boolean
+function OnCheckVersionCallback(result, localVersion, remoteVersion)
+    print("OnCheckVersionCallback: " .. tostring(result))
+    if result then
+        -- 兼容所有的资源对应App版本信息
+        -- 在这里应该要判断RemoteVersion的版本信息 remoteVersion.AppVersion string
+        -- 以及判断资源支持以前的版本信息 remoteVersion.SupportOldAppVersions List<string>
+        -- 如果不支持则动态设置RemoteUrl remoteVersion.OldResourceUrl string
+        if remoteVersion == nil then
+            GF.Log.Waring("File download failed..remoteVersion is NumOrEmpty!! ")
+            return
+        end
+        local localVersion = GameMode.Config.Config:get_Item("AppVersion"):ToString()
+        GF.Log.Info("localVersion:" .. tostring(localVersion))
+        GF.Log.Info("remoteVersion:" .. tostring(remoteVersion.AppVersion))
+        if
+            localVersion == tostring(remoteVersion.AppVersion) or
+                remoteVersion.SupportOldAppVersions:Contains(localVersion)
+         then
+            -- 更新资源
+            GameMode.Resource.Version:UpdateResource(
+                OnDownloadCallback,
+                Preload,
+                function(localPath, error)
+                    GF.Log.Warning("File download failed. " .. localPath .. error)
+                    -- txt_Tips.text = tab_tipVaule.resourError
+                    -- btn_Reload.gameObject:SetActive(true)
+                    -- btn_Exit.transform.localPosition = CS.UnityEngine.Vector3(180, -190, 0)
+                    -- trans_tipPanel.gameObject:SetActive(true)
+                end
+            )
+        else
+            if remoteVersion.OldResourceUrl == nil or remoteVersion.OldResourceUrl == "" then
+                -- 请更新主程序
+                --- 显示提示框
+                -- txt_Tips.text = tab_tipVaule.versionWrong
+                -- btn_Reload.gameObject:SetActive(true)
+                -- btn_Exit.transform.localPosition = CS.UnityEngine.Vector3(180, -190, 0)
+                -- trans_tipPanel.gameObject:SetActive(true)
+                return
+            else
+                GameMode.Resource.Version:SetRemoteUpdatePath(
+                    remoteVersion.OldResourceUrl .. GF.Utility.GetRuntimePlatformName()
+                )
+                GameMode.Resource.Version:CheckResource(OnCheckVersionCallback)
+            end
+        end
+    else
+        --self:LuaCallCSharp("Complete")
+        Preload()
+    end
+end
+
+--- 下载回调
+---@param progress number 进度
+---@param totleFileKBSize number 文件大小
+---@param speed number 下载速度
+---@param remainingTime number 剩余时间
+function OnDownloadCallback(progress, totleFileKBSize, speed, remainingTime)
+    if progress > 0 then
+        -- 显示进度框
+        _downloadSlider.value = progress
+        _downloadSlider.gameObject:SetActive(true)
+        progress = math.floor(progress * 100.0)
+        totleFileKBSize = math.ceil(totleFileKBSize / 1024.0)
+        speed = math.floor(speed)
+        remainingTime = math.max(0, math.floor(remainingTime))
+        _downloadTipText.text =
+            "下载进度:" ..
+            tostring(progress) ..
+                "% 下载大小:" ..
+                    tostring(totleFileKBSize) ..
+                        "MB 下载速度: " .. tostring(speed) .. "KB/s 估计剩余时间:" .. tostring(remainingTime) .. "s"
+    end
+end
+
+--- 预加载
+function Preload()
+    -- 播放广告
+    -- GameMode.Ads:Show("GameStart")
+    Application.backgroundLoadingPriority = 4
+    --self.transform:Find("Panel").gameObject:SetActive(false)
+    _downloadSlider.value = 0.0
+    -- _downloadTipText.gameObject:SetActive(false)
+    _downloadTipText.text = "预加载..."
+    GameMode.Resource.Asset:SetResource(
+        function()
+            GameMode.Resource.Asset:Preload(OnAssetPreload)
+        end
+    )
+end
+
+--- 预加载资源
+function OnAssetPreload(progress)
+    if progress > 0 then
+        _downloadSlider.value = progress
+        _downloadSlider.gameObject:SetActive(true)
+    -- self.transform:Find("Panel").gameObject:SetActive(true)
+    -- self.transform:Find("Forward").gameObject:SetActive(true)
+    end
+    if progress >= 1.0 then
+        Application.backgroundLoadingPriority = _backgroundLoadingPriority
+        self:LuaCallCSharp("Complete")
+    end
+end

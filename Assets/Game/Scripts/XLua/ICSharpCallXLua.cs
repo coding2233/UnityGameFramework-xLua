@@ -7,5 +7,7 @@ namespace Wanderer.GameFramework
 	public interface ICSharpCallXLua
 	{
 		void Bind(string luaName);
+
+		void Clear();
 	}
 }

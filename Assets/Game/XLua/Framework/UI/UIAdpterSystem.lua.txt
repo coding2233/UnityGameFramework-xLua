@@ -1,0 +1,139 @@
+﻿--- XLuaUGUI的事件适配器
+UIAdpterSystem = {}
+local this = UIAdpterSystem
+
+--- xlua的uiview
+---@type table
+local _xluaUIViewScripts = {}
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnInit(transform, uiContext)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnInit(transform, uiContext)
+end
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnFree(transform, uiContext)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnFree(transform, uiContext)
+end
+
+--- 更新
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param deltaTime number
+function this.OnUpdate(uiContext, deltaTime)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnUpdate(uiContext, deltaTime)
+end
+
+--- 进入
+---@param transform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this.OnEnter(transform, uiContext, callback, userData)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    if userData ~= nil then
+        userData = userData[0]
+    end
+    luaUIView:OnEnter(transform, uiContext, callback, userData)
+end
+
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnExit(uiContext)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnExit(uiContext)
+end
+--- 暂停
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnPause(uiContext)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnPause(uiContext)
+end
+
+--- 恢复
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this.OnResume(uiContext)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnResume(uiContext)
+end
+---开始游戏（关闭视频引导）
+function this.GameStart(uiContext)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:GameStart(uiContext)
+end
+
+--- 动画进入
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this.OnAnimationStart(uiContext, uiAnimation)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnAnimationStart(uiContext, uiAnimation)
+end
+
+--- 动画退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this.OnAnimationComplete(uiContext, uiAnimation)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    luaUIView:OnAnimationComplete(uiContext, uiAnimation)
+end
+
+--- ui事件
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param target Transform
+---@param callMethod string
+---@param eventData BaseEventData
+function this.OnEventTrigger(uiContext, target, callMethod, eventData)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    --调用响应的UI事件
+    if luaUIView[callMethod] ~= nil then
+        --转换eventData.position为世界坐标
+        local globalPoint = eventData.position
+        local result
+
+        local rayCast = eventData.pointerCurrentRaycast
+        --是否满足转换条件
+        if eventData.pressEventCamera ~= nil and rayCast ~= nil and rayCast.gameObject ~= nil then
+            local rectPanel = rayCast.gameObject:GetComponent(typeof(RectTransform))
+            result, globalPoint =
+                RectTransformUtility.ScreenPointToWorldPointInRectangle(
+                rectPanel,
+                eventData.position,
+                eventData.pressEventCamera
+            )
+        end
+        --globalPoint = Vector3(globalPoint.x, globalPoint.y, -10)
+        -- 调用uiview的回调
+        luaUIView[callMethod](luaUIView, target, eventData, globalPoint)
+    end
+end
+
+--- 物理碰撞事件
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callMethod string
+---@param selfTransform Transform
+---@param otherTransform Transform
+function this.OnColliderTrigger(uiContext, callMethod, selfTransform, otherTransform)
+    local luaUIView = this:LoadXLuaUIView(uiContext.Name)
+    --调用响应的触发/碰撞事件
+    if luaUIView[callMethod] ~= nil then
+        luaUIView[callMethod](luaUIView, selfTransform, otherTransform)
+    end
+end
+
+--- 加载xlua uiview 脚本
+---@param luaScriptsName string
+function this:LoadXLuaUIView(luaScriptsName)
+    local xluaUIView = _xluaUIViewScripts[luaScriptsName]
+    if xluaUIView == nil then
+        xluaUIView = require(luaScriptsName)
+        _xluaUIViewScripts[luaScriptsName] = xluaUIView
+    end
+    return xluaUIView
+end

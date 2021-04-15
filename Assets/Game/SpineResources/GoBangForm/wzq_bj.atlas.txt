@@ -1,0 +1,153 @@
+
+wzq_bj.png
+size: 2344,1526
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+BG
+  rotate: false
+  xy: 2, 444
+  size: 2340, 1080
+  orig: 2342, 1082
+  offset: 1, 1
+  index: -1
+Shu1
+  rotate: false
+  xy: 2237, 178
+  size: 34, 122
+  orig: 36, 124
+  offset: 1, 1
+  index: -1
+Shu10
+  rotate: false
+  xy: 2237, 178
+  size: 34, 122
+  orig: 36, 124
+  offset: 1, 1
+  index: -1
+Shu11
+  rotate: false
+  xy: 2237, 178
+  size: 34, 122
+  orig: 36, 124
+  offset: 1, 1
+  index: -1
+Shu12
+  rotate: false
+  xy: 2237, 178
+  size: 34, 122
+  orig: 36, 124
+  offset: 1, 1
+  index: -1
+Shu13
+  rotate: false
+  xy: 2237, 178
+  size: 34, 122
+  orig: 36, 124
+  offset: 1, 1
+  index: -1
+Shu14
+  rotate: true
+  xy: 2237, 142
+  size: 34, 89
+  orig: 36, 91
+  offset: 1, 1
+  index: -1
+Shu15
+  rotate: false
+  xy: 2273, 238
+  size: 63, 90
+  orig: 65, 93
+  offset: 1, 2
+  index: -1
+Shu2
+  rotate: true
+  xy: 2149, 302
+  size: 95, 94
+  orig: 98, 96
+  offset: 1, 1
+  index: -1
+Shu3
+  rotate: true
+  xy: 2149, 302
+  size: 95, 94
+  orig: 98, 96
+  offset: 1, 1
+  index: -1
+Shu4
+  rotate: true
+  xy: 2149, 302
+  size: 95, 94
+  orig: 98, 96
+  offset: 1, 1
+  index: -1
+Shu5
+  rotate: true
+  xy: 2245, 330
+  size: 67, 93
+  orig: 69, 95
+  offset: 1, 1
+  index: -1
+Shu6
+  rotate: true
+  xy: 2245, 330
+  size: 67, 93
+  orig: 69, 95
+  offset: 1, 1
+  index: -1
+Shu7
+  rotate: true
+  xy: 2273, 184
+  size: 52, 68
+  orig: 54, 70
+  offset: 1, 1
+  index: -1
+Shu8
+  rotate: true
+  xy: 2149, 2
+  size: 59, 88
+  orig: 61, 90
+  offset: 1, 1
+  index: -1
+Shu9
+  rotate: true
+  xy: 2239, 12
+  size: 49, 78
+  orig: 51, 80
+  offset: 1, 1
+  index: -1
+Taiyang
+  rotate: true
+  xy: 2, 79
+  size: 318, 319
+  orig: 320, 321
+  offset: 1, 1
+  index: -1
+Yun1
+  rotate: false
+  xy: 2149, 63
+  size: 158, 77
+  orig: 160, 79
+  offset: 1, 1
+  index: -1
+Yun2
+  rotate: true
+  xy: 2149, 142
+  size: 158, 86
+  orig: 160, 88
+  offset: 1, 1
+  index: -1
+shui1
+  rotate: false
+  xy: 2, 34
+  size: 2145, 43
+  orig: 2147, 45
+  offset: 1, 1
+  index: -1
+shui2
+  rotate: false
+  xy: 2, 399
+  size: 2316, 43
+  orig: 2318, 45
+  offset: 1, 1
+  index: -1

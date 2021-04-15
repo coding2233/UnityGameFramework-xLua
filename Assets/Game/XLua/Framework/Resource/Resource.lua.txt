@@ -1,0 +1,180 @@
+-- 资源表
+-- 对应 ResourceManager & DataTableManager
+Resource = {}
+local this = Resource
+
+-- 加载资源
+
+-- 获取所有的资源的路径
+function this:AssetPaths()
+    return GameMode.Resource.Asset.AllAssetPaths
+end
+
+--- 异步加载资源
+---@param assetPath string
+---@param callback Action<UnityEngine.Object>
+function this:LoadObject(assetPath, callback)
+    GameMode.Resource:LoadObject(assetPath, callback)
+end
+
+--- 同步加载资源
+---@param assetPath string
+---@param type UnityEngine的各种类型
+---@return UnityEngine.Object
+function this:LoadObjectSync(assetPath)
+    local asset = GameMode.Resource:LoadObjectSync(assetPath)
+    return asset
+end
+
+--- 异步加载资源
+---@param assetPath string
+---@param callback Action<UnityEngine.GameObject>
+function this:LoadAsset(assetPath, callback)
+    GameMode.Resource:LoadGameObject(assetPath, callback)
+end
+
+--- 同步加载资源
+---@param assetPath string
+---@param type UnityEngine的各种类型
+---@return UnityEngine.GameObject
+function this:LoadAssetSync(assetPath)
+    local asset = GameMode.Resource:LoadGameObjectSync(assetPath)
+    return asset
+end
+
+--- 模糊查找资源
+---@param name string
+---@return UnityEngine.Object
+function this:FindAsset(name)
+    local assetPath = this:FindAsstPath(name)
+    if assetPath == nil then
+        return nil
+    end
+    return this:LoadAssetSync(assetPath)
+end
+
+--- 查找路径
+function this:FindAsstPath(name)
+    name = string.lower(name)
+    local assetPaths = this:AssetPaths()
+    if assetPaths == nil then
+        return nil
+    end
+    for i = 0, assetPaths.Count do
+        if string.find(assetPaths[i], name, 1) ~= nil then
+            return assetPaths[i]
+        end
+    end
+    return nil
+end
+
+--- 卸载资源
+function this:UnloadAsset(assetPath)
+    GameMode.Resource:UnloadAsset(assetPath)
+end
+
+--- 检查资源是否需要更新
+---@param name string 小游戏的名称
+---@param callback Action<boolean,boolean> 第一次参数为是否有本地文件，第二个参数为是否需要更新或者下载，true表示需要，false表示不需要
+function this:CheckResource(name, callback)
+    GameMode.Resource.Version:CheckResource(name, callback)
+end
+
+--- 更新资源
+---@param callback Action<float, double, double, float> 下载回调(进度(0-1)，大小(KB),速度(KB/S),剩余时间(s))
+---@param downloadComplete Action 下载完成回调
+---@param errorCallback Action<string, string> 下载错误回调
+---@param name string  是否是更新单个资源需要更新则传单个文件的名称
+function this:UpdateResource(callback, downloadComplete, errorCallback, name)
+    GameMode.Resource.Version:UpdateResource(callback, downloadComplete, errorCallback, name)
+end
+
+--- 卸载ab包
+---@param abName string
+---@param unload boolean
+function this:UnloadAssetBunlde(abName, unload)
+    GameMode.Resource.Asset:UnloadAssetBunlde(abName, unload)
+end
+
+-- 加载datatable
+---@param  tableName string
+---@param callback Action<boolean,string,IDataTable>
+function this:LoadDataTable(tableName, callback)
+    local assetPath = Utility.AssetPath:GetDataTable(tableName)
+    GameMode.DataTable:LoadDataTable(assetPath, callback)
+end
+
+-- 移除dataTable
+---@param  tableName string
+function this:RemoveDataTable(tableName)
+    local assetPath = Utility.AssetPath:GetDataTable(tableName)
+    GameMode.DataTable:RemoveDataTable(assetPath)
+end
+
+--- 加载动态Sprite
+---@param name string
+function this:LoadSprite(name)
+    local assetPath = Utility.AssetPath:GetDynamicSprite(string.format("%s.png", name))
+    if not this:AssetPaths():Contains(string.lower(assetPath)) then
+        assetPath = Utility.AssetPath:GetDynamicSprite(string.format("%s.jpg", name))
+    end
+    return GameMode.Resource:LoadSpriteSync(assetPath)
+end
+
+--- 加载动态Game Sprite
+---@param name string
+function this:LoadGameSprite(gameName, spriteName)
+    local assetPath = Utility.AssetPath:GetGameDynamicSprite(gameName, string.format("%s.png", spriteName))
+    -- print(assetPath, "--------")
+    if not this:AssetPaths():Contains(string.lower(assetPath)) then
+        assetPath = Utility.AssetPath:GetGameDynamicSprite(gameName, string.format("%s.jpg", spriteName))
+    end
+    return GameMode.Resource:LoadSpriteSync(assetPath)
+end
+
+--- 加载游戏图标
+function this:LoadGameIcon(name, callback)
+    local assetPath = Utility.AssetPath:GetGameIcon(name)
+    this:LoadObject(assetPath, callback)
+end
+
+--- 动态加载UI组件
+---@param name string
+---@param callback Action<GameObject>
+function this:LoadUIItem(name, callback)
+    local assetPath = Utility.AssetPath:GetDynamicUIItem(name)
+    return GameMode.Resource:LoadGameObject(assetPath, callback)
+end
+
+--- 动态同步加载UI组件
+---@param name string
+---@param callback Action<GameObject>
+function this:LoadUIItemSync(name)
+    local assetPath = Utility.AssetPath:GetDynamicUIItem(name)
+    return GameMode.Resource:LoadGameObjectSync(assetPath)
+end
+
+--- 动态实例化UI组件
+---@param name string
+---@param callback Action<GameObject>
+---@param position Vector3
+---@param rotation Quaternion
+---@param parent Transform
+function this:InstantiateUIItem(name, callback, position, rotation, parent)
+    this:LoadUIItem(
+        name,
+        function(original)
+            local uiItem = nil
+            if original ~= nil then
+                if position == nil then
+                    position = Vector3.zero
+                end
+                if rotation == nil then
+                    rotation = Quaternion.identity
+                end
+                uiItem = GameObject.Instantiate(original, position, rotation, parent)
+            end
+            callback(uiItem)
+        end
+    )
+end

@@ -1,0 +1,187 @@
+local RubikCube = class("RubikCube", UIView)
+local this = RubikCube
+
+--- 魔方摄像机控制
+local _cameraControl = require "RubikCubeCamera"
+--- 全局配置
+local _config = require "RubikCubeConfig"
+
+--- 场景
+local _scene = nil
+--- 3阶魔方
+local _rubikCube3 = nil
+--- 魔方摄像机
+local _camera = nil
+--- 所有的魔方方块
+local _blocks = {}
+--- 黄色面的中心
+local _yellowCenter = nil
+--- 蓝色面的中心
+local _blueCenter = nil
+--- 绿色面的中心
+local _greenCenter = nil
+--- 紫色面的中心
+local _violetCenter = nil
+--- 红色面的中心
+local _redCenter = nil
+--- 橙色面的中心
+local _orangeCenter = nil
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnInit(transform, uiContext)
+    _scene = transform:GetTransform("Scene")
+    _rubikCube3 = _scene:GetTransform("RubikCube3")
+    _camera = _scene:GetTransform("Camera"):GetComponent("Camera")
+    local count = _rubikCube3.childCount
+    for i = 1, count do
+        _blocks[i] = _rubikCube3:GetChild(i - 1)
+    end
+    _yellowCenter = _rubikCube3:GetTransform("Block_YellowCenter")
+    _blueCenter = _rubikCube3:GetTransform("Block_BlueCenter")
+    _greenCenter = _rubikCube3:GetTransform("Block_GreenCenter")
+    _violetCenter = _rubikCube3:GetTransform("Block_VioletCenter")
+    _redCenter = _rubikCube3:GetTransform("Block_RedCenter")
+    _orangeCenter = _rubikCube3:GetTransform("Block_OrangeCenter")
+end
+
+--- 界面释放
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnFree(transform, uiContext)
+    _scene = nil
+    _rubikCube3 = nil
+    _camera = nil
+    _blocks = {}
+    _yellowCenter = nil
+    _blueCenter = nil
+    _greenCenter = nil
+    _violetCenter = nil
+    _redCenter = nil
+    _orangeCenter = nil
+end
+
+--- 更新
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param deltaTime number
+function this:OnUpdate(uiContext, deltaTime)
+    this:DragBlock()
+    _cameraControl:Control(_rubikCube3, _camera.transform, deltaTime)
+end
+
+--- 进入
+---@param transform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this:OnEnter(transform, uiContext, callback, userData)
+end
+
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnExit(uiContext)
+end
+--- 暂停
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnPause(uiContext)
+end
+
+--- 恢复
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnResume(uiContext)
+end
+
+--- 动画进入
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this:OnAnimationStart(uiContext, uiAnimation)
+end
+
+--- 动画退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this:OnAnimationComplete(uiContext, uiAnimation)
+end
+
+-- 功能==================================================================================================================
+
+--- 是否拖拽按住
+local _isDragDown = false
+--- 拖拽开始时的射线检测对象
+local _hit = nil
+--- 拖拽开始时的鼠标位置
+local _hitPos = nil
+
+--- 拖动方块
+function this:DragBlock()
+    if _isDragDown then
+        if Input.GetAxisRaw("Mouse X") ~= 0 or Input.GetAxisRaw("Mouse Y") ~= 0 then
+            local dir = Input.mousePosition - _hitPos
+            if dir.magnitude >= 1 then
+                local dir = this:GetDragDirection(dir.normalized)
+                this:RotateBlock(dir)
+                _isDragDown = false
+            end
+        end
+    end
+
+    if Input.GetMouseButtonDown(0) then
+        local isHit = false
+        isHit, _hit = _camera:Raycast()
+        if isHit then
+            _isDragDown = true
+            _hitPos = Input.mousePosition
+        end
+    elseif Input.GetMouseButtonUp(0) then
+        _isDragDown = false
+    end
+end
+
+--- 获取拖动方向
+function this:GetDragDirection(dir)
+    local project = Vector3.ProjectOnPlane(dir, _hit.normal).normalized
+    local minAngle = 360
+    local dir = nil
+    local angle = Vector3.Angle(project, _hit.transform.forward)
+    if angle < minAngle then
+        minAngle = angle
+        dir = _hit.transform.forward
+    end
+    angle = Vector3.Angle(project, _hit.transform.forward * -1)
+    if angle < minAngle then
+        minAngle = angle
+        dir = _hit.transform.forward * -1
+    end
+    angle = Vector3.Angle(project, _hit.transform.right)
+    if angle < minAngle then
+        minAngle = angle
+        dir = _hit.transform.right
+    end
+    angle = Vector3.Angle(project, _hit.transform.right * -1)
+    if angle < minAngle then
+        minAngle = angle
+        dir = _hit.transform.right * -1
+    end
+    angle = Vector3.Angle(project, _hit.transform.up)
+    if angle < minAngle then
+        minAngle = angle
+        dir = _hit.transform.up
+    end
+    angle = Vector3.Angle(project, _hit.transform.up * -1)
+    if angle < minAngle then
+        minAngle = angle
+        dir = _hit.transform.up * -1
+    end
+    return dir
+end
+
+--- 旋转方块
+function this:RotateBlock(dir)
+    local blocks = {}
+    local index = 1
+    for i = 1, #_blocks do
+    end
+end
+
+return this

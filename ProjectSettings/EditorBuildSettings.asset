@@ -4,5 +4,11 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Game/Scenes/main.unity
+    guid: c377ac3eabeeaad459a30a81eb316f76
+  - enabled: 0
+    path: Assets/Game/Scenes/Kingdoms.unity
+    guid: 3bc49ee49cd288a4c9390a0b7d710919
   m_configObjects: {}

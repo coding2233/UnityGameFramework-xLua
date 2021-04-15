@@ -1,0 +1,324 @@
+local GoBangAI = {}
+local this = GoBangAI
+
+local Board = require "GoBangChessBoard"
+local Pieces = require "GoBangChessPieces"
+local Config = require "GoBangConfig"
+
+--- 玩家落子的点
+local PlayerMoveLaterPosInfo = nil
+--- 模拟玩家落子信息
+local simulateMoveLaterPosInfo = nil
+
+--- AI落子的点
+local AIMoveLaterPosInfo = nil
+
+--- 包含4个轴上面的棋子信息
+local axisInfo = nil
+local axisScoreInfo = {}
+
+--- 默认黑子先行计算
+local curPiecesType = Config.PiecesType.Black
+
+--- 存储每一轮记录的所有的点，所有的估值
+local scoreList = {}
+local MoveLaterPriority = nil
+
+--- AI模拟进攻计算所有的点
+local simulateAttackPos = {}
+--- 记录布局点
+local randomSecondPos = nil
+
+--- 打印log使用
+local logStr = ""
+
+function this:AIInit()
+    --- 随机棋盘优先级
+    MoveLaterPriority = Config.MoveLaterPriority[math.random(1, #Config.MoveLaterPriority)]
+    randomSecondPos = nil
+end
+
+function this:MoveLater(posx, posy)
+    if posx ~= nil and posy ~= nil then
+        do
+            curPiecesType = Config.PiecesType.White
+            PlayerMoveLaterPosInfo = {
+                x = posx,
+                y = posy,
+                score = this:CalcScoreByPos(posx, posy, Config.AIMoveLaterType.Attack),
+                maxAxis = this:FindMaxAxis(),
+                everyAxisScore = axisScoreInfo
+            }
+        end
+        --- 此方法只执行一次，目的是控制第二个落子构成优势棋局
+        if this:RandomStart(posx, posy) then
+            return Vector2(randomSecondPos.x * Config.Board_Grid, randomSecondPos.y * Config.Board_Grid)
+        end
+        do
+            --- AI模拟落子
+            curPiecesType = Config.PiecesType.Black
+            AIMoveLaterPosInfo = this:GetMaxScoreByBoard()
+        end
+
+        if PlayerMoveLaterPosInfo.score > AIMoveLaterPosInfo.score then
+            print("拦截玩家操作")
+            local targetPos = this:InterceptPlayer(PlayerMoveLaterPosInfo)
+            if targetPos ~= nil then
+                return Vector2(targetPos.x * Config.Board_Grid, targetPos.y * Config.Board_Grid)
+            else
+                curPiecesType = Config.PiecesType.White
+                simulateMoveLaterPosInfo = this:GetMaxScoreByBoard()
+                return Vector2(
+                    simulateMoveLaterPosInfo.x * Config.Board_Grid,
+                    simulateMoveLaterPosInfo.y * Config.Board_Grid
+                )
+            end
+        else
+            do
+                --- 玩家模拟落子
+                curPiecesType = Config.PiecesType.White
+                simulateMoveLaterPosInfo = this:GetMaxScoreByBoard(Config.ScoreCalcType.Prevent)
+            end
+
+            if simulateMoveLaterPosInfo.score * Config.ScoreRetio > AIMoveLaterPosInfo.score then
+                print("提前预防玩家的操作落子")
+                --- 权衡预防和对自己最优
+                local pos = this:AssessOptimalPos()
+                return Vector2(pos.x * Config.Board_Grid, pos.y * Config.Board_Grid)
+            else
+                --- AI进攻
+                print("AI落子进攻")
+                return Vector2(AIMoveLaterPosInfo.x * Config.Board_Grid, AIMoveLaterPosInfo.y * Config.Board_Grid)
+            end
+        end
+    else
+        --- AI落子第一步
+        curPiecesType = Config.PiecesType.Black
+        AIMoveLaterPosInfo = this:GetMaxScoreByBoard()
+        return Vector2(AIMoveLaterPosInfo.x * Config.Board_Grid, AIMoveLaterPosInfo.y * Config.Board_Grid)
+    end
+end
+
+--- 随机开局
+function this:RandomStart(playerx, playery)
+    if randomSecondPos == nil then
+        local tempStr = tostring(playerx) .. "," .. tostring(playery)
+        if Config.RandomMoveLaterPriority[tempStr] ~= nil then
+            local r = math.random(1, #Config.RandomMoveLaterPriority[tempStr])
+            randomSecondPos = Config.RandomMoveLaterPriority[tempStr][r]
+        else
+            randomSecondPos = "nil"
+            return false
+        end
+        return true
+    else
+        return false
+    end
+end
+
+--- 每个轴估值
+function this:ValueOfAssessmentEveryAxis(axistable, calctype)
+    axisScoreInfo = {}
+    axisScoreInfo[Config.AxisType.Horizontal] =
+        this:CalcEveryAxisWeight(axistable[Config.AxisType.Horizontal], calctype)
+    axisScoreInfo[Config.AxisType.Vertical] = this:CalcEveryAxisWeight(axistable[Config.AxisType.Vertical], calctype)
+    axisScoreInfo[Config.AxisType.LeftOblique] =
+        this:CalcEveryAxisWeight(axistable[Config.AxisType.LeftOblique], calctype)
+    axisScoreInfo[Config.AxisType.RightOblique] =
+        this:CalcEveryAxisWeight(axistable[Config.AxisType.RightOblique], calctype)
+end
+
+--- 计算四个轴的估值总和
+function this:CalcScoreCountByFourAxis()
+    local socreCount = 0
+    for key, value in pairs(axisScoreInfo) do
+        socreCount = socreCount + value
+    end
+    return socreCount
+end
+
+--- 寻找估值最大的轴
+function this:FindMaxAxis()
+    local tempAxis, tempMaxScore = nil
+    tempMaxScore = axisScoreInfo[Config.AxisType.Horizontal]
+    tempAxis = Config.AxisType.Horizontal
+    for key, value in pairs(axisScoreInfo) do
+        if value > tempMaxScore then
+            tempMaxScore = value
+            tempAxis = key
+        end
+    end
+    if tempMaxScore == 0 then
+        tempAxis = nil
+    end
+    return tempAxis
+end
+
+--- 计算指定点的分数
+function this:CalcScoreByPos(posx, posy, type, calctype)
+    --- 获得当前位置，四个轴的棋子信息
+    axisInfo = Board:GetAxisInfoByPos(posx, posy, type)
+    --- 计算每个轴的估值
+    this:ValueOfAssessmentEveryAxis(axisInfo, calctype)
+    --- 计算估值总和
+    return this:CalcScoreCountByFourAxis()
+end
+
+--- 计算期盼中分值最大的点
+function this:GetMaxScoreByBoard(calctype)
+    local maxScore = CS.System.Int32.MinValue
+    local index_x, index_y = 0
+    scoreList = {}
+    for i = 0, Config.Board_W_Num do
+        for j = 0, Config.Board_H_Num do
+            if Board:GetBoardPosInfo(i, j) == 0 then
+                Board:SetTempPosInfo(i, j, curPiecesType)
+                local temp = this:CalcScoreByPos(i, j, Config.AIMoveLaterType.Attack, calctype)
+                temp = temp + MoveLaterPriority[i + 1][j + 1]
+                if temp > maxScore then
+                    maxScore = temp
+                    index_x = i
+                    index_y = j
+                end
+                table.insert(scoreList, {x = i, y = j, score = temp})
+                Board:ClearInfoByPos(i, j)
+            end
+        end
+    end
+    return {
+        x = index_x,
+        y = index_y,
+        score = maxScore
+    }
+end
+
+--- 拦截玩家
+function this:InterceptPlayer(movelaterInfo)
+    local tempAxisInfo = nil
+    -- 计算最大的轴的点进行判定
+    tempAxisInfo = Board:GetAxisInfoByPos(movelaterInfo.x, movelaterInfo.y, Config.AIMoveLaterType.Defend)
+    -- 直接判断有威胁的轴
+    tempAxisInfo = tempAxisInfo[movelaterInfo.maxAxis]
+    local infoStr = this:AxisInfoToString(tempAxisInfo)
+
+    --- 找到拦截的点
+    local index = nil
+    local targetInfo = nil
+
+    for key, value in pairs(Config.InterceptPieces) do
+        index = string.find(infoStr, key)
+        if index ~= nil then
+            for i = 1, #value do
+                if index + value[i] ~= 0 and index + value[i] < #tempAxisInfo then
+                    if tempAxisInfo[index + value[i]].info == 0 then
+                        print("InfoStr:", infoStr, "Index:", index, "index + value[i]:", index + value[i])
+                        targetInfo = tempAxisInfo[index + value[i]]
+                    end
+                end
+            end
+        end
+    end
+    return targetInfo
+end
+
+--- 计算每个轴的估值
+function this:CalcEveryAxisWeight(axistable, calctype)
+    local score = 0
+    local str = this:AxisInfoToString(axistable)
+
+    --- 根据棋子类型，计算AI和玩家的得分
+    local t = nil
+    if curPiecesType == Config.PiecesType.Black then
+        t = Config.BlackPiecesStateInBoard
+    elseif curPiecesType == Config.PiecesType.White then
+        t = Config.WhitePiecesStateInBoard
+    end
+
+    for key, value in pairs(t) do
+        for i = 1, #value do
+            if string.find(str, value[i][1]) then
+                if calctype == Config.ScoreCalcType.Prevent then
+                    score = score + Config.Prenent_DiffPiecesStateWeight[key]
+                else
+                    score = score + Config.DiffPiecesStateWeight[key]
+                end
+            end
+        end
+    end
+    return score
+end
+
+--- 把每个轴信息转换为字符串格式
+function this:AxisInfoToString(axisInfo)
+    local str = ""
+    for i = 1, #axisInfo do
+        str = str .. tostring(axisInfo[i].info)
+    end
+    return str
+end
+
+--- 对估值表进行排序,取前五个
+function this:SortScoreList()
+    table.sort(
+        scoreList,
+        function(a, b)
+            if a.score > b.score then
+                return true
+            else
+                return false
+            end
+        end
+    )
+    local temp = {}
+    for i = 1, 5 do
+        temp[i] = scoreList[i]
+    end
+    return temp
+end
+
+--- 评估最优的点
+function this:AssessOptimalPos()
+    ---拿到前五个点
+    local fivePos = this:SortScoreList()
+    local optimalNum = -1
+    local optimalInfo = nil
+    curPiecesType = Config.PiecesType.Black
+    for i = 1, #fivePos do
+        Board:SetTempPosInfo(fivePos[i].x, fivePos[i].y, curPiecesType)
+        local temp = this:CalcScoreByPos(fivePos[i].x, fivePos[i].y, Config.AIMoveLaterType.Attack)
+        Board:ClearInfoByPos(fivePos[i].x, fivePos[i].y)
+        if fivePos[i].score + temp > optimalNum then
+            optimalNum = fivePos[i].score + temp
+            optimalInfo = fivePos[i]
+        end
+    end
+    return {x = optimalInfo.x, y = optimalInfo.y}
+end
+
+--- AI进攻 未使用
+function this:AIAttack()
+    simulateAttackPos = {}
+    local aiAtkInfo = nil
+    for i = 1, Config.AIAtkLayer do
+        do
+            local temp = this:GetMaxScoreByBoard()
+            Board:SetTempPosInfo(temp.x, temp.y, Config.PiecesType.Black)
+            table.insert(simulateAttackPos, temp)
+            aiAtkInfo = temp
+            if aiAtkInfo.score >= Config.DiffPiecesStateWeight["L_5"] then
+                break
+            end
+        end
+        if i ~= Config.AIAtkLayer then
+            local temp = this:GetMaxScoreByBoard()
+            Board:SetTempPosInfo(temp.x, temp.y, Config.PiecesType.White)
+            table.insert(simulateAttackPos, temp)
+        end
+    end
+    for i = 1, #simulateAttackPos do
+        Board:ClearInfoByPos(simulateAttackPos[i].x, simulateAttackPos[i].y)
+    end
+    return aiAtkInfo
+end
+
+return this

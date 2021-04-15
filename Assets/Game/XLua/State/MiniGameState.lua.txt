@@ -1,0 +1,65 @@
+local MiniGame = GameState:Create("MiniGame")
+local this = MiniGame
+
+local _menuUIView = nil
+local _gameUIView = nil
+
+function this:OnInit()
+end
+
+function this:OnEnter(userData)
+    print("--------------------------------------", userData)
+    -- 设置屏幕朝向
+    local config = Node:Get("GAME_CONFIG")
+    local orientation = config:get_Item("ScreenOrientation"):ToInt()
+    this:SetOrientation(orientation)
+    -- 游戏界面
+    _gameUIView = nil
+    _menuUIView =
+        UISystem:Push(
+        "GameMenuUIView",
+        function(data)
+            if _gameUIView ~= nil then
+                -- 关闭游戏
+                UISystem:Close(_gameUIView, true, true)
+                -- 完全的卸载游戏
+                Resource:UnloadAssetBunlde(userData, true)
+            end
+            -- 关闭菜单界面
+            UISystem:Close(_menuUIView, true, false)
+            --切换到正常的游戏状态
+            this:ChangeState(Utility.State.LaunchState)
+        end
+    ).NextUIView
+    UISystem:PushGame(userData, nil, userData):OnUITweenReadyAsync(
+        function(uiTween, lastUIView, nextUIView)
+            _gameUIView = nextUIView
+        end
+    )
+end
+
+function this:OnExit()
+    --设置默认横屏
+    this:SetOrientation(3)
+end
+
+function this:OnUpdate(detlaTime)
+end
+
+-- 设置横竖屏
+function this:SetOrientation(orientation)
+    UISystem:SetOrientation(orientation)
+    local platformName = Utility.GetRuntimePlatformName()
+    if platformName == "ios" or platformName == "android" then
+        return
+    end
+    if orientation == 1 then
+        -- 竖屏
+        GE.Screen.SetResolution(506, 900, false)
+    elseif orientation == 3 then
+        -- 横屏
+        GE.Screen.SetResolution(900, 506, false)
+    end
+end
+
+return this

@@ -1,1 +1,1 @@
-{"Version":19,"BuildPath":"build","CompressOptions":1,"Copy2StreamingAssets":true,"BuildTargets":[],"OtherResources":"","IsEncrypt":true}
+{"Version":114,"BuildPath":"build/asset","CompressOptions":1,"UseAssetBundleEditor":true,"Copy2StreamingAssets":false,"BuildTarget":13,"OtherResources":"","IsEncrypt":true,"SupportOldAppVersions":"","OldResourceUrl":"","ForceUpdate":true}

@@ -1,0 +1,84 @@
+local LoadUIView = class("LoadUIView", UIView):New()
+local this = LoadUIView
+
+---下载的Slider
+---@type Slider
+local _downloadSlider = nil
+local _stateCallback = nil
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnInit(transform, uiContext)
+    _downloadSlider = transform:Find("Slider"):GetComponent(typeof(UGUI.Slider))
+end
+
+--- 界面释放
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnFree(transform, uiContext)
+end
+
+--- 更新
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param deltaTime number
+function this:OnUpdate(uiContext, deltaTime)
+end
+
+--- 进入
+---@param transform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this:OnEnter(transform, uiContext, callback, userData)
+    _stateCallback = callback
+
+    Resource:CheckResource(
+        userData,
+        function(haveFile, isUpdate)
+            if isUpdate then
+                this:UpdateGame(userData)
+            else
+                _stateCallback(userData)
+            end
+        end
+    )
+
+ 
+end
+
+
+function this:UpdateGame(userData)
+   Resource:UpdateResource(
+        -- 下载进度
+        function(progress, size, speed, time)
+            _downloadSlider.value = progress
+        end,
+        -- 下载完成 异步打开游戏
+        function()
+            _stateCallback(userData)
+            -- this:ChangeState("MiniGameState", userData)
+        end,
+        -- 下载错误
+        function(assetPath, error)
+        end,
+        userData
+    )
+end
+
+
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnExit(uiContext)
+end
+--- 暂停
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnPause(uiContext)
+end
+
+--- 恢复
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnResume(uiContext)
+end
+
+return this

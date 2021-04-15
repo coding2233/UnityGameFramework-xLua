@@ -1,0 +1,124 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Pass
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 7117d79a771584c12b4bc7f40b18743b, type: 3}
+    totalSpriteSurfaceArea: 949132
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 3ead9d80760a040d0b70e86939528e32, type: 3}
+  - {fileID: 21300000, guid: bdd674017bb6b4807aa77daf5310b898, type: 3}
+  - {fileID: 21300000, guid: 2b5ca3519d4074c88afd1edc401c2aba, type: 3}
+  - {fileID: 21300000, guid: 3fbf4e52eb58442c59fad6daec8a85e6, type: 3}
+  - {fileID: 21300000, guid: 2e57f9725042d4e3aa9ec75259c6c3c0, type: 3}
+  - {fileID: 21300000, guid: d74df393288c94e0e8791c98c247f31e, type: 3}
+  - {fileID: 21300000, guid: 6163179331e7542c183da946d5438c43, type: 3}
+  - {fileID: 21300000, guid: f98154b33c65045c780880a671e55b05, type: 3}
+  - {fileID: 21300000, guid: 738e8fb3e96094fd2b305fe307e2ea96, type: 3}
+  - {fileID: 21300000, guid: ce074144a8f7b47508cffe4445e20fb5, type: 3}
+  - {fileID: 21300000, guid: 77237084d67f848cd9c89a28f0b3c421, type: 3}
+  - {fileID: 21300000, guid: fbc232a40047843fba0231c2a71ef457, type: 3}
+  - {fileID: 21300000, guid: b779f7b448079467c9442503ad66781d, type: 3}
+  - {fileID: 21300000, guid: 0972555577dae4776a602b0ce67c77f4, type: 3}
+  - {fileID: 21300000, guid: cd9d2a266a4664cd692ce7c032361041, type: 3}
+  - {fileID: 21300000, guid: 7fd6e0462dd244573a18576c320addbc, type: 3}
+  - {fileID: 21300000, guid: 115c4f46eb9974054913829ac1bcabec, type: 3}
+  - {fileID: 21300000, guid: 9ee48157d016c4b689a2d28815ca6bc2, type: 3}
+  - {fileID: 21300000, guid: 0a750a28f6f81454e90e307b2f88433e, type: 3}
+  - {fileID: 21300000, guid: 19dc2e59ead0e48f6a6f1267971984c4, type: 3}
+  - {fileID: 21300000, guid: 95155d9989fb244f88f9656cbd4eecbc, type: 3}
+  - {fileID: 21300000, guid: 69b232b977c37436e892e1533b919317, type: 3}
+  - {fileID: 21300000, guid: 544abfd93c2744a7fa9efc5f1b412e7b, type: 3}
+  - {fileID: 21300000, guid: eaf704ba147b44aa5ad17cf5e2d703ad, type: 3}
+  - {fileID: 21300000, guid: 7e09983b655f24cf390307d4b52ceb6b, type: 3}
+  - {fileID: 21300000, guid: 7898208bc763a45b7a72df205c9f0755, type: 3}
+  - {fileID: 21300000, guid: cdec219ba90ca4cd7b967e2a3385b9e6, type: 3}
+  - {fileID: 21300000, guid: fbcf87eb3b7cb4dacbe30fb3e397f4be, type: 3}
+  - {fileID: 21300000, guid: 4bb49bfb268004408a0a5b4c2e39ba29, type: 3}
+  - {fileID: 21300000, guid: 8f9c5aecfebbd41eea10f82fb2fbb11d, type: 3}
+  - {fileID: 21300000, guid: d1210dfc6e6ef43e2a5b96c900c6bf26, type: 3}
+  - {fileID: 21300000, guid: 78f7436ea745448f48e4ef7cd0aa0f65, type: 3}
+  - {fileID: 21300000, guid: b367987edc6cd41ada86fbcf1912a187, type: 3}
+  - {fileID: 21300000, guid: 49f8508f3726d4d2f927f0b6f5cef714, type: 3}
+  - {fileID: 21300000, guid: 06f2a7cfcd32242219ed1317bd660d83, type: 3}
+  - {fileID: 21300000, guid: 909969ef7ab0d428c8a6b640ab051d04, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - pass_reward_prg_num_bg_gray
+  - pass_btn_active_pass
+  - pass_reward_icon_chest_1
+  - pass_icon_check
+  - pass_reward_icon_clover
+  - pass_reward_icon_chest_0
+  - pass_sub_title_bg
+  - pass_prg_bg
+  - pass_reward_icon_rune
+  - pass_reward_frame_yellow
+  - pass_prg_bar
+  - pass_reward_frame_blue
+  - pass_gradient_top
+  - pass_btn_collect
+  - pass_reward_icon_gold
+  - pass_reward_icon_glove
+  - icon_normal_pass
+  - pass_token_gold
+  - title_sub_icon_pass
+  - pass_divide_solid
+  - pass_reward_icon_ax
+  - pass_reward_prg_bar
+  - pass_bg
+  - pass_left_divide_line
+  - pass_gold_bg
+  - icon_golden_pass
+  - pass_reward_frame_purple
+  - pass_icon_time
+  - pass_prg_line
+  - pass_reward_icon_gem
+  - pass_gradient_bottom
+  - pass_reward_prg_num_bg_yellow
+  - _0002_pass_prg_bar
+  - pass_icon_lock
+  - pass_reward_icon_book
+  - pass_reward_prg_bg
+  m_Tag: Pass
+  m_IsVariant: 0

@@ -1,0 +1,93 @@
+--- 通用功能
+Utility = {}
+local this = Utility
+
+--- 游戏服务器的名称 Test / Official
+this.AppServerName = GF.Utility.AppServerName
+
+--- 游戏状态
+this.State = {
+    LoginState = "LoginState",
+    MainState = "MainState",
+    FreeTrainingState = "FreeTrainingState",
+    ChildCenterState = "ChildCenterState",
+    ClassRoomState = "ClassRoomState",
+    AdventureChooseState = "AdventureChooseState",
+    InitiationState = "InitiationState",
+    BasicsState = "BasicsState",
+    AdvancedState = "AdvancedState",
+    FreeTrainingGameState = "FreeTrainingGameState",
+    SpaceGalaxyChoseState = "SpaceGalaxyChoseState",
+    SpaceThroughState = "SpaceThroughState",
+    SpaceGameState = "SpaceGameState",
+<<<<<<< HEAD
+    ChildProgramState = "ChildProgramState"
+=======
+    MiniGameState = "MiniGameState"
+>>>>>>> develop
+}
+
+--- ui名称对应
+this.UI = {
+    MainUIView = "MainUIView",
+    FreeTrainingForm = "FreeTrainingForm",
+    CommonTipForm = "CommonTipForm",
+    CommonTipForm2 = "CommonTipForm2",
+    SystemSettingForm = "SystemSettingForm",
+    SettingNicknameForm = "SettingNicknameForm"
+}
+
+--- 资源路径
+this.AssetPath = {}
+
+--- 获取到UI的资源路径
+---@param name string
+function this.AssetPath:GetDataTable(name)
+    return string.format("Assets/Game/DataTable/%s.txt", name)
+end
+
+--- 获取到UI的资源路径
+---@param name string
+function this.AssetPath:GetUI(name)
+    return string.format("Assets/Game/UI/%s.prefab", name)
+end
+--- 获取到GameUI的资源路径
+---@param name string
+function this.AssetPath:GetGameUI(name)
+    return string.format("Assets/Game/MiniGames/%s/%s.prefab",name,name)
+end
+
+--- 获取UI的动态Sprite路径
+function this.AssetPath:GetDynamicSprite(name)
+    return string.format("Assets/Game/Texture/UISprites/Dynamic/%s", name)
+end
+
+--- 获取UI的动态Sprite路径
+function this.AssetPath:GetDynamicUIItem(name)
+    return string.format("Assets/Game/UIItem/Dynamic/%s.prefab", name)
+end
+
+---获取背音乐的路径
+function this.AssetPath:GetMusic(name)
+    return this.AssetPath:GetAudio(string.format("Music/%s", name))
+end
+
+---获取Sound的路径
+function this.AssetPath:GetSound(name)
+    return this.AssetPath:GetAudio(string.format("Sound/%s", name))
+end
+
+---获取UISound的路径
+function this.AssetPath:GetUISound(name)
+    return this.AssetPath:GetAudio(string.format("UISound/%s", name))
+end
+
+--- 获取默认音频的路径
+function this.AssetPath:GetAudio(name)
+    return string.format("Assets/Game/Audio/%s.mp3", name)
+end
+
+--- 获取GameUI的动态Sprite路径
+function this.AssetPath:GetGameDynamicSprite(gameName,spriteName)
+    return string.format("Assets/Game/MiniGames/%s/DynamicSprite/%s", gameName,spriteName)
+end

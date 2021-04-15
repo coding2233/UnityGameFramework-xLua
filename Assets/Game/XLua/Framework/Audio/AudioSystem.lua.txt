@@ -1,0 +1,187 @@
+--- 音频映射AudioManager入口
+AudioSystem = {}
+local this = AudioSystem
+
+---**Music**---------------------------------------------------------------------
+this.Music = {}
+
+--- 播放 （默认路径）
+---@param name string
+---@param loop boolean
+function this.Music:Play(name, loop, gameName)
+    local assetPath = Utility.AssetPath:GetMusic(name, gameName)
+    print(assetPath)
+    return this.Music:PlayWithPath(assetPath, loop)
+end
+
+--- 播放 (全路径)
+---@param assetPath string
+---@param loop boolean
+function this.Music:PlayWithPath(assetPath, loop)
+    if loop == nil then
+        loop = true
+    end
+    return GameMode.Audio:MusicPlay(assetPath, loop)
+end
+
+--- 暂停
+function this.Music:Pause()
+    GameMode.Audio:MusicPause()
+end
+
+--- 恢复
+function this.Music:Resume()
+    GameMode.Audio:MusicResume()
+end
+
+--- 停止
+function this.Music:Stop()
+    GameMode.Audio:MusicStop()
+end
+
+--- 获取静音设置
+function this.Music:GetMute()
+    return GameMode.Audio:GetMusicMute()
+end
+
+--- 设置收静音
+---@param mute boolean
+function this.Music:SetMute(mute)
+    GameMode.Audio:SetMusicMute(mute)
+end
+
+--- 获取音量
+function this.Music:GetVolume()
+    return GameMode.Audio:GetMusicVolume()
+end
+
+--- 设置音量
+---@param mute number
+function this.Music:SetVolume(volume)
+    GameMode.Audio:SetMusicVolume(volume)
+end
+
+---**Sound**---------------------------------------------------------------------
+this.Sound = {}
+
+--- 播放 （默认路径）
+---@param name string
+---@param loop boolean
+function this.Sound:Play(name, loop, gameName)
+    local assetPath = Utility.AssetPath:GetSound(name, gameName)
+    print(assetPath)
+    return this.Sound:PlayWithPath(assetPath, loop)
+end
+
+--- 播放 (全路径)
+---@param assetPath string
+---@param loop boolean
+function this.Sound:PlayWithPath(assetPath, loop)
+    if loop == nil then
+        loop = false
+    end
+    return GameMode.Audio:SoundPlay(assetPath, loop)
+end
+
+--- 暂停
+function this.Sound:Pause()
+    GameMode.Audio:SoundPause()
+end
+
+--- 恢复
+function this.Sound:Resume()
+    GameMode.Audio:SoundResume()
+end
+
+--- 停止
+function this.Sound:Stop()
+    GameMode.Audio:SoundStop()
+end
+
+--- 获取静音设置
+function this.Sound:GetMute()
+    return GameMode.Audio:GetSoundMute()
+end
+
+--- 设置收静音
+---@param mute boolean
+function this.Sound:SetMute(mute)
+    GameMode.Audio:SetSoundMute(mute)
+end
+
+--- 获取音量
+function this.Sound:GetVolume()
+    return GameMode.Audio:GetSoundVolume()
+end
+
+--- 设置音量
+---@param mute number
+function this.Sound:SetVolume(volume)
+    GameMode.Audio:SetSoundVolume(volume)
+end
+
+---**UISound**---------------------------------------------------------------------
+this.UISound = {}
+
+--- 播放 （默认路径）
+---@param name string
+---@param loop boolean
+function this.UISound:Play(name, loop, gameName)
+    local assetPath = Utility.AssetPath:GetUISound(name, gameName)
+    return this.UISound:PlayWithPath(assetPath, loop)
+end
+
+--- 播放 (全路径)
+---@param assetPath string
+---@param loop boolean
+function this.UISound:PlayWithPath(assetPath, loop)
+    if loop == nil then
+        loop = false
+    end
+    return GameMode.Audio:UISoundPlay(assetPath, loop)
+end
+
+--- 暂停
+---@param audioTween AudioTween
+function this.UISound:Pause(audioTween)
+    GameMode.Audio:UISoundPause(audioTween)
+end
+
+--- 恢复
+---@param audioTween AudioTween
+function this.UISound:Resume(audioTween)
+    GameMode.Audio:UISoundResume(audioTween)
+end
+
+--- 停止
+---@param audioTween AudioTween
+function this.UISound:Stop(audioTween)
+    GameMode.Audio:UISoundStop(audioTween)
+end
+
+--- UISound设置所有的音频停止
+function this.UISound:StopAll()
+    GameMode.Audio:UISoundStopAll()
+end
+
+--- 获取静音设置
+function this.UISound:GetMute()
+    return GameMode.Audio:GetUISoundMute()
+end
+
+--- 设置收静音
+---@param mute boolean
+function this.UISound:SetMute(mute)
+    GameMode.Audio:SetUISoundMute(mute)
+end
+
+--- 获取音量
+function this.UISound:GetVolume()
+    return GameMode.Audio:GetUISoundVolume()
+end
+
+--- 设置音量
+---@param mute number
+function this.UISound:SetVolume(volume)
+    GameMode.Audio:SetUISoundVolume(volume)
+end

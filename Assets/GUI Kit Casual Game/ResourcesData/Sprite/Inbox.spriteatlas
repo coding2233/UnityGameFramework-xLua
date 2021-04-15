@@ -1,0 +1,80 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Inbox
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: d92734e730f2f4b97b6e41e8166d0fba, type: 3}
+    totalSpriteSurfaceArea: 343641
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 9f3c50c022da640648ee29ee9ee7adf8, type: 3}
+  - {fileID: 21300000, guid: 21baa0c0651b44f289f03ad4e114665b, type: 3}
+  - {fileID: 21300000, guid: 4bc838f2408bc4f38aac83f3fcf3bcb0, type: 3}
+  - {fileID: 21300000, guid: 8ccee245265bb40b2a74bc4eba2c1e99, type: 3}
+  - {fileID: 21300000, guid: 7a1361c8c131743f7b4187f3c9cc52fe, type: 3}
+  - {fileID: 21300000, guid: 1bb4783acab174413806383baa8149f7, type: 3}
+  - {fileID: 21300000, guid: c4534b7c1c9584e9e933dfe49af170eb, type: 3}
+  - {fileID: 21300000, guid: aab789accb19b4741bc4fa2580926b9b, type: 3}
+  - {fileID: 21300000, guid: abb96bbc164304c69af8d0a9cf8cf261, type: 3}
+  - {fileID: 21300000, guid: 68a3cdecef36744d8a9f77eca93e595d, type: 3}
+  - {fileID: 21300000, guid: 0a84cbedaddc543e495212efe94f1ae1, type: 3}
+  - {fileID: 21300000, guid: 5d10c7ae0e6f94a4898417e1ea75a663, type: 3}
+  - {fileID: 21300000, guid: 10cba4be838bc4ac3b9e30dd05d7d176, type: 3}
+  - {fileID: 21300000, guid: d28d02fe3e93b4e49b33706a6c4c0def, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - inbox_list_bg
+  - inbox_character_bg_mask
+  - inbox_character_bg_blue
+  - inbox_character_sample_0
+  - inbox_reward_chest
+  - inbox_character_bg_green
+  - inbox_character_sample_2
+  - inbox_reward_rune
+  - inbox_reward_gold
+  - inbox_character_sample_3
+  - inbox_character_bg_shadow_white
+  - inbox_character_sample_1
+  - inbox_list_get_reward_bg
+  - inbox_reward_gem
+  m_Tag: Inbox
+  m_IsVariant: 0

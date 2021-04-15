@@ -1,0 +1,48 @@
+local Queue = class('Queue')
+
+function Queue:ctor()
+    self.tab = {}
+    self.tail = 0
+end
+
+function Queue:Enqueue(value)
+    if self.tail == 0 then
+        self.head = 1
+    end
+    table.insert(self.tab, value)
+    self.tail = self.tail + 1
+end
+
+function Queue:Dequeue()
+    if self.head > self.tail then
+        return nil
+    else
+        local value = self.tab[self.head]
+        self.tab[self.head] = nil
+        self.head = self.head + 1
+        return value
+    end
+end
+function Queue:Peek()
+    if self.head > self.tail then
+        return nil
+    else
+        return self.tab[self.head]
+    end
+end
+
+function Queue:Count()
+    if self.head == nil then
+        return 0
+    else
+        return self.tail - self.head + 1
+    end
+
+end
+
+function Queue:Clear()
+    self.tab = {}
+    self.tail = 0
+end
+
+return Queue

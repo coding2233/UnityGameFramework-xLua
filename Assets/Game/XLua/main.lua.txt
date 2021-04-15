@@ -1,6 +1,89 @@
--- require "MainUIView"
-require "UI/UIAdpterSystem"
+--- main.lua lua程序的主入口
+--- 支持MonoBehaviour的生命周期 OnStart - OnUpdate - OnClose
+--- 2020年11月24日 18点15分
 
+-- Unity常用类型
+-- Game Engine
+GE = CS.UnityEngine
+Input = CS.UnityEngine.Input
+Vector2 = CS.UnityEngine.Vector2
+Vector3 = CS.UnityEngine.Vector3
+Color = CS.UnityEngine.Color
+CanvasGroup = CS.UnityEngine.CanvasGroup
+BaseEventData = CS.UnityEngine.EventSystems.BaseEventData
+RectTransformUtility = CS.UnityEngine.RectTransformUtility
+WaitForSeconds = CS.UnityEngine.WaitForSeconds
+TextAsset = CS.UnityEngine.TextAsset
+TransformExtension = CS.TransformExtension
+Tweening = CS.DG.Tweening
+doTween_ease = CS.DG.Tweening.Ease -- 引用C# dotween动画
+PlayerPrefs = CS.UnityEngine.PlayerPrefs
+UGUI = CS.UnityEngine.UI
+GameObject = CS.UnityEngine.GameObject
+Time = CS.UnityEngine.Time
+Quaternion = CS.UnityEngine.Quaternion
+Material = CS.UnityEngine.Material
+Shader = CS.UnityEngine.Shader
+DoTween = CS.DG.Tweening.DOTween
+Image = CS.UnityEngine.UI.Image
+Text = CS.UnityEngine.UI.Text
+Screen = CS.UnityEngine.Screen
+
+-- GameFramework命令空间
+GF = CS.Wanderer.GameFramework
+-- 游戏入口 GameMode
+GameMode = GF.GameMode
+-- 日志系统的入口
+Log = GF.Log
+
+-- 导入标准库
+require "class"
+json = require "json"
+
+-- unity协程
+cs_coroutine = require "cs_coroutine"
+
+-- UI系统
+require "UISystem"
+-- 资源系统
+require "Resource"
+-- 通用功能
+require "Utility"
+-- --- spine动画控制器
+-- require "SpineSystem"
+-- 游戏状态管理
+require "GameState"
+--- Http协议请求
+require "WebRequest"
+--- 音频管理器
+require "AudioSystem"
+-- --- 图片缓存池
+-- require "Texture2DCachePool"
+
+-- 公共类
+Event = require "Event"
+List = require "List"
+Queue = require "Queue"
+toolButton = require "toolButton"
+tools = require "tools"
+toolutility = require "toolutility"
+Node = require("Node")
+
+-- 同Start
 function OnStart()
-	print("OnStart")
+    print("OnStart")
+    GameState:ChangeState("LaunchState")
+    --锁30帧
+    -- CS.UnityEngine.Application.targetFrameRate=10
+end
+
+-- 同Update
+function OnUpdate(deltaTime)
+    GameState:Update(deltaTime)
+    WebRequest:Update(deltaTime)
+end
+
+-- 同OnDestroy
+function OnClose()
+    print("OnClose")
 end

@@ -1,0 +1,152 @@
+SkeletonGraphic = CS.Spine.Unity.SkeletonGraphic
+TrackEntry = CS.Spine.TrackEntry
+
+--Spine动画的控制的脚本
+SpineSystem = {}
+
+-- spine动画控制器
+local _spineControllers = {}
+
+--- 获取Spine动画的控制器
+---@param skeletonGraphic SkeletonGraphic
+function SpineSystem:Get(skeletonGraphic)
+    if skeletonGraphic == nil then
+        return
+    end
+    local sgCtrl = _spineControllers[skeletonGraphic]
+    if sgCtrl == nil then
+        sgCtrl = SpineSystem:Create(skeletonGraphic)
+        _spineControllers[skeletonGraphic] = sgCtrl
+    end
+    return sgCtrl
+end
+
+--- 创建Spine动画的控制器
+---@param skeletonGraphic SkeletonGraphic
+function SpineSystem:Create(skeletonGraphic)
+    if skeletonGraphic == nil then
+        return
+    end
+
+    local sgCtrl = {}
+    sgCtrl.AnimStartCallback = {}
+    sgCtrl.AnimCompleteCallback = {}
+    -- 动画开始
+    sgCtrl.OnAnimStart = function(trackEntry)
+        local callback = sgCtrl.AnimStartCallback[trackEntry.Animation.Name]
+        if callback ~= nil then
+            callback(trackEntry)
+            sgCtrl.AnimStartCallback[trackEntry.Animation.Name] = nil
+        end
+    end
+    --动画结束回调
+    sgCtrl.OnAnimComplete = function(trackEntry)
+        local callback = sgCtrl.AnimCompleteCallback[trackEntry.Animation.Name]
+        if callback ~= nil then
+            callback(trackEntry)
+            sgCtrl.AnimCompleteCallback[trackEntry.Animation.Name] = nil
+        end
+    end
+    do
+        sgCtrl.SG = skeletonGraphic
+        sgCtrl.SG.AnimationState:Start("+", sgCtrl.OnAnimStart)
+        sgCtrl.SG.AnimationState:Complete("+", sgCtrl.OnAnimComplete)
+    end
+    --- 播放动画
+    function sgCtrl:Play(animName, loop, onAnimStart, onAnimComplete)
+        if sgCtrl.SG.SkeletonData:FindAnimation(animName) == nil then
+            return
+        end
+        sgCtrl.AnimStartCallback = {}
+        sgCtrl.AnimCompleteCallback = {}
+        if onAnimStart ~= nil then
+            sgCtrl.AnimStartCallback[animName] = onAnimStart
+        end
+        if onAnimComplete ~= nil then
+            sgCtrl.AnimCompleteCallback[animName] = onAnimComplete
+        end
+        sgCtrl.SG.AnimationState:SetAnimation(0, animName, loop)
+    end
+
+    --- 冻结动画
+    function sgCtrl:Freeze(freeze)
+        sgCtrl.SG.freeze = freeze
+    end
+
+    ----关闭整个控制器
+    function sgCtrl:Close()
+        sgCtrl.SG.AnimationState:Start("-", sgCtrl.OnAnimStart)
+        sgCtrl.SG.AnimationState:Complete("-", sgCtrl.OnAnimComplete)
+        sgCtrl.OnAnimStart = nil
+        sgCtrl.OnAnimComplete = nil
+        sgCtrl.SG = nil
+        sgCtrl = nil
+    end
+
+    --- 给指定动画添加回调
+    function sgCtrl:AnimCompelte(aniName, callback)
+        sgCtrl.SG.AnimationState:Complete(
+            "+",
+            function(trackEntry)
+                if trackEntry.Animation.Name == aniName then
+                    if callback ~= nil then
+                        callback(trackEntry)
+                    end
+                    sgCtrl.SG.AnimationState:Complete("-", callback)
+                end
+            end
+        )
+    end
+
+    return sgCtrl
+end
+
+--- 销毁SpineController
+---@param skeletonGraphic SkeletonGraphic
+function SpineSystem:Destroy(spineController)
+    local sg = spineController.SG
+    spineController:Close()
+    _spineControllers[sg] = nil
+end
+
+--- 播放动画
+---@param skeletonGraphic SkeletonGraphic
+---@param animName string
+---@param loop boolean
+---@param onAnimStart Action<TrackEntry>
+---@param onAnimComplete Action<TrackEntry>
+function SpineSystem:Play(skeletonGraphic, animName, loop, onAnimStart, onAnimComplete)
+    if skeletonGraphic == nil or skeletonGraphic.SkeletonData:FindAnimation(animName) == nil then
+        return
+    end
+    local animCallback = {}
+    animCallback.SG = skeletonGraphic
+    animCallback.AnimName = animName
+    animCallback.OnAnimStart = function(trackEntry)
+        if trackEntry.Animation.Name == animCallback.AnimName then
+            if onAnimStart ~= nil then
+                onAnimStart(trackEntry)
+            end
+            animCallback.SG.AnimationState:Start("-", animCallback.OnAnimStart)
+        end
+    end
+    animCallback.OnAnimComplete = function(trackEntry)
+        if trackEntry.Animation.Name == animCallback.AnimName then
+            if onAnimComplete ~= nil then
+                onAnimComplete(trackEntry)
+            end
+            animCallback.SG.AnimationState:Complete("-", animCallback.OnAnimComplete)
+        end
+        animCallback = nil
+    end
+    skeletonGraphic.AnimationState:Start("+", animCallback.OnAnimStart)
+    skeletonGraphic.AnimationState:Complete("+", animCallback.OnAnimComplete)
+    skeletonGraphic.AnimationState:SetAnimation(0, animName, loop)
+end
+
+---冻结动画
+---@param  skeletonGraphic SkeletonGraphic
+---@param freeze boolean
+function SpineSystem:Freeze(skeletonGraphic, freeze)
+    skeletonGraphic.freeze = freeze
+end

@@ -1,0 +1,204 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Common
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: b4f9e0db43d5a41e59519d800d7434ba, type: 3}
+    totalSpriteSurfaceArea: 4096391
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 0f56a520c9c034c2692fa3db3b7f1454, type: 3}
+  - {fileID: 21300000, guid: f337ec50763134ed1bbb82848ae3b024, type: 3}
+  - {fileID: 21300000, guid: fbb7a5602b05448efa2d2c63fec674b0, type: 3}
+  - {fileID: 21300000, guid: 1d48c180f78384887b54f3ce7bc8046f, type: 3}
+  - {fileID: 21300000, guid: 6d034811652a84633bc8c63d22ce5574, type: 3}
+  - {fileID: 21300000, guid: d8dfea1100ec541b684f3101cad0d335, type: 3}
+  - {fileID: 21300000, guid: 8865df1114fa24fed914687ef9ce0ce8, type: 3}
+  - {fileID: 21300000, guid: d360c761a90c641d9b704106d9dacba1, type: 3}
+  - {fileID: 21300000, guid: 4ca0708151b60449d97a6e6a1455f979, type: 3}
+  - {fileID: 21300000, guid: 7b7ccc812964b4113bcb420b583b6a17, type: 3}
+  - {fileID: 21300000, guid: 23d2f9d15f15a43c5bf2c57de1a27879, type: 3}
+  - {fileID: 21300000, guid: 9f6ca5b28b1e34e2d8d7e51015e1a6f9, type: 3}
+  - {fileID: 21300000, guid: 362cdbc283a1c43a7abec33080b04398, type: 3}
+  - {fileID: 21300000, guid: 52066fc285ffc4bb0b9fc98f1d840149, type: 3}
+  - {fileID: 21300000, guid: 391584432233c4e0a864435a50a098c5, type: 3}
+  - {fileID: 21300000, guid: 03a52e934f88f4a699b498a51573c186, type: 3}
+  - {fileID: 21300000, guid: 51bc7f9398cc24aff81f13855411d2d4, type: 3}
+  - {fileID: 21300000, guid: 86ad28a37b0134b33b88df67b42b7fe0, type: 3}
+  - {fileID: 21300000, guid: 6be115246fe9b40b8b37ad9f4e2be66a, type: 3}
+  - {fileID: 21300000, guid: 4c95714486ef949438634bdbd26b8887, type: 3}
+  - {fileID: 21300000, guid: cb37917483ee24fea8fab306393441e5, type: 3}
+  - {fileID: 21300000, guid: d14da694cce9b4c2b87ef9421a9bd459, type: 3}
+  - {fileID: 21300000, guid: b78e1c94f1bcb42a7996ce616745e100, type: 3}
+  - {fileID: 21300000, guid: f87d9d25262734d879c2da72faf95bf2, type: 3}
+  - {fileID: 21300000, guid: af96c8555362c4b7fba005304d49b573, type: 3}
+  - {fileID: 21300000, guid: 3a057b166165546afb4bab7fbec93a29, type: 3}
+  - {fileID: 21300000, guid: 69182636b3efa4063b1a80e916b2d312, type: 3}
+  - {fileID: 21300000, guid: c0947046604294781a54818d5efaa1ea, type: 3}
+  - {fileID: 21300000, guid: 8204a346530a44e11a8f7a16aed74e85, type: 3}
+  - {fileID: 21300000, guid: e19e5296403924aa284b2678fbe8b2d6, type: 3}
+  - {fileID: 21300000, guid: 2bc701b63b63f40e0893a9fabeaa0a78, type: 3}
+  - {fileID: 21300000, guid: 65df51e6b7a624cbeb6ee5ca56875e83, type: 3}
+  - {fileID: 21300000, guid: 34095737c59574ff3ae446c0c5e1e56f, type: 3}
+  - {fileID: 21300000, guid: 33effd6735e414dc7b70ded5e8bb47f8, type: 3}
+  - {fileID: 21300000, guid: de4b2777d088c49dea1bbd2c0f5d295d, type: 3}
+  - {fileID: 21300000, guid: 1c72bf871f2614c4a8e129267b425912, type: 3}
+  - {fileID: 21300000, guid: 75bcd0b7eff514a1b963792ac5ce380c, type: 3}
+  - {fileID: 21300000, guid: 4e264218963304cd4af172f9081b6fb8, type: 3}
+  - {fileID: 21300000, guid: 4f004328d7c9547edae34787869f3e8a, type: 3}
+  - {fileID: 21300000, guid: e2a40928d5976449ea8dafad110b4317, type: 3}
+  - {fileID: 21300000, guid: d6cce558fcc344f4ea971d01b01edaa6, type: 3}
+  - {fileID: 21300000, guid: 535d5068f6e6f4174a907fe1688dc8c1, type: 3}
+  - {fileID: 21300000, guid: 2c9cf0a86fc754b64844e1b6c9b920b3, type: 3}
+  - {fileID: 21300000, guid: a13948f8f3f6c492498d476fe3431028, type: 3}
+  - {fileID: 21300000, guid: 4e61e7096fc78431092f4d337536ef68, type: 3}
+  - {fileID: 21300000, guid: 0cb69729b35e449c28988f306d369a13, type: 3}
+  - {fileID: 21300000, guid: 09bc4c8968db34013af82f219bace12e, type: 3}
+  - {fileID: 21300000, guid: 0b414699395174baf8bff79d6dc7a858, type: 3}
+  - {fileID: 21300000, guid: 8ce7d0e9cb5184e2298eedeb3266e9be, type: 3}
+  - {fileID: 21300000, guid: 7a9d6fe905b52426ea2cbb0a0f1a9972, type: 3}
+  - {fileID: 21300000, guid: 55ea74aab36dc49289557ba03bbefcc5, type: 3}
+  - {fileID: 21300000, guid: 1e4107dadfbe1487ebf4a991ecd58b4e, type: 3}
+  - {fileID: 21300000, guid: 7643c1ea47f5f45958477b9803208cd6, type: 3}
+  - {fileID: 21300000, guid: c665ec0b4213949b1b7358674e5966fd, type: 3}
+  - {fileID: 21300000, guid: dcffd6cb697cf48baae8890f4fe08712, type: 3}
+  - {fileID: 21300000, guid: 0e07c8fb8158b4d95bc5184c10777d99, type: 3}
+  - {fileID: 21300000, guid: b9d0300c581154c618942cb476c47985, type: 3}
+  - {fileID: 21300000, guid: a4771f2cf68494470ab5d3d0bb83abad, type: 3}
+  - {fileID: 21300000, guid: 221db54c6537e4c20bbbd4071f86e4fd, type: 3}
+  - {fileID: 21300000, guid: 2323358c16953446e9b2cb27fde07104, type: 3}
+  - {fileID: 21300000, guid: aa09dddc7c5f24d0983e3a6958f80a1c, type: 3}
+  - {fileID: 21300000, guid: 46d84f4d841ad44fea3559615f6ed9d2, type: 3}
+  - {fileID: 21300000, guid: e544a06ddd05f42fd879ce1fbe06593c, type: 3}
+  - {fileID: 21300000, guid: 48c1ac6db8ee44910872cbbe743c9312, type: 3}
+  - {fileID: 21300000, guid: 558e1d0ef6ee24fee80dbf641857e8dc, type: 3}
+  - {fileID: 21300000, guid: 6bbcba4e267be464998897741b81d508, type: 3}
+  - {fileID: 21300000, guid: 1672025ec5ecf4aeebe093f9588af382, type: 3}
+  - {fileID: 21300000, guid: 299f326ea0f4443bb8aede4cccf6bc77, type: 3}
+  - {fileID: 21300000, guid: 804461bef59b141dba258fc997c8ca15, type: 3}
+  - {fileID: 21300000, guid: 2350fdbe01c4d42649eaf2b3259e2021, type: 3}
+  - {fileID: 21300000, guid: 89bfafeec14b047a4ac5510b8751485d, type: 3}
+  - {fileID: 21300000, guid: 30af861f4c8c141159c3c1ff5b424c3c, type: 3}
+  - {fileID: 21300000, guid: 681db73f19fb24efe843aad713eccb43, type: 3}
+  - {fileID: 21300000, guid: 22bb5f5f739154e0581b8f1b535d6774, type: 3}
+  - {fileID: 21300000, guid: 96274b6f4982041558dfdc5471747076, type: 3}
+  - {fileID: 21300000, guid: 1c003fff2a78f4a4fa6e0a7be1fb3cbd, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - common_dimed_light
+  - top_btn_right
+  - reward_icon_glove
+  - txt_input_field_n
+  - top_status_icon_gem
+  - top_status_btn_get_yellow
+  - top_status_icon_energy
+  - notification_small_icon_red
+  - btn_icon_gem
+  - notification_bg_green
+  - button_gray
+  - common_tab_focus
+  - button_sky
+  - btn_icon_gold
+  - btn_icon_ad
+  - ribbon_bg_yellow
+  - text_deco_line_right
+  - button_purple
+  - common_info_btn
+  - user_level_bar_blue
+  - button_green
+  - reward_icon_chest
+  - top_btn_icon_back
+  - button_dark
+  - text_deco_line_left
+  - top_status_bg_white
+  - txt_input_field_d
+  - reward_menu_bg_focus
+  - user_level_bg
+  - character_lv_bg
+  - button_orange
+  - common_bg_glow_1024
+  - character_lv_bar
+  - top_status_icon_gold
+  - reward_menu_label_white
+  - common_tab_bg
+  - common_white_box
+  - tab_full_bg
+  - ribbon_bg_green
+  - reward_menu_label
+  - top_btn_icon_setting
+  - button_white
+  - character_lv_icon_trophy
+  - common_bg_glow_1
+  - top_status_btn_get_purple
+  - reward_menu_bg_0
+  - notification_bg_red
+  - tab_icon_sort
+  - top_btn_icon_home
+  - reward_icon_gem
+  - common_bottom_shadow
+  - top_status_btn_get_green
+  - character_lv_bar_bg
+  - common_bottom_shadow_white
+  - common_bg_glow_0
+  - notification_small_icon_green
+  - reward_icon_gold
+  - reward_menu_bg
+  - btn_icon_setting
+  - ribbon_bg_orange
+  - checkbox_off
+  - time_icon
+  - toast_popup_bg
+  - menu_back_effect
+  - checkbox_on
+  - button_blue
+  - common_dimed
+  - reward_menu_bg_1
+  - button_yellow
+  - top_btn_icon_exit
+  - top_btn_left
+  - common_bg_glow_512
+  - button_red
+  - reward_icon_energy
+  - common_bg
+  - user_level_bar_bg
+  m_Tag: Common
+  m_IsVariant: 0

@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Ranking
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 16267968efc2c4422b420a769220de70, type: 3}
+    totalSpriteSurfaceArea: 209119
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: a3196820b16eb4df588d8ef9f2671b8c, type: 3}
+  - {fileID: 21300000, guid: a3f6ade06695e433b90d2395867e368a, type: 3}
+  - {fileID: 21300000, guid: 840a54519d139421686eb868f94c36fc, type: 3}
+  - {fileID: 21300000, guid: f55f3c82a540f4eed8ba9b3a418177d9, type: 3}
+  - {fileID: 21300000, guid: 6d4c98934f50e497c9e0f48aa21676ec, type: 3}
+  - {fileID: 21300000, guid: c06fecf5f5c014aba8e7992f21a0cc8f, type: 3}
+  - {fileID: 21300000, guid: 1c2bba071f5224ce38336312ab9e8871, type: 3}
+  - {fileID: 21300000, guid: 46c193379f00e448fbe9b57ffa7a3cd8, type: 3}
+  - {fileID: 21300000, guid: c277e9372b7194061bf622d873c42964, type: 3}
+  - {fileID: 21300000, guid: 9221a33849c62451f8c1384e7f22c9ba, type: 3}
+  - {fileID: 21300000, guid: bfd61c98d74144657b1aa56db3fd048a, type: 3}
+  - {fileID: 21300000, guid: 96476ac8142ae468d8bc8dfd1cf1540b, type: 3}
+  - {fileID: 21300000, guid: 89f8acf856b2e4750a7749f92f308def, type: 3}
+  - {fileID: 21300000, guid: f6a78c692cf27471f8a5e16609281d22, type: 3}
+  - {fileID: 21300000, guid: 1af1970b58e9a42e5b365731d49e450d, type: 3}
+  - {fileID: 21300000, guid: c2657b9df8f9e48fb84c4417b47e5920, type: 3}
+  - {fileID: 21300000, guid: 4da9e92e9eaca4909941db29d7425baa, type: 3}
+  - {fileID: 21300000, guid: 1c2eec4f264c34c92b06e3c5ad8dc5ed, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - flag_small_eng
+  - ranking_medal_gold
+  - ranking_list_me
+  - ranking_profile_bg_mask
+  - ranking_icon_trophy
+  - ranking_character_sample_1
+  - ranking_character_sample_3
+  - ranking_profile_bg_green
+  - ranking_profile_bg_blue
+  - ranking_character_sample_2
+  - ranking_medal_bronze
+  - flag_small_kor
+  - flag_small_fra
+  - ranking_character_sample_0
+  - flag_small_chn
+  - flag_small_deu
+  - ranking_medal_silver
+  - ranking_list_default
+  m_Tag: Ranking
+  m_IsVariant: 0

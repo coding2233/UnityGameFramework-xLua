@@ -1,0 +1,55 @@
+--[====[     Lua对象池 针对UnityGameObject使用    ]====]
+local list = require "List"
+LuaObjectPool = {}
+LuaObjectPool.__index = LuaObjectPool
+
+function LuaObjectPool:New(func, num)
+    local item = {}
+    setmetatable(item, self)
+    item.DefaultIncrease = 3
+    item.InstanceFunc = func
+    item.PoolList = List:New()
+    for i = 1, num do
+        item.PoolList:Add(item.InstanceFunc())
+    end
+    return item
+end
+-- 在对象池中增加一些对象
+function LuaObjectPool:InstanceObjectNumber(num)
+    for i = 1, num do
+        self.PoolList:Add(self.InstanceFunc())
+    end
+end
+-- 取出对象
+function LuaObjectPool:GetObject()
+    local i = self.PoolList:Count()
+    -- while i > 0 do
+    --     local obj = self.PoolList[i]
+    --     self.PoolList:RemoveAt(i)
+    --     i = i - 1
+    --     return obj
+    -- end
+    if i > 0 then
+        local obj = self.PoolList[1]
+        self.PoolList:RemoveAt(1)
+        return obj
+    else
+        self:InstanceObjectNumber(self.DefaultIncrease)
+        return self:GetObject()
+    end
+end
+-- 回收对象/设置对象
+function LuaObjectPool:RecoveryObject(obj)
+    self.PoolList:Add(obj)
+end
+-- 清空对象池
+-- 清空对象的方法(对象)
+function LuaObjectPool:ClearPool(clearFunc)
+    local i = self.PoolList:Count()
+    while i > 0 do
+        local obj = self.PoolList[i]
+        self.PoolList:RemoveAt(i)
+        clearFunc(obj)
+        i = i - 1
+    end
+end

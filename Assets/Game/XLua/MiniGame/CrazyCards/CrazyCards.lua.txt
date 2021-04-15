@@ -1,0 +1,268 @@
+﻿local CrazyCards = class("CrazyCards", UIView):New()
+local this = CrazyCards
+
+---@type GE.Transform
+local _panel01 = nil
+---@type GE.Transform
+local _panel02 = nil
+--- 配置表
+local _config = {}
+-- config
+local _configMap = {}
+--得分
+local _score = 0
+--最高得分
+local _highScore = 0
+
+local _textTime = nil
+local _textScore = nil
+local _textScoreHigh = nil
+
+local _menuPanel = nil
+
+local _time = 60
+
+local _colors = {
+    "#CC9999",
+    "#FFFF99",
+    "#666699",
+    "#FF9900",
+    "#FFFF00",
+    "#0099CC",
+    "#CCCC99",
+    "#CC3399",
+    "#99CC00",
+    "#FF6666",
+    "#FFFF00",
+    "#3399CC",
+    "#CC6600",
+    "#999999",
+    "#CCCC33",
+    "#FF9933",
+    "#FFFFCC",
+    "#009933",
+    "#0099CC",
+    "#CCCCCC",
+    "#FF6666",
+    "#FF6600",
+    "#FFFF66",
+    "#009966",
+    "#CC6633",
+    "#FFCC99",
+    "#CC6600",
+    "#CC0066",
+    "#009999",
+    "#FFCC33",
+    "#FF6666",
+    "#FFFF66",
+    "#99CC66",
+    "#FF0033",
+    "#FF9900",
+    "#66CCCC"
+}
+local _setColor = true
+
+function this:OnInit(transform, uiContext)
+    _panel01 = transform:Find("GameContent/Panel (1)")
+    _panel02 = transform:Find("GameContent/Panel (2)")
+
+    _textTime = transform:Find("GameContent/Text_Time"):GetComponent(typeof(UGUI.Text))
+    _textScore = transform:Find("GameContent/Text_Score"):GetComponent(typeof(UGUI.Text))
+    _textScoreHigh = transform:Find("GameContent/Text_Score_High"):GetComponent(typeof(UGUI.Text))
+
+    _menuPanel = transform:Find("GameContent/Panel_Replay")
+    _menuPanel:Find("Button"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            _menuPanel.gameObject:SetActive(false)
+            this:GameStart()
+        end
+    )
+
+    transform:Find("GameContent/Toggle_SetColor"):GetComponent(typeof(UGUI.Toggle)).onValueChanged:AddListener(
+        function(value)
+            _setColor = value
+        end
+    )
+
+    -- 按钮监听
+    local btns = transform:GetComponentsInChildren(typeof(UGUI.Button))
+    for i = 0, btns.Length - 1 do
+        local btn = btns[i]
+        btn:OnClick(
+            function()
+                if btn.name == "Button_Refresh" then
+                    return
+                end
+                if _time <= 0 then
+                    return
+                end
+                local number = _configMap[btn.transform]
+                local count = 0
+                for key, value in pairs(_configMap) do
+                    if number == value then
+                        count = count + 1
+                    end
+                end
+
+                if count == 2 then
+                    _score = _score + 1
+                    print("win-------------------------", tostring(_score))
+                else
+                    _score = _score - 1
+                    print("lose--------------------------", tostring(_score))
+                end
+                _textScore.text = "得分: " .. tostring(_score)
+                this:GameInit()
+            end
+        )
+    end
+
+    Resource:LoadObject(
+        "Assets/Game/MiniGames/CrazyCards/Config/card.txt",
+        function(textAsset)
+            local lines = string.split(textAsset.text, "\n")
+            for i = 1, #lines do
+                local args = string.split(lines[i], " ")
+                if #args >= 8 then
+                    local data = {}
+                    for j = 1, #args do
+                        table.insert(data, tonumber(args[j]))
+                    end
+                    table.insert(_config, data)
+                end
+            end
+            this:GameStart()
+
+            -- 游戏初始化
+        end
+    )
+end
+
+function this:OnEnter(transform, uiContext, callback, userData)
+    AudioSystem.Music:Play("Wakka Wakka", true, "CrazyCards")
+end
+
+function this:OnUpdate(uiContext, deltaTime)
+    if _time > 0 then
+        _time = _time - deltaTime
+        if _time <= 0 then
+            _time = 0
+            this:GameEnd()
+        end
+        _textTime.text = "倒计时: " .. tostring(math.floor(_time)) .. "s"
+    end
+end
+
+function this:OnExit(uiContext)
+    AudioSystem.Music:Stop()
+end
+
+function this:OnFree(transform, uiContext)
+end
+
+------------------------------------------------------------------------------------
+
+function this:OnPointerDown(transform, eventdata, mousepos)
+end
+
+function this:OnPointerUp(transform, eventdata, mousepos)
+end
+
+function this:OnPointerClick(transform, eventdata, mousepos)
+    if transform.name == "Button_Refresh" then
+        this:GameInit()
+    end
+end
+
+function this:OnBeginDrag(transform, eventdata, mousepos)
+end
+
+function this:OnDrag(transform, eventdata, mousepos)
+end
+
+function this:OnEndDrag(transform, eventdata, mousepos)
+end
+
+function this:OnTriggerEnter2D(selfTrans, targetTrans)
+end
+
+------------------------------------------------------------------------------------
+
+function this:StartGame()
+end
+
+function this:Puase()
+end
+
+function this:Continue()
+end
+
+function this:GameInit()
+    local index1 = math.random(1, #_config)
+    local index2 = index1
+    while index2 == index1 do
+        index2 = math.random(1, #_config)
+    end
+    _configMap = {}
+    this:MakeCards(_panel01, _config[index1])
+    this:MakeCards(_panel02, _config[index2])
+end
+
+-- 整理卡牌
+function this:MakeCards(panel, config)
+    local points = {}
+    for i = 0, panel.childCount - 1 do
+        local needUpdate = true
+        local point = Vector2.zero
+        while needUpdate do
+            needUpdate = false
+            point = Vector2(math.random(-355, 355), math.random(-220, 220))
+            for j = 1, #points do
+                if Vector2.Distance(point, points[j]) < 160 then
+                    needUpdate = true
+                end
+            end
+        end
+        local child = panel:GetChild(i):GetComponent(typeof(GE.RectTransform))
+        child.anchoredPosition = point
+        child.localEulerAngles = Vector3(0, 0, math.random(0, 360))
+        local sprite = Resource:LoadGameSprite("CrazyCards", config[i + 1])
+        local image = child:GetComponent(typeof(UGUI.Image))
+        image.sprite = sprite
+        if _setColor then
+            local ranx = math.random(1, #_colors)
+            local result, color = GE.ColorUtility.TryParseHtmlString(_colors[ranx])
+            image.color = color
+        else
+            image.color = GE.Color.white
+        end
+        _configMap[child.transform] = config[i + 1]
+        table.insert(points, point)
+    end
+end
+
+function this:GameStart()
+    _time = 60
+    _score = 0
+    -- 最高得分
+    local highScore = GE.PlayerPrefs.GetInt("CrazyCards-High-Score", 0)
+    _highScore = highScore
+    _textScoreHigh.text = "最高得分: " .. tostring(highScore)
+    _textTime.text = "倒计时: 60s"
+    _textScore.text = "得分: " .. tostring(_score)
+
+    this:GameInit()
+end
+
+function this:GameEnd()
+    if _time > 0 then
+        return
+    end
+    if _score > _highScore then
+        GE.PlayerPrefs.SetInt("CrazyCards-High-Score", _score)
+    end
+
+    _menuPanel.gameObject:SetActive(true)
+end
+
+return this

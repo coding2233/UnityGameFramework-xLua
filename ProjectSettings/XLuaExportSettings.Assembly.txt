@@ -1,3 +1,0 @@
-Assembly-CSharp
-GameFramework
-Libraries

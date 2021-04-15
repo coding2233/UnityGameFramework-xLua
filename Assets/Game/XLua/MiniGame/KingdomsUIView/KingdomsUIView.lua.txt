@@ -1,0 +1,525 @@
+local KingdomsUIView = class("KingdomsUIView", UIView)
+
+local this = KingdomsUIView
+
+local _gameName = "KingdomsUIView"
+
+local transFormClone = nil
+local KingdomsCallBack = nil
+local UIContentClone = nil
+local UserDataClone = nil
+
+-- 关卡配置
+local _levelConfigs
+--- 大小
+local _size = 200
+--- 行
+local _row = 4
+--- 列
+local _column = 7
+-- --- 地图
+-- local _map = {}
+-- 地图的起始点
+local _mapPivot = Vector2.zero
+-- 组件配置
+local _itemConfig = {
+    {Name = "b1", Size = Vector2(2, 1), Point = Vector2(0.5, 0), Blocks = {}},
+    {Name = "c2", Size = Vector2(1, 1), Point = Vector2(2, 3), Blocks = {}}
+}
+
+--- 角色组件
+local _playerName = nil
+--- 是否胜利
+local _isVictory = false
+-- 胜利组件的名称
+local _victoryName = nil
+--- 胜利的组件
+local _victoryItemConfig = nil
+
+--- 所有的组件
+local _item = {}
+
+local _selfTransform = nil
+
+local levelIndex = -100
+-- 步数
+local _stepCount = 0
+
+local _textStepCount = nil
+local _textLevelName = nil
+
+-----------------加入新的變量------------------
+--游戲勝利界面
+local SettlementForm = nil
+--记录当前关卡 所有组件的位置
+local AllToolPostion = {}
+--狗狗动作控制器
+local WGGCtr = nil
+
+--初始化变量
+-- function this:MyInit()
+--     WGGCtr = nil
+-- end
+
+local _menuPanel = nil
+
+function this:OnInit(transform, uiContext)
+    --游戲勝利界面
+    SettlementForm = transform:GetTransform("SettlementForm")
+    SettlementForm.gameObject:Hide()
+
+    _textLevelName = transform:Find("Bg/Text_LevelName"):GetComponent(typeof(UGUI.Text))
+    _textStepCount = transform:Find("Bg/Text_step"):GetComponent(typeof(UGUI.Text))
+
+    transform:Find("Bg/Dropdown"):GetComponent(typeof(UGUI.Dropdown)).onValueChanged:AddListener(
+        function(index)
+            levelIndex = index + 1
+            this:ResPlay()
+        end
+    )
+
+    _menuPanel = transform:Find("Panel_Menu")
+    _menuPanel:Find("Button"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            _menuPanel.gameObject:SetActive(false)
+            levelIndex = levelIndex + 1
+            this:ResPlay()
+        end
+    )
+    --- 读取有多少个关卡
+end
+--- 进入
+---@param _selfTransform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this:OnEnter(transform, uiContext, callback, userData)
+    -- AudioSystem.Music:PlayWithPath(
+    --     "Assets/Game/MiniGames/KingdomsUIView/Audio/Music/music_spaceThrough_game_1.mp3",
+    --     true
+    -- )
+    _selfTransform = transform
+    KingdomsCallBack = callback
+    UIContentClone = uiContext
+    UserDataClone = userData
+
+    local configData = Resource:LoadObjectSync("Assets/Game/MiniGames/KingdomsUIView/Config/config.txt").text
+    local configJd = json.decode(configData)
+    _size = configJd["Size"]
+    _row = configJd["Row"]
+    _column = configJd["Column"]
+    _levelConfigs = configJd["Levels"]
+
+    -- if userData == nil then
+    --     levelIndex = _selfTransform:Find("Panel_Item"):GetComponent(typeof(GF.KingdomsUnityEditor)).SelectLevel + 1
+    -- else
+    --     levelIndex = userData.StarID - 13000
+    --     Event.AddListener(EventType.SpaceGamePause.PauseAndResuse, this.PauseAndResuse)
+    -- end
+    -- if userData == nil then
+    --     levelIndex = _selfTransform:Find("Panel_Item"):GetComponent(typeof(GF.KingdomsUnityEditor)).SelectLevel + 1
+    -- else
+    --     print("userdata not nil")
+    -- end
+    levelIndex = 1
+    local platformName = GF.Utility.GetRuntimePlatformName(false)
+    if platformName == "windows" or platformName == "linux" or platformName == "osx" then
+        if transform:GetComponent(typeof(GF.XLuaUIViewRunInUnityEditor)).RunInEditor then
+            local kdue = _selfTransform:Find("Panel_Item"):GetComponent(typeof(GF.KingdomsUnityEditor))
+            levelIndex = kdue.SelectLevel + 1
+        end
+    end
+
+    -- levelIndex = 1
+    this:GameInit(levelIndex)
+    -- AudioSystem.UISound:Play("MoveUISound", false, "KingdomsUIView")
+    -- AudioSystem.UISound:PlayWithPath("Assets/Game/MiniGames/KingdomsUIView/Audio/UISound/MoveUISound.wav")
+
+    AudioSystem.Music:Play("Spring Chicken", true, "KingdomsUIView")
+end
+
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnExit(uiContext)
+    AllToolPostion = {}
+    _item = {}
+    _itemConfig = {}
+    WGGCtr = nil
+    _playerName = nil
+    _isVictory = false
+    _victoryName = nil
+    _victoryItemConfig = nil
+    if UserDataClone ~= nil then
+        Event.RemoveListener(EventType.SpaceGamePause.PauseAndResuse, this.PauseAndResuse)
+    end
+    -- AudioSystem.Music:Stop()
+    -- AudioSystem.UISound:StopAll()
+    -- AudioSystem.Sound:Stop()
+    SettlementForm.gameObject:Hide()
+end
+--按下返回鍵返回界面事件
+function this:PauseAndResuse(event, data)
+    if data == 1 then
+        local uiview = UISystem:GetActiveGameUIView("KingdomsUIView")
+        UISystem:Close(uiview, true, true)
+        Event.DispenseEvent(EventType.ChangeState.ChangeCurrState, {type = 0})
+    elseif data == 2 then
+    -- UISystem:Resume(self_uiForm)
+    end
+end
+
+function this:OnPointerClick(target, eventData, mospos)
+    if UserDataClone == nil then
+        return
+    end
+    if target.name == "Button_Back" then
+        KingdomsCallBack("ChildrenProgramGame")
+    elseif target.name == "btnBack" then
+        local uiview = UISystem:GetActiveGameUIView("KingdomsUIView")
+        UISystem:Close(uiview, true, true)
+        Event.DispenseEvent(EventType.ChangeState.ChangeCurrState, {type = 0})
+    elseif target.name == "btnNext" then
+        this:PlayNextOrLast()
+    elseif target.name == "btnRestart" then
+        this:ResPlay()
+    end
+end
+
+--重玩
+function this:ResPlay()
+    -- AudioSystem.UISound:StopAll()
+    -- AudioSystem.Sound:Stop()
+    -- for i = 1, #AllToolPostion do
+    --     CS.UnityEngine.Object.Destroy(AllToolPostion[i].gameObject)
+    -- end
+    for key, value in pairs(_item) do
+        GE.Object.Destroy(key.gameObject)
+        -- body
+    end
+    this:GameInit(levelIndex)
+    -- this:OnExit()
+    -- this:OnEnter(_selfTransform, UIContentClone, KingdomsCallBack, UserDataClone)
+end
+---进入下一关或者已经到了最后一关
+function this:PlayNextOrLast()
+    print("进入下一关")
+
+    UISystem:Push("InterfaceTransitionForm")
+    this:CloseSelf()
+    for i = 1, #AllToolPostion do
+        CS.UnityEngine.Object.Destroy(AllToolPostion[i].gameObject)
+    end
+    Event.DispenseEvent(EventType.ChangeState.ChangeCurrState, {type = 1, Data = 3})
+    SettlementForm.gameObject:Hide()
+end
+
+--- 开始拖拽
+---@param  target Transform
+---@param eventData BaseEventData
+---@param globalPoint Vector2
+function this:OnBeginDrag(target, eventData, globalPoint)
+    -- print("OnBeginDrag", target.name, globalPoint)
+end
+
+--- 拖拽
+---@param  target Transform
+---@param eventData BaseEventData
+---@param globalPoint Vector2
+function this:OnDrag(target, eventData, globalPoint)
+    if _isVictory then
+        return
+    end
+    local moveRectTrans = target:GetComponent(typeof(RectTransform))
+    local result = false
+    --是否满足转换条件
+    local rayCast = eventData.pointerCurrentRaycast
+    if eventData.pressEventCamera ~= nil and rayCast ~= nil and rayCast.gameObject ~= nil then
+        result, globalPoint =
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            moveRectTrans,
+            Vector2(Input.mousePosition.x, Input.mousePosition.y),
+            eventData.pressEventCamera
+        )
+    end
+
+    if result then
+        if globalPoint.magnitude > _size then
+            local moveX = math.abs(globalPoint.x) - math.abs(globalPoint.y) > 0
+            local moveDir = Vector2.zero
+            if moveX then
+                if globalPoint.x > 0 then
+                    moveDir.x = 1
+                else
+                    moveDir.x = -1
+                end
+            else
+                if globalPoint.y > 0 then
+                    moveDir.y = 1
+                else
+                    moveDir.y = -1
+                end
+            end
+
+            local moveData = _item[moveRectTrans]
+            moveData.Point = moveData.Point + moveDir
+            for i = 1, #moveData.Blocks do
+                moveData.Blocks[i] = moveDir + moveData.Blocks[i]
+            end
+            if this:ItemCanMove(moveRectTrans) then
+                -- AudioSystem.UISound:StopAll()
+                -- AudioSystem.UISound:Play("MoveMp3", false, "KingdomsUIView")
+                -- AudioSystem.UISound:PlayWithPath("Assets/Game/MiniGames/KingdomsUIView/Audio/UISound/MoveUISound.wav")
+                moveRectTrans.anchoredPosition = _mapPivot + moveData.Point * _size
+                _stepCount = _stepCount + 1
+                _textStepCount.text = "步数：" .. tostring(_stepCount)
+            else
+                moveData.Point = moveData.Point - moveDir
+                for i = 1, #moveData.Blocks do
+                    moveData.Blocks[i] = moveData.Blocks[i] - moveDir
+                end
+            end
+        end
+    end
+end
+
+---@param target RectTransform
+function this:ItemCanMove(target)
+    local targetData = _item[target]
+    -- 胜利组件不可移动 角色判断是否胜利
+    if targetData.Name == _victoryName then
+        return false
+    elseif targetData.Name == _playerName then
+        _isVictory = this:CheckVictory(targetData)
+        if _isVictory then
+            this:ShowVictory()
+            return true
+        end
+    end
+    -- 是否超出范围
+    local min = targetData.Point - targetData.Size * 0.5
+    local max = targetData.Point + targetData.Size * 0.5
+    if min.x < -0.5 or max.x > _column or min.y < -0.5 or max.y > _row then
+        return false
+    end
+    -- 是否和其他组件重叠
+    local intersect = this:ItemIntersect(target)
+    if intersect then
+        return false
+    end
+    return true
+end
+
+---@param target RectTransform
+function this:ItemIntersect(target)
+    local targetData = _item[target]
+    for key, value in pairs(_item) do
+        if target ~= key then
+            if this:RectIntersect(targetData, value) then
+                return true
+            end
+        end
+    end
+    return false
+end
+
+--- 交叉
+function this:RectIntersect(target, other)
+    local targetBlocks = target.Blocks
+    local otherBlocks = other.Blocks
+    for i = 1, #targetBlocks do
+        for j = 1, #otherBlocks do
+            if targetBlocks[i] == otherBlocks[j] then
+                return true
+            end
+        end
+    end
+
+    return false
+end
+
+-- 检测是否胜利
+function this:CheckVictory(playerConfig)
+    -- if _victoryItemConfig == nil then
+    --     return false
+    -- end
+    local targetBlocks = playerConfig.Blocks
+    -- local otherBlocks = _victoryItemConfig.Blocks
+
+    -- for i = 1, #targetBlocks do
+    --     local distance = targetBlocks[i].magnitude - otherBlocks[i].magnitude
+    --     if distance == 0 or distance == 1 then
+    --     else
+    --         return false
+    --     end
+    -- end
+
+    -- local rigntCount = 0
+    -- for i = 1, #targetBlocks do
+    --     for j = 1, #otherBlocks do
+    --         if targetBlocks[i] == otherBlocks[j] then
+    --             rigntCount = rigntCount + 1
+    --         end
+    --     end
+    -- end
+
+    local rigntCount = 0
+    for i = 1, #targetBlocks do
+        if targetBlocks[i] == Vector2(1, 0) or targetBlocks[i] == Vector2(2, 0) then
+            rigntCount = rigntCount + 1
+        end
+    end
+
+    -- if rigntCount / #targetBlocks >= 0.5 then
+    --     return true
+    -- end
+
+    if rigntCount >= 2 then
+        return true
+    end
+
+    return false
+end
+
+function this:GameInit(levelIndex)
+    _item = {}
+    _itemConfig = {}
+    _playerName = nil
+    _isVictory = false
+    _victoryName = nil
+    _victoryItemConfig = nil
+    SettlementForm.gameObject:Hide()
+    _stepCount = 0
+
+    if levelIndex > 0 and levelIndex <= #_levelConfigs then
+        local levelConfig = _levelConfigs[levelIndex]
+        local items = levelConfig["Items"]
+        _textLevelName.text = "关卡: " .. levelConfig["LevelName"]
+        _textStepCount.text = "步数: 0"
+        _playerName = levelConfig["Player"]
+        _victoryName = levelConfig["Victory"]
+        for i = 1, #items do
+            local itemConfig = {}
+            itemConfig.Name = items[i]["Name"]
+            itemConfig.Sprite = items[i]["Sprite"]
+            itemConfig.Size = Vector2(items[i]["Size"]["x"], items[i]["Size"]["y"])
+            itemConfig.Point = Vector2(items[i]["Point"]["x"], items[i]["Point"]["y"])
+            itemConfig.Blocks = {}
+            --- 胜利的组件
+            if itemConfig.Name == _victoryName then
+                _victoryItemConfig = itemConfig
+            end
+            table.insert(_itemConfig, itemConfig)
+        end
+    else
+        return
+    end
+
+    _mapPivot = Vector2(_column * _size, _row * _size) * -0.5 + Vector2(_size * 0.5, _size * 0.5)
+
+    -- -- 初始化地图
+    -- _map = {}
+    -- for i = 1, _row do
+    --     local mapColumn = {}
+    --     for j = 1, _column do
+    --         table.insert(mapColumn, false)
+    --     end
+    --     table.insert(_map, mapColumn)
+    -- end
+
+    ---初始化组件
+    local item = _selfTransform:Find("Panel_Item/Item")
+    for i = 1, #_itemConfig do
+        local itemConfig = {}
+        --复制配置表
+        for key, value in pairs(_itemConfig[i]) do
+            itemConfig[key] = value
+        end
+        local itemClone = nil
+
+        -- itemClone = GameObject.Instantiate(item.gameObject):GetComponent(typeof(RectTransform))
+
+        -- itemClone:SetParent(item.parent)
+        -- itemClone.localScale = Vector3.one
+        -- itemClone.localPosition = Vector3.zero
+        -- itemClone.name = itemConfig.Name
+
+        -- local sprite = Resource:LoadGameSprite(_gameName, itemConfig.Sprite)
+
+        Resource:LoadAsset(
+            "Assets/Game/MiniGames/KingdomsUIView/Prefabs/" .. itemConfig.Sprite .. ".prefab",
+            function(asset)
+                itemClone = GameObject.Instantiate(asset):GetComponent(typeof(RectTransform))
+                itemClone:SetParent(item.transform.parent)
+                itemClone.localScale = Vector3.one
+                itemClone.localPosition = Vector3.zero
+                itemClone.gameObject:SetActive(true)
+                itemClone.sizeDelta = _size * itemConfig.Size
+                itemClone.anchoredPosition = _mapPivot + itemConfig.Point * _size
+                local miniPoint = itemConfig.Point - itemConfig.Size * 0.5
+                for m = 1, itemConfig.Size.x do
+                    for n = 1, itemConfig.Size.y do
+                        table.insert(itemConfig.Blocks, miniPoint + Vector2((m - 1) + 0.5, (n - 1) + 0.5))
+                    end
+                end
+                _item[itemClone] = itemConfig
+            end
+        )
+
+        -- itemClone:Find("Image"):GetComponent(typeof(Image)).sprite = sprite
+    end
+
+    -- if UserDataClone ~= nil then
+    --     --初始化完毕关闭过度界面
+    --     local uiview, script = UISystem:GetActiveUIView("InterfaceTransitionForm")
+    --     if (script ~= nil) then
+    --         script:OpenGamePartSucces()
+    --     end
+    -- end
+end
+
+--- 显示胜利
+function this:ShowVictory()
+    -- if UserDataClone ~= nil then
+    --     -- AudioSystem.Sound:Play("winmaudio", false, "KingdomsUIView")
+    --     this:SaveCurretLevel()
+    --     WGGCtr:Play(
+    --         "win",
+    --         false,
+    --         nil,
+    --         function()
+    --             WGGCtr:Play("1", true, nil, nil)
+    --             SettlementForm.gameObject:Show()
+    --         end
+    --     )
+    -- else
+    --     -- _selfTransform:Find("Panel_Menu").gameObject:SetActive(true)
+    -- end
+    -- -- _selfTransform:Find("Panel_Menu").gameObject:SetActive(true)
+
+    _selfTransform:Find("Panel_Menu").gameObject:SetActive(true)
+end
+---发送保存游戏进度
+function this:SaveCurretLevel()
+    print("保存进度,游戏编号：：", UserDataClone.StarID)
+    local url = "wgg-game/gameList/insertGameList"
+    local data = {gameId = UserDataClone.StarID, type = 3}
+    WebRequest:Post(
+        url,
+        data,
+        function(databack)
+            if databack.code == 0 then
+                print("存储进度成功")
+            else
+                UI.OpenCommonTipForm({2, "存储游戏进度失败！"})
+            end
+        end
+    )
+end
+
+function this:CloseSelf()
+    local uiview = UISystem:GetActiveGameUIView("KingdomsUIView")
+    UISystem:Close(uiview, true, true)
+    print("关闭界面  关闭界面")
+end
+
+return KingdomsUIView

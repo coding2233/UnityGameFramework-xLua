@@ -1,0 +1,72 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: PopupSubscribe
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 9307b4eb533754a82bc191d495912666, type: 3}
+    totalSpriteSurfaceArea: 3055008
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 3188a7319861a4b01b73f879f5271452, type: 3}
+  - {fileID: 21300000, guid: 3c4436b170daf4a95a3d7bf71c4610e5, type: 3}
+  - {fileID: 21300000, guid: 4af7b2d383b63494aabf4d874ab1f397, type: 3}
+  - {fileID: 21300000, guid: cf218fd3f78cc4191bdf56c712995893, type: 3}
+  - {fileID: 21300000, guid: 2feaafe4e67104e6fbd6232e8f31f297, type: 3}
+  - {fileID: 21300000, guid: 6fd84bd8e2cf645c490588f77f3da2fc, type: 3}
+  - {fileID: 21300000, guid: 75e3eed89f4c445c18126fbb6d66222e, type: 3}
+  - {fileID: 21300000, guid: f6c112ede153f4fb7a260e2631ec23a9, type: 3}
+  - {fileID: 21300000, guid: 2adcfbfe5db0e45f0abd58d13e6f6e40, type: 3}
+  - {fileID: 21300000, guid: b169656fffe4b4eb48f4b32a9f08ad2d, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - special_icon_gift
+  - glow_purple
+  - special_icon_glove
+  - special_icon_gem_gold
+  - popup_bg_purple
+  - icon_pass
+  - info_bg_purple
+  - special_chest
+  - back_effect
+  - special_icon_remove_ad
+  m_Tag: PopupSubscribe
+  m_IsVariant: 0

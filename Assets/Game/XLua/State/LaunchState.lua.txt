@@ -1,0 +1,55 @@
+local LaunchState = GameState:Create("LaunchState")
+local this = LaunchState
+
+-- 多语言初始化
+local _languageInit = false
+
+function this:OnInit()
+    local platformName = Utility.GetRuntimePlatformName()
+    if platformName == "ios" or platformName == "android" then
+    else
+         -- 默认横屏
+        GE.Screen.SetResolution(900, 506, false)
+    end
+    
+    -- 加载多语言文本
+    Resource:LoadDataTable(
+        "Language",
+        function(result, assetPath, iDataTable)
+            if result then
+                local language = "English"
+                for key, value in pairs(iDataTable) do
+                    local languageKey = iDataTable[value]:get_Item("Key"):ToString()
+                    local languageText = iDataTable[value]:get_Item(language):ToString()
+                    GF.GameMode.Localization:ChangeLocalizationString(languageKey, languageText)
+                end
+                _languageInit = true
+                this:OpenMainUIView()
+            end
+        end
+    )
+end
+
+function this:OnEnter(userData)
+    this:OpenMainUIView()
+end
+
+function this:OnExit()
+end
+
+function this:OnUpdate(detlaTime)
+end
+
+function this:OpenMainUIView()
+    if _languageInit then
+        UISystem:Push(
+            "MainUIView",
+            function(data)
+                UISystem:Pop(true, false)
+                this:ChangeState(Utility.State.LoadState, data)
+            end
+        )
+    end
+end
+
+return this

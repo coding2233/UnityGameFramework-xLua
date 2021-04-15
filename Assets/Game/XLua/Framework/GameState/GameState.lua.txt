@@ -1,0 +1,71 @@
+require "class"
+
+--- 状态基类
+local stateBaseClass = class("stateBaseClass")
+function stateBaseClass:ctor(name, context)
+    self.Name = name
+    self.Context = context
+end
+
+function stateBaseClass:OnInit()
+end
+
+function stateBaseClass:OnEnter(userData)
+end
+
+function stateBaseClass:OnExit()
+end
+
+function stateBaseClass:OnUpdate(detlaTime)
+end
+
+function stateBaseClass:ChangeState(stateName, userData)
+    self.Context:ChangeState(stateName, userData)
+end
+
+--- GameState
+GameState = {}
+local this = GameState
+
+local _states = {}
+local _currentState = nil
+
+--- 创建状态
+function this:Create(stateName)
+    if _states[stateName] ~= nil then
+        return
+    end
+    local state = class(stateName, stateBaseClass).New(stateName, this)
+    return state
+end
+
+--- 获取当前状态
+function this:Current()
+    return _currentState
+end
+
+function this:Update(detlaTime)
+    if _currentState ~= nil then
+        _currentState:OnUpdate(detlaTime)
+    end
+end
+
+function this:ChangeState(stateName, userData)
+    if _currentState ~= nil then
+        _currentState:OnExit()
+        _currentState = nil
+    end
+    _currentState = _states[stateName]
+    if _currentState == nil then
+        local state = require(stateName)
+        if state ~= nil then
+            _states[stateName] = state
+            _currentState = state
+            _currentState:OnInit()
+        end
+    end
+
+    if _currentState ~= nil then
+        _currentState:OnEnter(userData)
+    end
+end

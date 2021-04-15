@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 namespace Wanderer.GameFramework
 {
@@ -16,7 +17,18 @@ namespace Wanderer.GameFramework
             //初始化
             GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnInit(transform, uiContext);
         }
-	
+
+
+        /// <summary>
+        /// 销毁
+        /// </summary>
+        /// <param name="uiContext"></param>
+        public override void OnFree(IUIContext uiContext)
+        {
+            base.OnFree(uiContext);
+            //初始化
+            GameMode.XLua.CallLua<UGUIViewCallXLua>()?.LuaOnFree(transform, uiContext);
+        }
 
         /// <summary>
         /// 更新界面
@@ -89,7 +101,32 @@ namespace Wanderer.GameFramework
         {
             base.SetDepth(depth);
         }
-    }
 
+        #region UI Event  
+        /// <summary>
+        /// XLua Event Trigger事件
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="callMethod"></param>
+        /// <param name="eventData"></param>
+        public void OnEventTrigger(Transform target, string callMethod, BaseEventData eventData)
+        {
+            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnEventTrigger(_uiContext, target, callMethod, eventData);
+        }
+        #endregion
 
+        #region Physics Event
+        /// <summary>
+        /// 物理触发事件， 触发器 和 碰撞事件
+        /// </summary>
+        /// <param name="callMethod"></param>
+        /// <param name="self"></param>
+        /// <param name="other"></param>
+        public void OnColliderTrigger(string callMethod,Transform self, Transform other)
+        {
+            GameMode.XLua.CallLua<UGUIViewCallXLua>().LuaOnColliderTrigger(_uiContext, callMethod, self, other);
+        }        
+		#endregion
+
+	}
 }

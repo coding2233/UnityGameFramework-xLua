@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Character_List_Select
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 0490c2a3a63a14f019048386031255f0, type: 3}
+    totalSpriteSurfaceArea: 2392429
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 96ff8090ed400444ca45e8ef17e76f0c, type: 3}
+  - {fileID: 21300000, guid: 1b652d4125f7c453eba84d8462355c62, type: 3}
+  - {fileID: 21300000, guid: 15cd82f15e04f4f3f887bec521790fc8, type: 3}
+  - {fileID: 21300000, guid: b76446236559e4a7ebfbdc6519fa9d07, type: 3}
+  - {fileID: 21300000, guid: 535673d3292e04b449b63e2d699f99ef, type: 3}
+  - {fileID: 21300000, guid: 0aa457f380905464fad519a5d662ed48, type: 3}
+  - {fileID: 21300000, guid: 30b1a3b4a6f4749c5ad29bdce9aee4c6, type: 3}
+  - {fileID: 21300000, guid: 072fc1e433b92438e915c6c10bfd2994, type: 3}
+  - {fileID: 21300000, guid: 2e7431356ba764d2cbc73ae363cad75a, type: 3}
+  - {fileID: 21300000, guid: 7135d585f82ae408d8713917af908381, type: 3}
+  - {fileID: 21300000, guid: f4f151a5ee5d4481aa3b02b2d79d33b2, type: 3}
+  - {fileID: 21300000, guid: f38098d552a984003a237adf1d93ca19, type: 3}
+  - {fileID: 21300000, guid: b944c63612ae9407cbd657cf70397e9b, type: 3}
+  - {fileID: 21300000, guid: eb22d376b7994415aac9d7a87ff27901, type: 3}
+  - {fileID: 21300000, guid: b56197178539f48009c713d5b5d04a81, type: 3}
+  - {fileID: 21300000, guid: 91d37967864564f818aaf9326fcf0302, type: 3}
+  - {fileID: 21300000, guid: c3c72287193214996af4f29c39ba21ef, type: 3}
+  - {fileID: 21300000, guid: fb3d9ab77192f48d29273337d1eb43a5, type: 3}
+  - {fileID: 21300000, guid: 0aff41489ca2441879fe4da19a0b8589, type: 3}
+  - {fileID: 21300000, guid: 284f99482071f47839549747513b612b, type: 3}
+  - {fileID: 21300000, guid: d9dda2a9c329c489898a17eea14bcd7d, type: 3}
+  - {fileID: 21300000, guid: c127e3f9b75644725ad804c4df314d36, type: 3}
+  - {fileID: 21300000, guid: 00d268f9870dd41d1ab0c13d9f0149fd, type: 3}
+  - {fileID: 21300000, guid: 1ebe9d3ac5ce74f3589c006da297bdc7, type: 3}
+  - {fileID: 21300000, guid: 08be456a6ddbf458784cf3a37e52822f, type: 3}
+  - {fileID: 21300000, guid: 7c38202bc1125471cb46578c474ed80e, type: 3}
+  - {fileID: 21300000, guid: 13fc64bb545d04550bdc58cabefcd0b0, type: 3}
+  - {fileID: 21300000, guid: 55ab78bb5705a45efbdba0f372c1469e, type: 3}
+  - {fileID: 21300000, guid: e514d96c479e0452b9eb23b64340e96e, type: 3}
+  - {fileID: 21300000, guid: 6e89577c7208241f8b2e979f467525d9, type: 3}
+  - {fileID: 21300000, guid: bf43c98c56e3149d1adbf4d58a059820, type: 3}
+  - {fileID: 21300000, guid: 97015b9c8e41d49de9b3b84779bcf5a7, type: 3}
+  - {fileID: 21300000, guid: 7a860c9c2d94544b688db0cd613e58bd, type: 3}
+  - {fileID: 21300000, guid: 12e556acc0e044f6ab466ba4f262091d, type: 3}
+  - {fileID: 21300000, guid: 079e16bce45e14ab2b4512c4e4d08d4a, type: 3}
+  - {fileID: 21300000, guid: f3b7e31eb60b84b17870d0b5d926cfad, type: 3}
+  - {fileID: 21300000, guid: 23e2b16eb7e0748babf6dc861d198ed1, type: 3}
+  - {fileID: 21300000, guid: 1986397ee03644e76be554f7b1158ef7, type: 3}
+  - {fileID: 21300000, guid: 813b7c7ef9aa146f9b4d2333c590c88c, type: 3}
+  - {fileID: 21300000, guid: 8e29b5fe7ce3149e8aae1ee7b88d87b3, type: 3}
+  - {fileID: 21300000, guid: 17fc055fb7c2f4e2c934e1360a8d1adb, type: 3}
+  - {fileID: 21300000, guid: cc8a3b9fbaeaa42e89c0f5ba75213684, type: 3}
+  - {fileID: 21300000, guid: a62b74cf5e0d843df92213d37c22e0bd, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - character_sample_4
+  - character_role_icon_3
+  - character_lv_bar_green
+  - character_sample_2
+  - character_role_bg
+  - character_lv_bg_blue
+  - tab_full_bg
+  - character_list_frame_purple
+  - character_lv_bar_bg
+  - character_sample_5
+  - character_grade_label_blue
+  - character_grade_star_dim
+  - character_role_icon_1
+  - character_sample_3
+  - character_list_frame_dim
+  - character_list_frame_blue
+  - character_sample_8
+  - character_grade_star
+  - character_lv_bar_blue
+  - character_list_frame_orange
+  - btn_icon_help
+  - character_select_add_bg
+  - character_select_icon_lock
+  - character_sample_1
+  - character_list_frame_green
+  - character_role_icon_0
+  - character_lv_bg_yellow
+  - character_grade_label_purple
+  - tab_icon_sort
+  - character_grade_label_orange
+  - character_select_frame
+  - character_grade_label_green
+  - character_role_icon_2
+  - character_card_gradient_white
+  - character_lv_bar_yellow
+  - character_sample_0
+  - character_sample_6
+  - character_select_sample
+  - character_sample_7
+  - character_select_shadow_white
+  - character_select_icon_add
+  - character_sample_9
+  - character_select_frame_focus
+  m_Tag: Character_List_Select
+  m_IsVariant: 0

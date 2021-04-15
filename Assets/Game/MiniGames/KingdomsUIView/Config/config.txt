@@ -1,0 +1,769 @@
+{
+    "Size": 200,
+    "Row": 5,
+    "Column": 4,
+    "Levels": [
+        {
+            "LevelName": "阿谀逢迎",
+            "Player": "曹操",
+            "Victory": "e41508",
+            "Items": [
+                {
+                    "Name": "曹操",
+                    "Sprite": "Item_caocao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 0.5,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "小兵01",
+                    "Sprite": "Item_xiaobing01",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 4.0
+                    }
+                },
+                {
+                    "Name": "黄忠",
+                    "Sprite": "Item_huangzhong",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "小兵02",
+                    "Sprite": "Item_xiaobing02",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Name": "小兵03",
+                    "Sprite": "Item_xiaobing03",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "小兵04",
+                    "Sprite": "Item_xiaobing04",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "张飞",
+                    "Sprite": "Item_zhangfei",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 1.0,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Name": "赵云",
+                    "Sprite": "Item_zhaoyun",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Name": "关羽",
+                    "Sprite": "Item_guanyu",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "马超",
+                    "Sprite": "Item_machao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 2.0
+                    }
+                }
+            ]
+        },
+        {
+            "LevelName": "暗渡陈仓",
+            "Player": "曹操",
+            "Victory": "e41508",
+            "Items": [
+                {
+                    "Name": "曹操",
+                    "Sprite": "Item_caocao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 1.5,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "2c0c44",
+                    "Sprite": "Item_machao",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "f72722",
+                    "Sprite": "Item_zhaoyun",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 2.5
+                    }
+                },
+                {
+                    "Name": "9af7d2",
+                    "Sprite": "Item_xiaobing01",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 4.0
+                    }
+                },
+                {
+                    "Name": "f9bd5f",
+                    "Sprite": "Item_xiaobing02",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "13ecba",
+                    "Sprite": "Item_zhangfei",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 1.5,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "c0d762",
+                    "Sprite": "Item_guanyu",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 1.5,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "77d02f",
+                    "Sprite": "Item_xiaobing03",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "2fa1cb",
+                    "Sprite": "Item_xiaobing04",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Name": "91e676",
+                    "Sprite": "Item_huangzhong",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 0.5
+                    }
+                }
+            ]
+        },
+        {
+            "LevelName": "八阵书图",
+            "Player": "曹操",
+            "Victory": "e41508",
+            "Items": [
+                {
+                    "Name": "曹操",
+                    "Sprite": "Item_caocao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "482aed",
+                    "Sprite": "Item_guanyu",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "93ec43",
+                    "Sprite": "Item_xiaobing05",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 1.0,
+                        "y": 3.0
+                    }
+                },
+                {
+                    "Name": "23aaf1",
+                    "Sprite": "Item_zhaoyun",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.5,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "d7ef5b",
+                    "Sprite": "Item_zhangfei",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.5,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "357b95",
+                    "Sprite": "Item_xiaobing01",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "5d04e9",
+                    "Sprite": "Item_xiaobing02",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "fc7102",
+                    "Sprite": "Item_huangzhong",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 1.5
+                    }
+                },
+                {
+                    "Name": "590397",
+                    "Sprite": "Item_machao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Name": "27722b",
+                    "Sprite": "Item_xiaobing03",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 1.0,
+                        "y": 0.0
+                    }
+                }
+            ]
+        },
+        {
+            "LevelName": "百步岐形",
+            "Player": "曹操",
+            "Victory": "e41508",
+            "Items": [
+                {
+                    "Name": "曹操",
+                    "Sprite": "Item_caocao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 0.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Name": "cca96c",
+                    "Sprite": "Item_guanyu",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Name": "6d314e",
+                    "Sprite": "Item_zhangfei",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "8000fb",
+                    "Sprite": "Item_xiaobing01",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "755293",
+                    "Sprite": "Item_xiaobing02",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "62d21b",
+                    "Sprite": "Item_xiaobing03",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 1.0,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "d5d8ff",
+                    "Sprite": "Item_xiaobing05",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 3.0
+                    }
+                },
+                {
+                    "Name": "ff283c",
+                    "Sprite": "Item_machao",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 1.0,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "e61674",
+                    "Sprite": "Item_zhaoyun",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "51d414",
+                    "Sprite": "Item_huangzhong",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 3.5
+                    }
+                }
+            ]
+        },
+        {
+            "LevelName": "百花盛开",
+            "Player": "曹操",
+            "Victory": "e41508",
+            "Items": [
+                {
+                    "Name": "曹操",
+                    "Sprite": "Item_caocao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 0.5
+                    }
+                },
+                {
+                    "Name": "cca96c",
+                    "Sprite": "Item_guanyu",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.5,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Name": "e4ae8a",
+                    "Sprite": "Item_zhangfei",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.5,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "1d6525",
+                    "Sprite": "Item_xiaobing01",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "2c7bd4",
+                    "Sprite": "Item_xiaobing02",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 2.0
+                    }
+                },
+                {
+                    "Name": "accd81",
+                    "Sprite": "Item_xiaobing03",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 3.0
+                    }
+                },
+                {
+                    "Name": "c0c163",
+                    "Sprite": "Item_xiaobing05",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 4.0
+                    }
+                },
+                {
+                    "Name": "bc8df8",
+                    "Sprite": "Item_huangzhong",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "6181f4",
+                    "Sprite": "Item_machao",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 1.0,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "86e02b",
+                    "Sprite": "Item_zhaoyun",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 3.5
+                    }
+                }
+            ]
+        },
+        {
+            "LevelName": "背水列阵",
+            "Player": "曹操",
+            "Victory": "e41508",
+            "Items": [
+                {
+                    "Name": "曹操",
+                    "Sprite": "Item_caocao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 1.5,
+                        "y": 1.5
+                    }
+                },
+                {
+                    "Name": "cca96c",
+                    "Sprite": "Item_guanyu",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.5,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Name": "6d314e",
+                    "Sprite": "Item_zhangfei",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.5,
+                        "y": 0.0
+                    }
+                },
+                {
+                    "Name": "5ac0d4",
+                    "Sprite": "Item_xiaobing01",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "3dcd49",
+                    "Sprite": "Item_xiaobing02",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 1.0
+                    }
+                },
+                {
+                    "Name": "53fe5c",
+                    "Sprite": "Item_xiaobing03",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 1.0,
+                        "y": 3.0
+                    }
+                },
+                {
+                    "Name": "c4bb1a",
+                    "Sprite": "Item_xiaobing05",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 2.0,
+                        "y": 3.0
+                    }
+                },
+                {
+                    "Name": "d18850",
+                    "Sprite": "Item_machao",
+                    "Size": {
+                        "x": 2.0,
+                        "y": 1.0
+                    },
+                    "Point": {
+                        "x": 1.5,
+                        "y": 4.0
+                    }
+                },
+                {
+                    "Name": "1c4cef",
+                    "Sprite": "Item_zhaoyun",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 0.0,
+                        "y": 3.5
+                    }
+                },
+                {
+                    "Name": "54f22e",
+                    "Sprite": "Item_huangzhong",
+                    "Size": {
+                        "x": 1.0,
+                        "y": 2.0
+                    },
+                    "Point": {
+                        "x": 3.0,
+                        "y": 3.5
+                    }
+                }
+            ]
+        }
+    ]
+}

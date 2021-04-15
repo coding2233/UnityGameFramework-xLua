@@ -1,0 +1,26 @@
+local LoadState = GameState:Create("LoadState")
+local this = LoadState
+
+function this:OnInit()
+end
+
+function this:OnEnter(userData)
+    -- 播放广告
+    GameMode.Ads:Show("Loading")
+    UISystem:Push(
+        "LoadUIView",
+        function(data)
+            UISystem:Pop(true, false)
+            this:ChangeState(Utility.State.MiniGameState, data)
+        end,
+        userData
+    )
+end
+
+function this:OnExit()
+end
+
+function this:OnUpdate(detlaTime)
+end
+
+return this

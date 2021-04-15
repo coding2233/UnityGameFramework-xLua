@@ -1,0 +1,179 @@
+--lua 工具类
+--toolutility lua公用工具类
+
+toolutility = {}
+-- this = toolutility
+
+local GameEntry = CS.Rhapsody.GameEntry
+
+FormInAndOutDir = {
+    up = "up", --上
+    down = "down", --下
+    left = "left", --左
+    right = "right" --右
+}
+
+---播放一个sound 停止之前已经在播放的声音
+function toolutility.PlaySingleSound()
+end
+
+function toolutility.Log(stringValue)
+    print(stringValue)
+end
+function toolutility.SetRawImage(url, rawImage)
+    if (rawImage ~= nil and url ~= nil and url ~= "") then
+        Texture2DCache.GetTexture2D(
+            url,
+            function(tex2d)
+                rawImage.texture = tex2d
+            end
+        )
+    end
+end
+
+function toolutility.OpenFreedomInit()
+    FlyStart.SetNil()
+
+    GameMovie.OnClickBackCall(
+        function()
+            print("回调置空")
+        end
+    )
+end
+-- 生成一组不重复的随机数
+-- count 数量
+-- minNum 最小数值
+-- maxNum 最大数值
+function toolutility.Random(count, minNum, maxNum)
+    local tab_randomNum = {}
+
+    for i = 1, count do
+        local num = -1
+        local isAdd = false
+        while isAdd == false do
+            isAdd = true
+            num = toolutility.RandomSingle(minNum, maxNum)
+            for i = 1, #tab_randomNum do
+                if tab_randomNum[i] == num then
+                    isAdd = false
+                end
+            end
+        end
+        table.insert(tab_randomNum, num)
+    end
+
+    return tab_randomNum
+end
+
+--打印
+function toolutility.Log(...)
+    -- return
+    print(...)
+end
+
+--随机单个的数
+function toolutility.RandomSingle(minNum, maxNum)
+    local num = math.random(minNum, maxNum)
+    return num
+end
+
+-- 背景音乐是否静音
+function toolutility.music_isMute(is_mute)
+    GameEntry.Sound:Mute("Music", is_mute)
+end
+-- 音效是否静音
+function toolutility.sound_isMute(is_mute)
+    GameEntry.Sound:Mute("Sound", is_mute)
+end
+-- UI音效是否静音
+function toolutility.uiSound_isMute(is_mute)
+    GameEntry.Sound:Mute("UISound", is_mute)
+end
+
+-- 获取平台类型
+function toolutility.GetPlatformType()
+    -- body
+    local platform_type = GameEntry.Lua:GetPlatformType()
+    return platform_type
+end
+
+-- 播放UI音频
+function toolutility.PlayUISound(sound_id)
+    -- body
+    return GameEntry.Sound:PlayUISound(sound_id)
+end
+
+function toolutility.PlaySound(soundID, isBreak)
+    if isBreak then
+        GameEntry.Sound:StopSound()
+    end
+    GameEntry.Sound:PlaySound(soundID)
+end
+
+-- 播放UI音频 关卡返回音频
+function toolutility.PlayUISound_GameExit()
+    -- body
+    GameEntry.Sound:PlayUISound(1006)
+end
+
+-- 播放UI音频 返回音频
+function toolutility.PlayUISound_Back()
+    -- body
+    GameEntry.Sound:PlayUISound(1006)
+end
+
+-- 播放音频
+function toolutility.PlayDubbing(sound_id)
+    -- body
+    GameEntry.Sound:PlaySound(sound_id)
+end
+
+function toolutility.StopSound()
+    -- body
+    GameEntry.Sound:StopSound()
+end
+
+--工具方法获取界面进出点
+function toolutility.GetFormIn_and_OutPoint(dir)
+    local move_point = nil
+    if dir == "up" then
+        move_point = Screen.height + 500
+    elseif dir == "down" then
+        move_point = -Screen.height - 500
+    elseif dir == "left" then
+        move_point = -Screen.width - 500
+    elseif dir == "right" then
+        move_point = Screen.width + 500
+    end
+
+    return move_point
+end
+
+--工具方法: 10位数时间戳转换年月日时间
+function toolutility.FormatUnixTime2Date(unixTime)
+    if unixTime and unixTime >= 0 then
+        local tb = {}
+        tb.year = tonumber(os.date("%Y", unixTime))
+        tb.month = tonumber(os.date("%m", unixTime))
+        tb.day = tonumber(os.date("%d", unixTime))
+        tb.hour = tonumber(os.date("%H", unixTime))
+        tb.minute = tonumber(os.date("%M", unixTime))
+        tb.second = tonumber(os.date("%S", unixTime))
+        return tb
+    end
+end
+
+-- 查看某key是否为表tbl中的key值
+function toolutility.IsKeyIn(tbl, key)
+    if tbl == nil then
+        return false
+    end
+    for k, v in pairs(tbl) do
+        if k == key then
+            return true
+        end
+    end
+    return false
+end
+
+return toolutility

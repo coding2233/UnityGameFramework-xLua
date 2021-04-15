@@ -1,0 +1,195 @@
+--事件名称表
+EventType = {}
+
+EventType.Http = {
+    -- 网络错误消息 参数 (int) error_code
+    NetError = "NetError"
+}
+
+--角色头像相关事件
+EventType.RoleIdEvent = {
+    OnRoleIdChanged = "OnRoleIdChanged"
+}
+
+--信息相关事件
+EventType.MessageEvent = {
+    EventOnCheckClick = "EventOnCheckClick"
+}
+
+--学习课堂视频播放相关事件
+EventType.StudyClassEvent = {
+    EventOnVideoPlayOver = "EventOnVideoPlayOver"
+}
+
+--家长中心事件
+EventType.ParentCenterEvent = {
+    --获取服务器的用户数据
+    GetUserInfoInServer = "GetUserInfoInServer",
+    --获取本地userinfo数据
+    UpdateUserInfo = "UpdateUserInfo",
+    --获取服务器地址信息
+    GetAdressDataDone = "GetAdressDataDone",
+    --监听传递数据到服务器
+    PostAdressData = "PostAdressData",
+    --收到返回id后，创建物体
+    CreateAdress = "CreateAdress",
+    --修改地址信息
+    ChangeAdressInfo = "ChangeAdressInfo",
+    --修改地址完成
+    ChangeAdressInfoDone = "ChangeAdressInfoDone",
+    --删除地址信息
+    DeleteAdressInfo = "DeleteAdressInfo",
+    --获取手机验证码
+    GetVerifyCode = "GetVerifyCode",
+    --校验验证码
+    CheckVerifyCode = "CheckVerifyCode",
+    --手机验证成功
+    CheckPhone = "CheckPhone",
+    --修改小宝信息
+    ChangeBabyInfo = "ChangeBabyInfo",
+    --修改小宝信息完成
+    ChangeBabyInfoDone = "ChangeBabyInfoDone",
+    --修改昵称
+    ChangeNickName = "ChangeNickName",
+    --修改昵称成功
+    ChangeNickNameSuccess = "ChangeNickNameSuccess",
+    --绑定微信
+    BindingWeChat = "BindingWeChat",
+    --收益数据
+    EarningData = "EarningData",
+    --绑定支付宝
+    BindAlipay = "BindAlipay",
+    --绑定支付宝成功
+    BindAlipaySuccess = "BindAlipaySuccess",
+    --提现
+    WithdrawMoney = "WithdrawMoney",
+    --提现成功
+    WithdrawMoneySuccess = "WithdrawMoneySuccess",
+    --获取学习报告
+    StudyReport = "StudyReport",
+    --更新地址信息
+    UpdateAdressInfo = "UpdateAdressInfo",
+    --关闭界面
+    CloseParentForm = "CloseParentForm",
+    --设置收益数据
+    SetEarningData = "SetEarningData",
+    --更新收益数据
+    UpateEarningData = "UpateEarningData",
+    --监听打开家长中心
+    OpenParentCenter = "OpenParentCenter",
+    --根据类型和时间，获取收支明细
+    GetIncomeAndExpenses = "GetIncomeAndExpenses",
+    --推送收支明细
+    PushIncomeAndExpenses = "PushIncomeAndExpenses",
+    --根据类型和时间，获取收支明细
+    GetVipTeamByType = "GetVipTeamByType",
+    --推送收支明细
+    PushVipTeam = "PushVipTeamByType",
+    --根据id，获取收益信息
+    GetIncomeInfoById = "GetIncomeInfoById",
+    --推送收支明细
+    PushIncomeInfo = "PushIncomeInfo",
+    --根据时间，获取对应的收益信息
+    GetIncomeInfoByTime = "GetIncomeInfoByTime",
+    --提现之后，刷新收支信息
+    UpdateIncomeAndExpensesInfo = "UpdateIncomeAndExpensesInfo",
+    --关闭收益界面回调
+    CloseIncomeCallBack = "CloseIncomeCallBack",
+    --关闭提现界面
+    CloseWithdrawCallBack = "CloseWithdrawCallBack",
+    --未绑定支付宝或者微信
+    NotBindWeChatOrAlipay = "NotBindWeChatOrAlipay"
+}
+--18202344754
+EventType.ShopEven = {
+    EventGetShopList = "EventGetShopList",
+    EventPropsused = "EventPropsused"
+}
+EventType.DouDou = {
+    EventDouDouChange = "EventDouDouChange"
+}
+
+--大礼包界面相关事件
+EventType.BigGiftEvent = {
+    OpenGoodInfoPage = "OpenGoodInfoPage",
+    OrderAddressChange = "OrderAddressChange",
+    PaySuccess = "PaySuccess",
+    CloseBigGiftForm = "CloseBigGiftForm",
+    ReOpenBigGiftForm = "ReOpenBigGiftForm",
+    ReOpenPTForm = "ReOpenPTForm"
+}
+
+EventType.CloseForm = {
+    CloseBigGiftForm_move = "CloseBigGiftForm_move"
+}
+
+--滑动缓存管理器
+EventType.SliderCache = {
+    SendSliderIndex = "SendSliderIndex",
+    PushCacheData = "PushCacheData",
+    RequestDataTotal = "RequestDataTotal"
+}
+
+---地址管理页相关
+EventType.AddresManagerEvent = {
+    ChangeAddres = "ChangeAddres"
+}
+EventType.NewMainForm = {
+    ---按钮是否可以点击
+    BtnCanClick = "BtnCanClick",
+    OpenAdventure = "OpenAdventure",
+    AdventureOpenMain = "AdventureOpenMain",
+    SpaceGalaxyChoseAnimate = "SpaceGalaxyChoseAnimate",
+    OpenFormexceptMain = "OpenFormexceptMain",
+    CloseFormExceptMain = "CloseFormExceptMain",
+    NewMessage = "NewMessage"
+}
+
+EventType.Adventure = {
+    OpenGamePart = "OpenGamePart"
+}
+EventType.AdventureGamePart = {
+    ---打开启蒙星球 基础星球   进阶星球 拓展星球 成功
+    OpenGamePartSucces = "OpenGamePartSucces",
+    ---关闭一个游戏
+    CloseGame = "CloseGame",
+    ---成功打开某个游戏界面
+    OpenSmallGameSucces = "OpenSmallGameSucces",
+    YouKeLogin = "YouKeLogin"
+}
+
+EventType.TwentyFourHour = {
+    EnemyDie = "EnemyDie",
+    EnemyTakeDamage = "EnemyTakeDamage",
+    EnemyBorn = "EnemyBorn",
+    GameOver = "GameOver",
+    EatCake = "EatCake",
+    RecycleBullet = "RecycleBullet",
+    RecycleEnemy = "RecycleEnemy"
+}
+
+EventType.SpaceThrough = {
+    OnStarClick = "OnStarClick",
+    GoToNextLevel = "GoToNextLevel",
+    MathLevelComplete = "MathLevelComplete"
+}
+
+EventType.ChangeState = {
+    ChangeCurrState = "ChangeCurrState"
+}
+---关闭游戏引导视频
+EventType.GameMovieClose = {
+    gameMovieClose = "GameMovieClose"
+}
+--星球冒险游戏结束触发事件，增加游戏次数
+EventType.GameOverEnd = {
+    GameEnd = "GameEnd"
+}
+
+EventType.ChildrenCenter = {
+    UpdateTime = "UpdateTime"
+}
+EventType.SpaceGamePause = {
+    PauseAndResuse = "PauseAndResuse"
+}
+return EventType

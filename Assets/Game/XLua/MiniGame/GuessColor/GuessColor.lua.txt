@@ -1,0 +1,351 @@
+﻿local GuessColor = class("GuessColor", UIView):New()
+local this = GuessColor
+
+-- 游戏面板
+local _contentPanel=nil
+-- 选中特效
+local _selectFx = nil
+-- 选择的菜单
+local _selectItemMenu=nil
+
+-- 猜颜色的3d根物体
+local _guessColorGo=nil
+--- 所有的预设
+local _prefabs = nil
+-- 目标的球
+local _targetBalls= nil
+-- 选中的球
+local _selectBall = nil
+-- 选中球的初始位置
+local _selectNativePoint = nil
+--所有item面板
+local _itemsPanel=nil
+-- 当前的Item
+local _selectItemIndex = nil
+-- 半中材质
+local _halfMaterial = nil
+-- 全中材质
+local _fullMaterial = nil
+
+-- 结果
+local _resultMap={}
+--选择当前
+local _selectItemMap = {}
+
+function this:OnInit(transform, uiContext)
+end
+
+function this:OnEnter(transform, uiContext, callback, userData)
+
+    GameObject.Find("Directional Light").transform.localEulerAngles=Vector3(17.678,-27.957,-4.354)
+
+    _contentPanel = transform:Find("GameContent"):GetComponent(typeof(GE.RectTransform))
+    _selectFx = transform:Find("GameContent/Fx_Select"):GetComponent(typeof(GE.RectTransform))
+    _selectItemMenu=transform:Find("GameContent/Slot_Rune"):GetComponent(typeof(GE.RectTransform))
+    _selectItemMenu.transform:Find("Image/OK"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            AudioSystem.UISound:Play("LOTUS_FLUTE_Whistle_Up_01_mono",false,"GuessColor")
+            this:GameItemSure()
+          
+        end)
+    _contentPanel:Find("Menu/Popup/Button_OK"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            _contentPanel:Find("Menu").gameObject:SetActive(false)
+            this:GameInit()
+        end
+    )
+    _contentPanel:Find("Info/Popup/Button_OK"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            _contentPanel:Find("Info").gameObject:SetActive(false)
+        end
+    )
+
+    _guessColorGo=GE.GameObject.Instantiate(Resource:LoadObjectSync("Assets/Game/MiniGames/GuessColor/Prefab/GuessColor.prefab"))
+    _prefabs=_guessColorGo.transform:Find("Prefabs"):GetComponentsInChildren(typeof(GE.MeshRenderer))
+    _targetBalls=_guessColorGo.transform:Find("Item_Target"):GetComponentsInChildren(typeof(GE.MeshRenderer))
+    _itemsPanel=_guessColorGo.transform:Find("Items")
+    _halfMaterial=Resource:LoadObjectSync("Assets/Game/MiniGames/GuessColor/Material/Result_Half.mat")
+    _fullMaterial=Resource:LoadObjectSync("Assets/Game/MiniGames/GuessColor/Material/Result_Full.mat")
+
+    this:GameInit()
+end
+
+function this:OnUpdate(uiContext, deltaTime)
+    local uiCamera = GE.Camera.main
+    if _selectBall==nil then
+        if  GE.Input.GetMouseButtonDown(0) then
+            local result,hitInfo= uiCamera:Raycast()
+            if result then
+                if hitInfo.collider.transform.parent.name=="Prefabs" then
+                    _selectNativePoint=hitInfo.collider.transform.position
+                    _selectBall=hitInfo.collider.transform
+                    _selectBall:GetComponent(typeof(GE.Collider)).enabled=false
+                end
+            end
+        end
+    else
+        if GE.Input.GetMouseButtonUp(0) then
+            local result,hitInfo= uiCamera:Raycast()
+            if result then
+                local ball = hitInfo.collider.transform:Find("Ball")
+                if ball ~= nil then
+                    local material = _selectBall:GetComponent(typeof(GE.MeshRenderer)).material
+                    ball:GetComponent(typeof(GE.MeshRenderer)).material=material
+                    ball.gameObject:SetActive(true)
+                    _selectItemMap[ball]=_selectBall
+                    AudioSystem.UISound:Play("POP_Mouth_Darker_mono",false,"GuessColor")
+                end
+            end
+            _selectBall.position=_selectNativePoint
+            _selectBall:GetComponent(typeof(GE.Collider)).enabled=true
+            _selectBall=nil
+            _selectFx.gameObject:SetActive(false)
+            -- 所有的球都填完
+            if this:CheckItemComplete() then
+                _selectItemMenu.transform:Find("Image/Rotate").gameObject:SetActive(false)
+                _selectItemMenu.transform:Find("Image/OK").gameObject:SetActive(true)
+            end
+        elseif GE.Input.GetMouseButton(0) then
+            local point=uiCamera:ScreenToWorldPoint(GE.Input.mousePosition)
+            point.z=_selectNativePoint.z-1.0
+            _selectBall.position=point
+            local result,hitInfo= GE.Camera.main:Raycast()
+            local showFx =false
+            if result then
+                local ball = hitInfo.collider.transform:Find("Ball")
+                if ball ~= nil then
+                    local screenPos = uiCamera:WorldToScreenPoint(ball.position)
+                    screenPos=GE.Vector2(screenPos.x,screenPos.y)
+                    local r,p = uiCamera:ScreenPointToLocalPointInRectangle(_contentPanel,screenPos)
+                    if r then
+                        _selectFx.anchoredPosition=p
+                        showFx=true
+                    end
+                end
+            end
+            _selectFx.gameObject:SetActive(showFx)
+        end
+    end
+    
+    
+end
+
+function this:OnExit(uiContext)
+    if _guessColorGo~=nil then
+        GE.GameObject.Destroy(_guessColorGo)
+        _guessColorGo=nil
+    end
+end
+
+function this:OnFree(transform, uiContext)
+end
+
+------------------------------------------------------------------------------------
+
+function this:OnPointerDown(transform, eventdata, mousepos)
+end
+
+function this:OnPointerUp(transform, eventdata, mousepos)
+end
+
+function this:OnPointerClick(transform, eventdata, mousepos)
+end
+
+function this:OnBeginDrag(transform, eventdata, mousepos)
+end
+
+function this:OnDrag(transform, eventdata, mousepos)
+end
+
+function this:OnEndDrag(transform, eventdata, mousepos)
+end
+
+function this:OnTriggerEnter2D(selfTrans, targetTrans)
+end
+
+------------------------------------------------------------------------------------
+
+function this:StartGame()
+end
+
+function this:Puase()
+end
+
+function this:Continue()
+end
+
+
+function this:GameInit()
+    -- 设置答案的颜色
+    _guessColorGo.transform:Find("Lid").gameObject:SetActive(true)
+    local prefabLength = _prefabs.Length
+    _resultMap={}
+    for i = 0, _targetBalls.Length-1 do
+        local index = math.random(0,prefabLength-1)
+        _targetBalls[i].material=_prefabs[index].material
+        _resultMap[i]=index
+    end
+    -- 其他组件的初始化
+    for i = 0, _itemsPanel.childCount-1 do
+        local item =_itemsPanel:GetChild(i)
+        item:GetComponent(typeof(GE.Collider)).enabled=true
+        item:Find("Cube (0)/Ball").gameObject:SetActive(false)
+        item:Find("Cube (1)/Ball").gameObject:SetActive(false)
+        item:Find("Cube (2)/Ball").gameObject:SetActive(false)
+        item:Find("Cube (3)/Ball").gameObject:SetActive(false)
+        item:Find("Result/Cube (0)").gameObject:SetActive(false)
+        item:Find("Result/Cube (1)").gameObject:SetActive(false)
+        item:Find("Result/Cube (2)").gameObject:SetActive(false)
+        item:Find("Result/Cube (3)").gameObject:SetActive(false)
+    end
+    _selectItemIndex=nil
+    -- 获取第一个Item
+    this:SetItemAction(0)
+end
+
+--- 设置当前激活的Item
+function this:SetItemAction(index)
+    if index==nil and _selectItemIndex ~= nil then
+        -- 关闭之前的Item
+        local lastItem = _itemsPanel:GetChild(_selectItemIndex)
+        lastItem:GetComponent(typeof(GE.Collider)).enabled=true
+        --开启新的Item
+        _selectItemIndex=_selectItemIndex+1
+        -- if _selectItemIndex>=_itemsPanel.childCount then
+        --     this:GameLose()
+        --     return
+        -- end
+    else
+        _selectItemIndex=index
+    end
+
+    _selectItemMap={}
+    local item = _itemsPanel:GetChild(_selectItemIndex)
+    item:GetComponent(typeof(GE.Collider)).enabled=false
+    local uiCamera=GE.Camera.main
+    local screenPos = uiCamera:WorldToScreenPoint(item.position)
+    screenPos=GE.Vector2(screenPos.x,screenPos.y+125.5)
+    local r,p = uiCamera:ScreenPointToLocalPointInRectangle(_contentPanel,screenPos)
+    if r then
+        _selectItemMenu.anchoredPosition=p
+        _selectItemMenu.transform:Find("Image/Rotate").gameObject:SetActive(true)
+        _selectItemMenu.transform:Find("Image/OK").gameObject:SetActive(false)
+        _selectItemMenu.gameObject:SetActive(true)
+    end
+end
+
+--- 检测所有的球是否填完
+function this:CheckItemComplete()
+    local item = _itemsPanel:GetChild(_selectItemIndex)
+    -- 有一个Result物体
+    for i = 0, item.childCount-2 do
+        if not item:GetChild(i):Find("Ball").gameObject.activeSelf then
+            return false
+        end 
+    end
+    return true
+end
+
+function this:GameItemSure()
+    --隐藏菜单
+    _selectItemMenu.gameObject:SetActive(false)
+    --设置当前的结果
+    local item = _itemsPanel:GetChild(_selectItemIndex)
+
+    -- 当前选择的对应关系
+    local selectMap={}
+    for i = 0, _targetBalls.Length-1 do
+        local itemBall = item:GetChild(i):Find("Ball")
+        local prefab =_selectItemMap[itemBall]
+        for j = 0, _prefabs.Length-1 do
+            if prefab==_prefabs[j].transform then
+                selectMap[i]=j
+                break
+            end
+        end
+    end
+
+    -- 位置 颜色 全对
+    local rightFull=0
+    --剩余球
+    local otherBalls={}
+    local otherTargets ={}
+    for i = 0, _targetBalls.Length-1 do
+        if selectMap[i]==_resultMap[i] then
+            rightFull=rightFull+1
+        else
+            table.insert(otherBalls,selectMap[i])
+            table.insert(otherTargets,_resultMap[i])
+        end
+    end
+
+    -- 全对
+    if rightFull==_targetBalls.Length then
+        this:GameWin()
+        return
+    end
+
+    -- 颜色的对的球
+    local rightHalf=0
+    for i = 1, #otherBalls do
+        for j = 1, #otherTargets do
+            if otherBalls[i]==otherTargets[j] then
+                rightHalf=rightHalf+1
+                table.remove(otherTargets,j)
+                break
+            end
+        end
+    end
+    -- 显示结果
+    local result = item:Find("Result")
+    for i = 1, rightFull do
+        local mr =result:GetChild(i):GetComponent(typeof(GE.MeshRenderer))
+        mr.material=_fullMaterial
+        mr.gameObject:SetActive(true)
+    end
+    for i = rightFull+1, rightFull+rightHalf do
+        local mr =result:GetChild(i):GetComponent(typeof(GE.MeshRenderer))
+        mr.material=_halfMaterial
+        mr.gameObject:SetActive(true)
+    end
+
+    if _selectItemIndex+1>=_itemsPanel.childCount then
+        this:GameLose()
+        return
+    else
+        -- 设置Item
+        this:SetItemAction()
+        --显示提示
+        _contentPanel:Find("Info/Popup/Image/Text_Full"):GetComponent(typeof(UGUI.Text)).text=tostring(rightFull)
+        _contentPanel:Find("Info/Popup/Image/Text_Half"):GetComponent(typeof(UGUI.Text)).text=tostring(rightHalf)
+        _contentPanel:Find("Info").gameObject:SetActive(true)
+    end
+   
+   
+end
+
+
+-- 游戏胜利
+function this:GameWin()
+    _guessColorGo.transform:Find("Lid").gameObject:SetActive(false)
+    this:SetMenu(true,"Win!!!")
+end
+
+-- 游戏失败
+function this:GameLose()
+    _guessColorGo.transform:Find("Lid").gameObject:SetActive(false)
+    this:SetMenu(false,"Failed!!!")
+    AudioSystem.UISound:Play("LOTUS_FLUTE_Whistle_Down_01_mono",false,"GuessColor")
+end
+
+-- 设置显示菜单
+function this:SetMenu(win,text)
+    local menu = _contentPanel:Find("Menu")
+    menu:Find("Popup/Title_Bg/Text"):GetComponent(typeof(UGUI.Text)).text = text
+    menu:Find("Popup/Win").gameObject:SetActive(win)
+    menu:Find("Popup/Failed").gameObject:SetActive(not win)
+    menu.gameObject:SetActive(true)
+end
+
+
+return this

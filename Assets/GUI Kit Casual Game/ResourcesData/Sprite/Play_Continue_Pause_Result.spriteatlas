@@ -1,0 +1,70 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Play_Continue_Pause_Result
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: f4af54c401fe646ada00f5211e256ab0, type: 3}
+    totalSpriteSurfaceArea: 179231
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 82857232218d743c0bdd3f145cd1120f, type: 3}
+  - {fileID: 21300000, guid: 9e8e2254e0d704081931984187b98db6, type: 3}
+  - {fileID: 21300000, guid: bb686ea4c141046129a10074d93b72fd, type: 3}
+  - {fileID: 21300000, guid: ef337475efc8f47e0a137be142ee61c3, type: 3}
+  - {fileID: 21300000, guid: 4b00db671a20143a8be8c3b5301d6a23, type: 3}
+  - {fileID: 21300000, guid: a07f1de97da8b48b6bd4d976ad1b1fad, type: 3}
+  - {fileID: 21300000, guid: cd4f5d6acfdcc49288d2e34761f088bc, type: 3}
+  - {fileID: 21300000, guid: 61f14e0da5f2045d5882369db281148c, type: 3}
+  - {fileID: 21300000, guid: def9d44e77c3046528bd1809282fe1cb, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - result_star_large
+  - pause_btn_icon_play
+  - pause_btn_icon_setting
+  - pause_btn_blue
+  - pause_btn_icon_resume
+  - pause_btn_red
+  - pause_btn_icon_exit
+  - particle_circle
+  - result_star_samll
+  m_Tag: Play_Continue_Pause_Result
+  m_IsVariant: 0

@@ -1,0 +1,519 @@
+local GoBangForm = class("GoBangForm", UIView):New()
+local this = GoBangForm
+
+local Board = require "GoBangChessBoard"
+local Pieces = require "GoBangChessPieces"
+local AI = require "GoBangAI"
+local Config = require "GoBangConfig"
+local Model = require "GoBangModel"
+
+local selfCanvasGroup = nil
+
+--- 点击位置
+local clickPos = nil
+local touchPanel = nil
+--- 棋子的位置
+local piecesPos = nil
+--- 黑白子
+local black_pieces = nil
+local white_pieces = nil
+--- 黑白子对象集合
+local piecesList = {}
+--- 存放棋子的父物体
+local piecesContent = nil
+
+--- 当前点的四个轴所有坐标
+local curAxisPos = nil
+
+--- 选择游戏模式按钮
+local aiBtn = nil
+local vsBtn = nil
+--- 选择游戏模式界面
+local changeGamePanel = nil
+--- 游戏获胜界面
+local gameWinPanel = nil
+local gameWinPanelPos = nil
+local closeBtn = nil
+local restartBtn = nil
+
+local winType = nil
+-- local winSpine = nil
+
+--- 当前游戏模式
+local curGameType = nil
+--- 当前棋手
+local curChessPlayer = nil
+--- 当前棋子类型,默认黑子先行
+local curPiecesType = Config.PiecesType.Black
+--- 当前棋子显示图片
+local curPiecesImg = {}
+--- 当前棋子的位置信息
+local curPiecesPos_X = nil
+local curPiecesPos_Y = nil
+
+local greenFrame = nil
+local gameOver = false
+local overContent = nil
+
+--- 关闭游戏回调
+local CloseGameCallBack = nil
+
+--- 计时器
+local timer = 0
+--- 随机等待时间
+local randomDelayTime = 0
+
+--- 十字光标
+local HV_Corss = {}
+
+local _selfTransform = nil
+
+function this:OnInit(transform, uiContext)
+    selfCanvasGroup = transform:GetTransform("GameContent"):GetComponent("CanvasGroup")
+    black_pieces = transform:GetTransform("Black")
+    white_pieces = transform:GetTransform("White")
+    piecesContent = transform:GetTransform("PiecesContent")
+    changeGamePanel = transform:GetGameObject("ChangeGamePanel")
+    gameWinPanel = transform:GetGameObject("GameOverPanel")
+    closeBtn = transform:GetButton("CloseBtn")
+    restartBtn = transform:GetButton("RestartBtn")
+    vsBtn = transform:GetButton("VSBtn")
+    aiBtn = transform:GetButton("AIBtn")
+    curPiecesImg[Config.PiecesType.White] = transform:GetGameObject("White_Pieces")
+    curPiecesImg[Config.PiecesType.Black] = transform:GetGameObject("Black_Pieces")
+    overContent = transform:GetTransform("gameOverContent")
+    gameWinPanelPos = overContent.localPosition
+    HV_Corss["Horizontal"] = transform:GetTransform("Hor"):GetComponent("RectTransform")
+    HV_Corss["Vertical"] = transform:GetTransform("Ver"):GetComponent("RectTransform")
+    HV_Corss["Black"] = transform:GetTransform("HV_Black"):GetComponent("RectTransform")
+    HV_Corss["White"] = transform:GetTransform("HV_White"):GetComponent("RectTransform")
+    touchPanel = transform:GetTransform("TouchPanel")
+    greenFrame = transform:GetTransform("greenFrame"):GetComponent("RectTransform")
+    clickPos = transform:GetTransform("ClickPos")
+    -- local spine = transform:GetTransform("WinSpine"):GetComponent("SkeletonGraphic")
+    -- winSpine = SpineSystem:Create(spine)
+    gameWinPanel:SetActive(false)
+    --- 初始化二维数组
+    for i = 0, Config.Board_W_Num do
+        piecesList[i] = {}
+    end
+
+    --- 初始化
+    Board:BoardInit()
+    AI:AIInit()
+end
+
+function this:OnEnter(transform, uiContext, callback, userData)
+    _selfTransform = transform
+
+    CloseGameCallBack = callback
+    aiBtn:OnClick(
+        function()
+            curGameType = Config.GameType.AI
+            changeGamePanel:SetActive(false)
+            --- AI初始化
+            AI:AIInit()
+            this:AIMoveLater()
+        end
+    )
+    vsBtn:OnClick(
+        function()
+            curGameType = Config.GameType.VS
+            changeGamePanel:SetActive(false)
+        end
+    )
+    closeBtn:OnClick(
+        function()
+            if CloseGameCallBack ~= nil then
+                CloseGameCallBack()
+            end
+            this:OverPaneShow(false)
+        end
+    )
+    restartBtn:OnClick(
+        function()
+            this:OverPaneShow(
+                false,
+                function()
+                    this:GameRestart()
+                    changeGamePanel:SetActive(true)
+                end
+            )
+        end
+    )
+    changeGamePanel:SetActive(true)
+    AudioSystem.Music:Play("Beat Thee", true, "GoBangForm")
+end
+
+function this:OnExit()
+    AudioSystem.Music:Stop()
+end
+
+function this:OnUpdate(uiContext, deltaTime)
+    local ray = GE.Camera.main:ScreenPointToRay(GE.Input.mousePosition)
+    local result, hitInfo = GE.Physics.Raycast(ray)
+    print(result, "--------------", hitInfo)
+
+    if curGameType == Config.GameType.AI then
+        --- 玩家落子后AI落子
+        if curChessPlayer == Config.ChessPlayer.Player and gameOver == false then
+            timer = timer + deltaTime
+            if timer > randomDelayTime then
+                timer = 0
+                this:AIMoveLater()
+            end
+        end
+    end
+
+    -- ---点击单人AI互博
+    -- if curGameType == Config.GameType.AI and gameOver == false then
+    --     timer = timer + deltaTime
+    --     if timer > 0.3 then
+    --         timer = 0
+    --         this:AIMoveLater()
+    --     end
+    -- end
+end
+
+function this:OnFree(transform, uiContext)
+    this:FieldInit()
+end
+
+function this:OnPointerDown(transform, eventdata, mousepos)
+    local pos = this:ConvertPosition(mousepos)
+    piecesPos = Model:CalcPos(pos)
+end
+
+function this:OnPointerUp(transform, eventdata, mousepos)
+    if curChessPlayer == Config.ChessPlayer.AI or curGameType == Config.GameType.VS then
+        --- 转换坐标
+        this:PlayerMoveLater()
+    end
+end
+
+function this:OnBeginDrag(transform, eventdata, mousepos)
+    this:ShowCrossCursor(true)
+end
+
+function this:OnDrag(transform, eventdata, mousepos)
+    local pos = this:ConvertPosition(mousepos)
+    piecesPos = Model:CalcPos(pos)
+    this:SetCrossCursorPos(piecesPos)
+end
+
+function this:OnEndDrag(transform, eventdata, mousepos)
+    this:ShowCrossCursor(false)
+end
+
+--=====================================================================================================
+
+--- 游戏初始化
+function this:GameRestart()
+    changeGamePanel:SetActive(true)
+    gameOver = false
+    curPiecesPos_X = nil
+    curPiecesPos_Y = nil
+    curPiecesType = Config.PiecesType.Black
+    curGameType = nil
+    curChessPlayer = nil
+    Board:BoardInit()
+    AI:AIInit()
+    this:BoardClear()
+end
+
+--- 视频关闭之后回调
+function this:StartGame()
+    changeGamePanel:SetActive(true)
+end
+
+--- 为了处理分辨率过低，导致坐标计算有误使用的方法
+function this:ConvertPosition(pos)
+    local tempPos = nil
+    clickPos.position = pos
+    clickPos:SetParent(touchPanel)
+    tempPos = clickPos.localPosition
+    clickPos:SetParent(selfCanvasGroup.transform)
+    return tempPos
+end
+
+--- 显示隐藏十字光标
+function this:ShowCrossCursor(isshow)
+    if isshow then
+        if curPiecesType == Config.PiecesType.White then
+            HV_Corss["White"].gameObject:SetActive(true)
+            HV_Corss["Black"].gameObject:SetActive(false)
+        elseif curPiecesType == Config.PiecesType.Black then
+            HV_Corss["White"].gameObject:SetActive(false)
+            HV_Corss["Black"].gameObject:SetActive(true)
+        end
+        HV_Corss["Horizontal"].gameObject:SetActive(true)
+        HV_Corss["Vertical"].gameObject:SetActive(true)
+    else
+        HV_Corss["White"].gameObject:SetActive(false)
+        HV_Corss["Black"].gameObject:SetActive(false)
+        HV_Corss["Horizontal"].gameObject:SetActive(false)
+        HV_Corss["Vertical"].gameObject:SetActive(false)
+    end
+end
+
+--- 设置十字光标位置和棋子
+function this:SetCrossCursorPos(pos)
+    if curPiecesType == Config.PiecesType.White then
+        HV_Corss["White"].anchoredPosition = Vector2(pos.x, pos.y)
+    elseif curPiecesType == Config.PiecesType.Black then
+        HV_Corss["Black"].anchoredPosition = Vector2(pos.x, pos.y)
+    end
+    HV_Corss["Horizontal"].anchoredPosition = Vector2(HV_Corss["Horizontal"].anchoredPosition.x, pos.y)
+    HV_Corss["Vertical"].anchoredPosition = Vector2(pos.x, HV_Corss["Vertical"].anchoredPosition.y)
+end
+
+--- 清空棋盘
+function this:BoardClear()
+    local items = TransformExtension.GetChilTransforms(piecesContent)
+    for i = 0, items.Length - 1 do
+        CS.UnityEngine.GameObject.Destroy(items[i].gameObject)
+    end
+    for i = 0, Config.Board_W_Num do
+        piecesList[i] = {}
+    end
+end
+
+--- 玩家落子
+function this:PlayerMoveLater()
+    if this:JudgeCurPosIsCreate() then
+        curChessPlayer = Config.ChessPlayer.Player
+        --- 创建棋子
+        this:CreatePieces(curPiecesType)
+        --- 变换棋子
+        this:ChangeCurPiecesType()
+        --- 计算坐标
+        curAxisPos = Model:CalcAxisIndex(curPiecesPos_X, curPiecesPos_Y)
+        --- 五珠相连是否完成
+        this:FiveBeadBeJoinedIsDone()
+        --- 判断是否和棋
+        if Board:IsHaveEmptyInBoard() == false then
+            this:GameADraw()
+        end
+        --- 随机等待时间
+        randomDelayTime = (math.random(5, 10) / 10)
+    end
+end
+
+--- AI落子
+function this:AIMoveLater()
+    cs_coroutine.start(
+        function()
+            selfCanvasGroup.blocksRaycasts = false
+            coroutine.yield(CS.UnityEngine.WaitForEndOfFrame())
+            piecesPos = AI:MoveLater(curPiecesPos_X, curPiecesPos_Y)
+            this:CreatePieces(curPiecesType)
+            this:ChangeCurPiecesType()
+            --- 计算坐标
+            curAxisPos = Model:CalcAxisIndex(curPiecesPos_X, curPiecesPos_Y)
+            --- 五珠相连是否完成
+            this:FiveBeadBeJoinedIsDone()
+            curChessPlayer = Config.ChessPlayer.AI
+            --- 判断是否和棋
+            if Board:IsHaveEmptyInBoard() == false then
+                this:GameADraw()
+            end
+            selfCanvasGroup.blocksRaycasts = true
+        end
+    )
+end
+
+--- 创建棋子对象
+function this:CreatePieces(type)
+    local index_x = math.ceil(piecesPos.x / Config.Board_Grid)
+    local index_y = math.ceil(piecesPos.y / Config.Board_Grid)
+    --- 记录
+    Board:SaveMoveLaterInfoInBoard(type, index_x, index_y)
+    --- 当前棋子的坐标
+    curPiecesPos_X = index_x
+    curPiecesPos_Y = index_y
+
+    --- 实例化游戏物体
+    local go = nil
+    if type == Config.PiecesType.Black then
+        go = GameObject.Instantiate(black_pieces)
+    elseif type == Config.PiecesType.White then
+        go = GameObject.Instantiate(white_pieces)
+    end
+    --- 设置棋子的父物体
+    go.transform:SetParent(piecesContent)
+    go.transform.localPosition = Vector3.zero
+    go.transform.localScale = Vector3.one
+    --- 创建对象
+    local item = Pieces:New(go)
+    item:Init(type, index_x, index_y, piecesPos)
+    ---绿框
+    if greenFrame.gameObject.activeSelf == false then
+        greenFrame.gameObject:SetActive(true)
+    end
+    greenFrame.anchoredPosition = piecesPos
+    piecesList[index_x][index_y] = item
+    -- AudioSystem.UISound:PlayWithPath("Assets/Game/MiniGames/GoBangForm/Audio/UISound/GoBang_MoveLater.mp3", false)
+end
+
+--- 变更棋子类型
+function this:ChangeCurPiecesType()
+    if curPiecesType == Config.PiecesType.Black then
+        curPiecesType = Config.PiecesType.White
+        curPiecesImg[Config.PiecesType.Black]:SetActive(false)
+        curPiecesImg[Config.PiecesType.White]:SetActive(true)
+    elseif curPiecesType == Config.PiecesType.White then
+        curPiecesType = Config.PiecesType.Black
+        curPiecesImg[Config.PiecesType.Black]:SetActive(true)
+        curPiecesImg[Config.PiecesType.White]:SetActive(false)
+    end
+end
+
+--- 判断当前位置是否可以创建
+function this:JudgeCurPosIsCreate()
+    local index_x = math.ceil(piecesPos.x / Config.Board_Grid)
+    local index_y = math.ceil(piecesPos.y / Config.Board_Grid)
+
+    if index_x >= 0 and index_x <= Config.Board_W_Num and index_y >= 0 and index_y <= Config.Board_H_Num then
+        if piecesList[index_x][index_y] == nil then
+            return true
+        else
+            return false
+        end
+    end
+end
+
+--- 判断是否连珠
+function this:FiveBeadBeJoinedIsDone()
+    if this:JudgeEveryAxis(curAxisPos[Config.AxisType.Horizontal]) then --- 判断横轴
+        this:GameOver()
+    elseif this:JudgeEveryAxis(curAxisPos[Config.AxisType.Vertical]) then --- 判断竖轴
+        this:GameOver()
+    elseif this:JudgeEveryAxis(curAxisPos[Config.AxisType.LeftOblique]) then --- 判断左斜轴
+        this:GameOver()
+    elseif this:JudgeEveryAxis(curAxisPos[Config.AxisType.RightOblique]) then --- 判断右斜轴
+        this:GameOver()
+    end
+end
+
+--- 判断每一个轴
+function this:JudgeEveryAxis(axisTable)
+    if #axisTable >= Config.JoinedNum then
+        -- 计数
+        local beJoinedCount = 1
+        -- 上一个的棋子类型
+        local lastPiecesType = nil
+        --- 有效索引
+        local validIndex = nil
+
+        --- 找到第一个有效索引
+        for i = 1, #axisTable do
+            if piecesList[axisTable[i].x][axisTable[i].y] ~= nil then
+                lastPiecesType = piecesList[axisTable[i].x][axisTable[i].y].type
+                validIndex = i
+                break
+            end
+        end
+        --- 判断相连
+        for i = validIndex + 1, #axisTable do
+            if piecesList[axisTable[i].x][axisTable[i].y] ~= nil then
+                if piecesList[axisTable[i].x][axisTable[i].y].type == lastPiecesType then
+                    beJoinedCount = beJoinedCount + 1
+                else
+                    beJoinedCount = 1
+                end
+                lastPiecesType = piecesList[axisTable[i].x][axisTable[i].y].type
+                if beJoinedCount == Config.JoinedNum then
+                    winType = lastPiecesType
+                    return true
+                end
+            else
+                beJoinedCount = 1
+                lastPiecesType = nil
+            end
+        end
+        return false
+    else
+        return false
+    end
+end
+
+--- 游戏胜利
+function this:GameOver()
+    print("游戏胜利")
+    gameOver = true
+    greenFrame.gameObject:SetActive(false)
+    this:OverPaneShow(true)
+    -- AudioSystem.UISound:PlayWithPath("Assets/Game/MiniGames/GoBangForm/Audio/UISound/GoBang_GameOver.mp3", false)
+end
+
+--- 平局
+function this:GameADraw()
+    gameOver = true
+    greenFrame.gameObject:SetActive(false)
+    winType = "GameADraw"
+    this:OverPaneShow(true)
+end
+
+function this:OverPaneShow(isdown, cb)
+    if isdown then
+        gameWinPanel:SetActive(true)
+        local overText =
+            gameWinPanel.transform:Find("gameOverContent/Title/Text"):GetComponent(typeof(CS.TMPro.TextMeshProUGUI))
+        local whiteResult = gameWinPanel.transform:Find("gameOverContent/Title/White_Result").gameObject
+        whiteResult:SetActive(false)
+        local blackResult = gameWinPanel.transform:Find("gameOverContent/Title/Black_Result").gameObject
+        blackResult:SetActive(false)
+        if winType == Config.PiecesType.White then
+            overText.text = "White Win!"
+            whiteResult:SetActive(true)
+        elseif winType == Config.PiecesType.Black then
+            overText.text = "Black Win!"
+            blackResult:SetActive(true)
+        elseif winType == "GameADraw" then
+            overText.text = "Black and white are tied."
+        end
+        overContent:DOLocalMove(Vector3.zero, Config.OverPanelMoveTime):SetEase(doTween_ease.InQuart):OnComplete(
+            function()
+                if cb ~= nil then
+                    cb()
+                    gameWinPanel:SetActive(false)
+                end
+            end
+        )
+    else
+        overContent:DOLocalMove(gameWinPanelPos, Config.OverPanelMoveTime):SetEase(doTween_ease.OutQuart):OnComplete(
+            function()
+                if cb ~= nil then
+                    cb()
+                    gameWinPanel:SetActive(false)
+                end
+            end
+        )
+    end
+end
+
+function this:FieldInit()
+    selfCanvasGroup = nil
+    piecesPos = nil
+    black_pieces = nil
+    white_pieces = nil
+    piecesList = {}
+    piecesContent = nil
+    curAxisPos = nil
+    aiBtn = nil
+    vsBtn = nil
+    changeGamePanel = nil
+    curGameType = nil
+    curChessPlayer = nil
+    curPiecesType = Config.PiecesType.Black
+    curPiecesImg = {}
+    curPiecesPos_X = nil
+    curPiecesPos_Y = nil
+    gameWinPanel = nil
+    closeBtn = nil
+    restartBtn = nil
+    gameOver = false
+    HV_Corss = {}
+end
+
+return this

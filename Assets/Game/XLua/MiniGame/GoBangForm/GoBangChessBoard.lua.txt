@@ -1,0 +1,116 @@
+local GoBangChessBoard = {}
+local this = GoBangChessBoard
+
+local Config = require "GoBangConfig"
+local Model = require "GoBangModel"
+--- 棋盘信息
+local boardInfo = {}
+--- 四个轴的index信息
+local axisIndex = nil
+--- 四个轴上面记录棋子信息的数组
+local horizontalInfo = {}
+local verticalInfo = {}
+local leftObliqueInfo = {}
+local rightObliqueInfo = {}
+
+--- 初始化
+function this:BoardInit()
+    axisIndex = nil
+    --- 初始化棋盘信息
+    for i = 0, Config.Board_W_Num do
+        boardInfo[i] = {}
+        for j = 0, Config.Board_W_Num do
+            boardInfo[i][j] = 0 -- 空=0
+        end
+    end
+end
+
+function this:SetTempPosInfo(posx, posy, piecestype)
+    if piecestype == Config.PiecesType.Black then
+        boardInfo[posx][posy] = 1
+    elseif piecestype == Config.PiecesType.White then
+        boardInfo[posx][posy] = 2
+    end
+end
+
+--- 获得指定点的信息
+function this:GetBoardPosInfo(posx, posy)
+    return boardInfo[posx][posy]
+end
+
+--- 在棋盘中记录落子信息
+function this:SaveMoveLaterInfoInBoard(type, posx, posy)
+    if type == Config.PiecesType.Black then
+        boardInfo[posx][posy] = 1 --黑=1
+    elseif type == Config.PiecesType.White then
+        boardInfo[posx][posy] = 2 --白=2
+    end
+end
+
+--- 清空指定位置的信息
+function this:ClearInfoByPos(posx, posy)
+    boardInfo[posx][posy] = 0
+end
+
+--- 棋盘是否有空格
+function this:IsHaveEmptyInBoard()
+    local ishave = false
+    for i = 0, Config.Board_W_Num do
+        for j = 0, Config.Board_W_Num do
+            if boardInfo[i][j] == 0 then
+                ishave = true
+                break
+            end
+        end
+    end
+    return ishave
+end
+
+--- 拿到当前位置四个方向上的所有信息
+function this:GetAxisInfoByPos(posx, posy, type)
+    if type == Config.AIMoveLaterType.Defend then
+        axisIndex = Model:AIAssessCalcAxisIndex(posx, posy)
+    elseif type == Config.AIMoveLaterType.Attack then
+        axisIndex = Model:AIMoveLaterAssessCalcAxisIndex(posx, posy)
+    end
+
+    return this:GetFourAxisInfo(boardInfo)
+end
+
+function this:GetFourAxisInfo(table)
+    rightObliqueInfo = {}
+    verticalInfo = {}
+    horizontalInfo = {}
+    leftObliqueInfo = {}
+
+    local temp = nil
+    -- 四个轴上的所有信息
+    for i = 1, #axisIndex[Config.AxisType.Horizontal] do
+        temp = axisIndex[Config.AxisType.Horizontal][i]
+        horizontalInfo[i] = {x = temp.x, y = temp.y, info = table[temp.x][temp.y]}
+    end
+
+    for i = 1, #axisIndex[Config.AxisType.Vertical] do
+        temp = axisIndex[Config.AxisType.Vertical][i]
+        verticalInfo[i] = {x = temp.x, y = temp.y, info = table[temp.x][temp.y]}
+    end
+
+    for i = 1, #axisIndex[Config.AxisType.LeftOblique] do
+        temp = axisIndex[Config.AxisType.LeftOblique][i]
+        leftObliqueInfo[i] = {x = temp.x, y = temp.y, info = table[temp.x][temp.y]}
+    end
+
+    for i = 1, #axisIndex[Config.AxisType.RightOblique] do
+        temp = axisIndex[Config.AxisType.RightOblique][i]
+        rightObliqueInfo[i] = {x = temp.x, y = temp.y, info = table[temp.x][temp.y]}
+    end
+
+    return {
+        [Config.AxisType.Horizontal] = horizontalInfo,
+        [Config.AxisType.Vertical] = verticalInfo,
+        [Config.AxisType.LeftOblique] = leftObliqueInfo,
+        [Config.AxisType.RightOblique] = rightObliqueInfo
+    }
+end
+
+return this

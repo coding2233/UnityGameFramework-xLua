@@ -1,0 +1,59 @@
+MaterialPool = {}
+local this = MaterialPool
+
+local _materialPool = {}
+local MaxNum = 3
+local _shaders = {}
+
+local Name = nil
+function MaterialPool:FindShader(shaderName)
+    local shader = _shaders[shaderName]
+    if shader == nil then
+        local shaderPath = Utility.AssetPath:GetShader(shaderName)
+        shader = Resource:LoadObjectSync(shaderPath)
+        _shaders[shaderName] = shader
+    end
+    return shader
+end
+
+function MaterialPool:Creat(shaderName)
+    Name = shaderName
+    for i = 1, MaxNum do
+        --local material = Material(Shader.Find(shaderName))
+        local material = Material(MaterialPool:FindShader(shaderName))
+        table.insert(_materialPool, material)
+    end
+end
+
+-- function MaterialPool:GetMaterial(index)
+--     if Material_table ~= nil and #Material_table > index then
+--         return Material_table[index]
+--     else
+--         local material = Material(MaterialPool:FindShader(Name))
+--         Material_table[index] = material
+--         return  Material_table[index]
+--     end
+-- end
+
+--取出材质
+function this:Dequeue()
+    local mat = nil
+    if #_materialPool > 0 then
+        mat = _materialPool[1]
+        table.remove(_materialPool, 1)
+    else
+        mat = Material(MaterialPool:FindShader(Name))
+    end
+    return mat
+end
+
+--回收材质
+function this:Enqueue(mat)
+    table.insert(_materialPool,mat)
+end
+
+function MaterialPool:Clear()
+    _materialPool = {}
+end
+
+return MaterialPool

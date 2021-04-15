@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Roulette
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 1b2f2d0ba340841a19676924f507d4d7, type: 3}
+    totalSpriteSurfaceArea: 4403321
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 3d341a10fc920450984f683761a1e464, type: 3}
+  - {fileID: 21300000, guid: 85ac62813bcfa4211ac64779658aecc0, type: 3}
+  - {fileID: 21300000, guid: 92941183ea08b4de6906e406535ef99e, type: 3}
+  - {fileID: 21300000, guid: 7872ace3dc2664a37b5618813a148479, type: 3}
+  - {fileID: 21300000, guid: d535ffb65bf754dda95c3181d7389600, type: 3}
+  - {fileID: 21300000, guid: aa2a23d7d01ec42d3b16ee5947285b9c, type: 3}
+  - {fileID: 21300000, guid: a128d81974fbf44c4867f31f6a2c6aa0, type: 3}
+  - {fileID: 21300000, guid: 53ad1e6be082d413898218de8b60b447, type: 3}
+  - {fileID: 21300000, guid: 70866dab1e96e4e42b38a4725770f18b, type: 3}
+  - {fileID: 21300000, guid: a0a59abfa2a0941cc845b6ae63e998ec, type: 3}
+  - {fileID: 21300000, guid: f7ee65ff8e3f54a6fa8a01a1e8bfb904, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - roulette_icon_boxing-gloves
+  - roulette_character_sample
+  - roulette_bg
+  - roulette_gold
+  - btn_icon_ad_bic
+  - roulette_wheel
+  - roulette_btn_spin
+  - roulette_icon_clover
+  - roulette_arrow
+  - roulette_glow
+  - roulette_gem
+  m_Tag: Roulette
+  m_IsVariant: 0

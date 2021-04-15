@@ -1,0 +1,201 @@
+require "Texture2DCachePool"
+
+--- 网络请求
+WebRequest = {}
+
+local this = WebRequest
+
+-- 测试服务器的地址
+local _appServerTest = "http://wanderer.cloud:19321/"
+-- 正式服务器的地址
+local _appServerOfficial = "http://wanderer.cloud:19321/"
+
+--- 所有的网络请求的集合
+local _webRequest = {}
+--- 超时
+local _timeOut = 6.0
+
+--- 等待界面是否开启
+local _waitUIView = nil
+
+--- 混合请求列表完成情况
+local _blendRequest = {}
+
+--- Get请求
+---@param url string
+---@param callback Action<Table>
+function this:Get(url, callback)
+    --- 获取完整url
+    url = this:GetUrl(url)
+    this:AddWebRequst(url, callback)
+    -- 请求网络
+    GameMode.WebRequest:RequestText(
+        url,
+        this:GetHeader(),
+        function(result, content)
+            print("Url:", url, "Result:", content)
+            this:CallWebRequst(url, result, content)
+            -- local jsonData = nil
+            -- if result then
+            --     jsonData = json.decode(content)
+            -- else
+            --     Log.Warning(url .. " " .. content)
+            -- end
+            -- callback(jsonData)
+        end
+    )
+end
+
+--- Post请求
+---@param url string
+---@param userdata table
+---@param callback Action<Table>
+function this:Post(url, userdata, callback)
+    --- 获取完整url
+    url = this:GetUrl(url)
+    this:AddWebRequst(url, callback)
+    -- 获取时间戳
+    userdata.timestamp = GameMode.Setting:GetTimeStamp()
+    -- 转化数据
+    local jsonContent = json.encode(userdata)
+    GameMode.WebRequest:RequestTextPost(
+        url,
+        this:GetHeader(),
+        jsonContent,
+        function(result, content)
+            print("Url:", url, "Post:", jsonContent, "Result:", content)
+            this:CallWebRequst(url, result, content)
+            -- local jsonData = nil
+            -- if result then
+            --     jsonData = json.decode(content)
+            -- else
+            --     Log.Warning(url .. " " .. content)
+            -- end
+            -- callback(jsonData)
+        end
+    )
+end
+
+--- 混合请求
+--- @param requestTable Table 格式{{type="Post或者Get",sign="字符串用来区分",url="",data={Get请求可以不传}} ， {..} ，{..}，{..}}
+function this:RequestBlend(requestTable, callback)
+    for i = 1, #requestTable do
+        _blendRequest[requestTable[i].sign] = {isdone = false, result = nil}
+    end
+    for i = 1, #requestTable do
+        if requestTable[i].type == "Post" then
+            this:Post(
+                requestTable[i].url,
+                requestTable[i].data,
+                function(result)
+                    this:BlendCallback(requestTable[i], result, callback)
+                end
+            )
+        elseif requestTable[i].type == "Get" then
+            this:Get(
+                requestTable[i].url,
+                function(result)
+                    this:BlendCallback(requestTable[i], result, callback)
+                end
+            )
+        end
+    end
+end
+--- 混合请求回调
+function this:BlendCallback(data, result, callback)
+    local requestDone = true
+    _blendRequest[data.sign].isdone = true
+    _blendRequest[data.sign].result = result
+    for key, value in pairs(_blendRequest) do
+        if value.isdone == false then
+            requestDone = false
+        end
+    end
+    if requestDone == true then
+        if callback ~= nil then
+            callback(_blendRequest)
+        end
+    end
+end
+
+function this:Update(deltaTime)
+    if #_webRequest > 0 then
+        for i = 1, #_webRequest do
+            local waiteTime = Time.realtimeSinceStartup - _webRequest[i].time
+            if waiteTime > _timeOut then
+                -- -1代表超时
+                _webRequest[i].callback({code = -1})
+                table.remove(_webRequest, i)
+            end
+        end
+    else
+        if _waitUIView ~= nil then
+            UISystem:Close(_waitUIView)
+            _waitUIView = nil
+        end
+    end
+end
+
+---添加WebRequst
+function this:AddWebRequst(url, callback)
+    local wr = {}
+    wr.url = url
+    wr.callback = callback
+    wr.time = Time.realtimeSinceStartup
+    table.insert(_webRequest, wr)
+
+    -- if _waitUIView == nil then
+    --     _waitUIView = UISystem:Push("WebRequestWaitUIView").NextUIView
+    -- end
+end
+
+---WebRequest的回调
+function this:CallWebRequst(url, result, content)
+    local index = nil
+    for i = 1, #_webRequest do
+        if _webRequest[i].url == url then
+            index = i
+        end
+    end
+    --- 成功回调
+    if index ~= nil then
+        local wr = _webRequest[index]
+        local jsonData = nil
+        if result then
+            jsonData = json.decode(content)
+        else
+            Log.Warning(url .. " " .. content)
+        end
+        wr.callback(jsonData)
+        table.remove(_webRequest, index)
+    end
+end
+
+--- 请求Texture2D图片
+---直接走 Texture2DCachePool
+-- function this:RequestTexture2D(url, callback)
+--     GameMode.WebRequest:RequestTexture2D(url, callback)
+-- end
+
+--- 获取完整的url
+---@param url string
+function this:GetUrl(url)
+    if string.find(url, "http", 1) ~= nil then
+        return url
+    end
+
+    local appServer = _appServerOfficial
+    if Utility.AppServerName == "Test" then
+        appServer = _appServerTest
+    end
+    return appServer .. url
+end
+
+-- 获取header
+---@param token string
+function this:GetHeader()
+    local header = {}
+    header["Content-Type"] = "application/json;charset=utf-8"
+    -- header["token"] = userinfo.GetToken()
+    return header
+end

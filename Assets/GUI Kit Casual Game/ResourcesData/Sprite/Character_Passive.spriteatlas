@@ -1,0 +1,110 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Character_Passive
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 56a193a5f86cc4901b29995e42d750dc, type: 3}
+    totalSpriteSurfaceArea: 3420735
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 9be338601f2df46fdb4de32cda440c67, type: 3}
+  - {fileID: 21300000, guid: 8c4e2c116f2384eb187ccc7d0d12e0f9, type: 3}
+  - {fileID: 21300000, guid: c3189121f7e3342a3b2fcc2f495c9e31, type: 3}
+  - {fileID: 21300000, guid: 1eb37b6167af14206ae5394f921f1ac3, type: 3}
+  - {fileID: 21300000, guid: 3b3510c1053ff4f53a25096d82d82979, type: 3}
+  - {fileID: 21300000, guid: a55e47f19f24646acaab15c6d059fc57, type: 3}
+  - {fileID: 21300000, guid: 64d54c438a4564adbb0fe3cd488b2e10, type: 3}
+  - {fileID: 21300000, guid: b403f9149533544428c8e16b974d3134, type: 3}
+  - {fileID: 21300000, guid: 30e3b5847855a465caa31d54a8fe91eb, type: 3}
+  - {fileID: 21300000, guid: 5458175504c3442729c2d39a4201eb30, type: 3}
+  - {fileID: 21300000, guid: 6861a76578d2745459ab32dad4ae7b7a, type: 3}
+  - {fileID: 21300000, guid: a83159855797443f386c18e603ba9628, type: 3}
+  - {fileID: 21300000, guid: 7a313906e17864d7d9541e4d357c226e, type: 3}
+  - {fileID: 21300000, guid: 2350f616142f747c8b63c95f6e433884, type: 3}
+  - {fileID: 21300000, guid: 8e3feb46c1a9745ff8d049306e68d84b, type: 3}
+  - {fileID: 21300000, guid: 413710b631bd5493ebbf1a29b2d82eb3, type: 3}
+  - {fileID: 21300000, guid: 72085927ed4e5404aa1a7448a1e8996d, type: 3}
+  - {fileID: 21300000, guid: e92b76e84019e4f3a8b7373222e14fb0, type: 3}
+  - {fileID: 21300000, guid: b3d8dbe835c404179842f9f9595f2bf0, type: 3}
+  - {fileID: 21300000, guid: 48b3d44a58491465faf1dd6d9e60ae12, type: 3}
+  - {fileID: 21300000, guid: 3c6f5b7a54bd84489ba7d655c5b7b812, type: 3}
+  - {fileID: 21300000, guid: 9876fcfabd3b2425687da38e45dedbc2, type: 3}
+  - {fileID: 21300000, guid: 6325706bbc2f942d293bc3cc86f9e00e, type: 3}
+  - {fileID: 21300000, guid: 1f5b3d0c32c8341e8bbf75f4859dbca7, type: 3}
+  - {fileID: 21300000, guid: 83c4252c97d8e4daeba99d69cfa5cb32, type: 3}
+  - {fileID: 21300000, guid: 3a24231e736824ad98236385091f0cc2, type: 3}
+  - {fileID: 21300000, guid: 68dff65e5c93f48da84e0319396c9e1d, type: 3}
+  - {fileID: 21300000, guid: bd76787ed8d1343b484338868b821683, type: 3}
+  - {fileID: 21300000, guid: a1096b8f57ae441c79e465d788fbf0dc, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - character_detail_arrow_prev
+  - skill_passive_glow
+  - ability_icon_speed
+  - rune_sample_1
+  - character_detail_sample
+  - rune_bg
+  - character_line
+  - skill_lv_lock
+  - rune_sample_2
+  - btn_top_label
+  - ability_bg
+  - skill_icon_passive
+  - skill_icon_passive_paticle
+  - skill_icon_1
+  - skill_lv_bg
+  - ability_icon_damage
+  - rune_lv_lock
+  - rune_bg_activity
+  - ability_icon_defense
+  - skill_passive_rotate_white
+  - ability_icon_critical
+  - ability_icon_hp
+  - rune_sample_0
+  - skill_passive_screen_dimmed
+  - character_detail_arrow_next
+  - skill_passive_rotate_white
+  - skill_icon_0
+  - skill_icon_passive_get
+  - character_detail_sample_shadow
+  m_Tag: Character_Passive
+  m_IsVariant: 0

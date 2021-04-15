@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Popup
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 5695d6959b77c483e874d5374ab295b1, type: 3}
+    totalSpriteSurfaceArea: 3496977
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 73d8983007ddd4830baf7ecba1debd74, type: 3}
+  - {fileID: 21300000, guid: eb3db5b0868bc4f348e3d3a1dfbf32a8, type: 3}
+  - {fileID: 21300000, guid: e7616c318c334479c9b0c12357d85650, type: 3}
+  - {fileID: 21300000, guid: 10467a51965ec4f8abe04190081e5636, type: 3}
+  - {fileID: 21300000, guid: 4e9baab14e03b4b1c9219bb1a838f001, type: 3}
+  - {fileID: 21300000, guid: 6859da92742c94fa9bfcb5d416e98e56, type: 3}
+  - {fileID: 21300000, guid: bd7820459436c4022b247f5a14f682ad, type: 3}
+  - {fileID: 21300000, guid: e792b7a6f9b844e14b97fcb3514851e0, type: 3}
+  - {fileID: 21300000, guid: 228b09b7fa1c5455eab8432a85fac4ee, type: 3}
+  - {fileID: 21300000, guid: 4173e6b9e42724ad89d8808cbc7bb000, type: 3}
+  - {fileID: 21300000, guid: b6c812e9e15084444899825718ee6b6c, type: 3}
+  - {fileID: 21300000, guid: 5551461a712fd427aa2b059aac398cd4, type: 3}
+  - {fileID: 21300000, guid: c5844f8c6c02e47e58a3f8b122e58a59, type: 3}
+  - {fileID: 21300000, guid: e0e57e0e10e8b42448eb6f153c290853, type: 3}
+  - {fileID: 21300000, guid: 1fc9864f9a0c840b496c1783e1b831d4, type: 3}
+  - {fileID: 21300000, guid: 93949faf194e34722be8d4ecb0da634a, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - popup_bg_glow_white
+  - popup_bg
+  - txt_field_icon_account_1
+  - txt_field_icon_pw_0
+  - popup_btn_close
+  - txt_field_icon_email_1
+  - txt_field_icon_email_0
+  - popup_bg_login
+  - popup_title_line
+  - popup_network_error
+  - popup_bottom_shadow
+  - common_screen_dimmed
+  - txt_field_icon_pw_1
+  - txt_field_icon_account_0
+  - icon_network_error
+  - frame
+  m_Tag: Popup
+  m_IsVariant: 0

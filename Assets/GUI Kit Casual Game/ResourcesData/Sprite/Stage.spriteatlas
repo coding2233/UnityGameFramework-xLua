@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Stage
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 76c23290b3e684259bac38ff5328a65f, type: 3}
+    totalSpriteSurfaceArea: 2553279
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: dd50370016aa3427cbffd86ff9d349ea, type: 3}
+  - {fileID: 21300000, guid: 1b43931083419491d8b290f0c1fad04b, type: 3}
+  - {fileID: 21300000, guid: 3794f280dbc1a43e0b04594ca6a1a998, type: 3}
+  - {fileID: 21300000, guid: ef7010d05ff414dbf89580e62d7886a5, type: 3}
+  - {fileID: 21300000, guid: c38901210647d4f12a8fdeea6420b325, type: 3}
+  - {fileID: 21300000, guid: 978f5921e87d04a7f88a2dc6c330fab2, type: 3}
+  - {fileID: 21300000, guid: 6a1f2ec1b291243919959448562d19aa, type: 3}
+  - {fileID: 21300000, guid: 02b1b522bea764bedb5c69e9dda49220, type: 3}
+  - {fileID: 21300000, guid: 0ff3e5235663c4f62b754030d62adf1c, type: 3}
+  - {fileID: 21300000, guid: bc4a084373ec44b99b49e7a2a4f5da2d, type: 3}
+  - {fileID: 21300000, guid: 161b62044f01d41468f01c5510c23aff, type: 3}
+  - {fileID: 21300000, guid: d824c6144488845fcb51139fb8e60bac, type: 3}
+  - {fileID: 21300000, guid: fa8d7e24e8b094f028e98ed7813eed4d, type: 3}
+  - {fileID: 21300000, guid: 963d78d44fe92409d8e59e21376b81e7, type: 3}
+  - {fileID: 21300000, guid: ff872df451b594e5d942eb0ea9a187c9, type: 3}
+  - {fileID: 21300000, guid: ecd7df76139e3455f8534e3c43fd1626, type: 3}
+  - {fileID: 21300000, guid: 758dfb8648edb4bf1b998174c2ecab26, type: 3}
+  - {fileID: 21300000, guid: f087fd87b5ff044199e0d6f2b87ca5f8, type: 3}
+  - {fileID: 21300000, guid: 4df8f588e2dbd4977adde745edb6564a, type: 3}
+  - {fileID: 21300000, guid: 479b862926e3947de8e20b85fe6f2afc, type: 3}
+  - {fileID: 21300000, guid: 879d2339866da49968a95d6b3f418194, type: 3}
+  - {fileID: 21300000, guid: e0c60779c9ad14104a26ff569c139f15, type: 3}
+  - {fileID: 21300000, guid: 399c25c9dce384160839b459896c826e, type: 3}
+  - {fileID: 21300000, guid: 0b403f4a7638141ad965efd7adf34c52, type: 3}
+  - {fileID: 21300000, guid: bd05c69a9fe454ee6a8ba640b6a31a5c, type: 3}
+  - {fileID: 21300000, guid: 808fbd9aa05d24d049320db1a0b7176b, type: 3}
+  - {fileID: 21300000, guid: 2d66f54b5deec49179f8d5abaa971447, type: 3}
+  - {fileID: 21300000, guid: 5437236b9c8c24572bc98b7a615c20a6, type: 3}
+  - {fileID: 21300000, guid: d108f8bbf2f28434b9e9a8e23f2e814d, type: 3}
+  - {fileID: 21300000, guid: cedea9cb0486e414d8ec8794ffb9846e, type: 3}
+  - {fileID: 21300000, guid: 731174dcff3364014a256e41c25e8244, type: 3}
+  - {fileID: 21300000, guid: 7b6827dc950bb48278ef822641f23849, type: 3}
+  - {fileID: 21300000, guid: c965160d8643b4ceb8a96e344d4fe2ff, type: 3}
+  - {fileID: 21300000, guid: f1f6097e1845c4c74b0badf93519bd9b, type: 3}
+  - {fileID: 21300000, guid: a1570f9e78ea547af91f28afa5335c03, type: 3}
+  - {fileID: 21300000, guid: a23a57be640054bf08deecbc33c70a5e, type: 3}
+  - {fileID: 21300000, guid: 44fdb2fe54269466f8b0b810c0e57f86, type: 3}
+  - {fileID: 21300000, guid: 354c311ffdcdf4cea9a7e9326e0fa90b, type: 3}
+  - {fileID: 21300000, guid: 0bca651f898f1479c957ebcc1fa23f88, type: 3}
+  - {fileID: 21300000, guid: fdc3ad5fb76254238bca973927314946, type: 3}
+  - {fileID: 21300000, guid: 637b496f1d9824cf29ce186afab0702e, type: 3}
+  - {fileID: 21300000, guid: 484dcdaf0825148b886e56472fb3bb78, type: 3}
+  - {fileID: 21300000, guid: 6014cdcfc7d90457782dc80acc6242c1, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - stage_btn_icon_energy
+  - stage_frame_purple
+  - stage_frame_active
+  - stage_theme_frame
+  - stage_reward_icon_gem
+  - stage_icon_boss
+  - stage_frame_blue
+  - stage_btn_icon_lock
+  - stage_character_shadow
+  - stage_theme__icon_beach
+  - stage_reward_icon_book
+  - stage_reward_icon_glove
+  - stage_character_sample_1
+  - stage_path_bg
+  - bottom_bg
+  - stage_detail_popup_shadow
+  - stage_character_star_empty
+  - stage_character_bg_red
+  - stage_reward_icon_gold
+  - stage_character_star
+  - stage_theme_icon_forest
+  - stage_arrow_btn
+  - stage_arrow_prev
+  - stage_reward_icon_bg
+  - stage_character_bg_blue
+  - stage_icon_gold
+  - stage_reward_icon_energy
+  - stage_character_bg
+  - stage_character_bg_green
+  - stage_character_sample_0
+  - stage_icon_lock
+  - stage_icon_gem
+  - stage_frame_active_focus
+  - stage_menu_lock
+  - stage_icon_gold_dim
+  - stage_frame_dim
+  - stage_frame_yellow
+  - stage_info_label
+  - stage_arrow_next
+  - stage_theme_icon_city
+  - stage_icon_boss_dim
+  - stage_character_sample_2
+  - stage_detail_popup
+  m_Tag: Stage
+  m_IsVariant: 0

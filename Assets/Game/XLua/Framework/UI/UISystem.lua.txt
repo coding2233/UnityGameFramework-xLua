@@ -1,0 +1,95 @@
+-- UI System 主要映射操作UIManager
+--local UIManager = CS.Wanderer.GameFramework.GameMode
+
+-- xlua ui动画池
+XLuaUIAnimPool = CS.Wanderer.GameFramework.XLuaUIAnimPool
+
+-- ui事件回调绑定
+require "UIAdpterSystem"
+-- uiview 的基类
+require "UIView"
+-- ui动画
+require "UIAnimation"
+
+UISystem = {}
+local this = UISystem
+
+--- 打开UI
+---@param name string
+---@param callback Action
+---@param userData table
+function this:Push(name, callback, userData)
+    local assetPath = Utility.AssetPath:GetUI(name)
+    local uiTween = GameMode.UI:Push(assetPath, callback, false, userData)
+    local uiViewScript = UIAdpterSystem:LoadXLuaUIView(name)
+    return uiTween, uiViewScript
+end
+--- 打开GameUI
+---@param name string
+---@param callback Action
+---@param userData table
+function this:PushGame(name, callback, userData)
+    local assetPath = Utility.AssetPath:GetGameUI(name)
+    local uiTween = GameMode.UI:Push(assetPath, callback, true, userData)
+    local uiViewScript = UIAdpterSystem:LoadXLuaUIView(name)
+    return uiTween, uiViewScript
+end
+
+--- 关闭ui
+---@param setHide boolean
+---@param isDestroy boolean
+function this:Pop(setHide, isDestroy)
+    if setHide == nil then
+        setHide = true
+    end
+
+    if isDestroy == nil then
+        isDestroy = false
+    end
+
+    local uiTween = GameMode.UI:Pop(setHide, isDestroy)
+    return uiTween
+end
+
+--- 关闭特定的ui
+---@param uiView GF.UIView 也可以为GF.IUIContext
+---@param setHide boolean
+---@param isDestroy boolean
+function this:Close(uiView, setHide, isDestroy)
+    if setHide == nil then
+        setHide = true
+    end
+
+    if isDestroy == nil then
+        isDestroy = false
+    end
+
+    local uiTween = GameMode.UI:Close(uiView, setHide, isDestroy)
+    return uiTween
+end
+
+--- 获取最顶上的UI
+function this:Peek()
+    return GameMode.UI:Peek()
+end
+
+--- 获取当前已经激活的UIView
+---@param name string
+function this:GetActiveUIView(name)
+    local assetPath = Utility.AssetPath:GetUI(name)
+    local uiViewScript = UIAdpterSystem:LoadXLuaUIView(name)
+    return GameMode.UI:GetActiveUIView(assetPath), uiViewScript
+end
+
+--- 获取当前已经激活的游戏UIView
+---@param name string
+function this:GetActiveGameUIView(name)
+    local assetPath = Utility.AssetPath:GetGameUI(name)
+    return GameMode.UI:GetActiveUIView(assetPath)
+end
+
+--- 设置屏幕朝向
+---@param orientation int
+function this:SetOrientation(orientation)
+    GameMode.UI:SetOrientation(orientation)
+end

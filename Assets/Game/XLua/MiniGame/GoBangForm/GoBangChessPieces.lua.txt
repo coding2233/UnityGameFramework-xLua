@@ -1,0 +1,26 @@
+local GoBangChessPieces = {}
+GoBangChessPieces.__index = GoBangChessPieces
+local this = GoBangChessPieces
+
+function this:New(gameObject)
+    local t = {}
+    setmetatable(t, self)
+    t.go = gameObject
+    t.trans = gameObject.transform
+    t.type = nil
+    t.x = nil
+    t.y = nil
+    t.pos = nil
+    return t
+end
+
+function this:Init(colorType, index_x, index_y, pos)
+    self.type = colorType
+    self.x = index_x
+    self.y = index_y
+    self.pos = pos
+    self.go.name = tostring(index_x .. "_" .. index_y)
+    self.trans:GetComponent("RectTransform").anchoredPosition = pos
+end
+
+return this

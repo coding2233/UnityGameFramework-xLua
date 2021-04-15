@@ -1,0 +1,94 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Lobby_UserInfo
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 916976b882de14d1789f3cebae0a243e, type: 3}
+    totalSpriteSurfaceArea: 280146
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 361caa005b128477cb4e8e4e48357355, type: 3}
+  - {fileID: 21300000, guid: 1763c140e7caf4eb2a38686bf8a790ec, type: 3}
+  - {fileID: 21300000, guid: a5a4c7809bc8a4bad8dca1aebba59b46, type: 3}
+  - {fileID: 21300000, guid: 732d8521c5c164368b8ddaad53165b26, type: 3}
+  - {fileID: 21300000, guid: 995bab93062004ed5a4ce113ac1930cc, type: 3}
+  - {fileID: 21300000, guid: ae9f55855d9b54bcd943f6d9c50c6bab, type: 3}
+  - {fileID: 21300000, guid: 28fd0a3651a7643aca00d93bcc0e4105, type: 3}
+  - {fileID: 21300000, guid: 163e637667ff849a29c9981fe92cd6ff, type: 3}
+  - {fileID: 21300000, guid: 138745e6ce6ad409ebd5b1e29725d4ab, type: 3}
+  - {fileID: 21300000, guid: d714d6a7b58ac4aa19a43dce1d2bde7b, type: 3}
+  - {fileID: 21300000, guid: 427ac1f9e8f5d4fb6b2366559519f8fd, type: 3}
+  - {fileID: 21300000, guid: 5657cf8ad4f744ce8bf8fdd80931edd9, type: 3}
+  - {fileID: 21300000, guid: c182b4ba9894c46938bb33a524a912c9, type: 3}
+  - {fileID: 21300000, guid: 4de8d2fa3ab064c2ebde730c924aba50, type: 3}
+  - {fileID: 21300000, guid: 3c7dc21b9cfc64a28a0db252abd7f3ad, type: 3}
+  - {fileID: 21300000, guid: fccecdfb5696147e4a2c31c626b3278c, type: 3}
+  - {fileID: 21300000, guid: 2713668ca417246b8a2c388ae6e1a050, type: 3}
+  - {fileID: 21300000, guid: 9f57a8adac99e4526a1986646a3be29a, type: 3}
+  - {fileID: 21300000, guid: d8ec7bed8b86f4a3d905859476e40a84, type: 3}
+  - {fileID: 21300000, guid: c036f3de1f1584b6eb35aa03cce9964c, type: 3}
+  - {fileID: 21300000, guid: 5a5d5fbf2b0304fef8da8a584f9d46c6, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - userinfo_icon_vs
+  - userinfo_icon_boss
+  - btn_small_blue
+  - userinfo_major
+  - btn_icon_edit
+  - userinfo_detail_bg
+  - userinfo_icon_king
+  - popup_user_info
+  - userinfo_icon_map
+  - userinfo_icon_trophy
+  - profile_img_back
+  - profile_img_sample
+  - user_info_name_bg
+  - userinfo_lv_bg
+  - userinfo_icon_crown
+  - userinfo_icon_critical
+  - userinfo_lv_bar
+  - userinfo_icon_win
+  - userinfo_icon_skull
+  - profile_img_frame
+  - userinfo_lv_bar_bg
+  m_Tag: Lobby_UserInfo
+  m_IsVariant: 0

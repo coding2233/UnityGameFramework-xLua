@@ -1,0 +1,16 @@
+Node = {}
+local this = Node
+
+local _nodeData = {}
+
+function Node:Set(key, data)
+    _nodeData[key] = data
+end
+
+function Node:Get(key)
+    return _nodeData[key]
+end
+function Node:Clear()
+    _nodeData = {}
+end
+return Node

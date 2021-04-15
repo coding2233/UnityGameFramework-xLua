@@ -1,0 +1,74 @@
+Event = {}
+require("EventType")
+local listener_table = {}
+
+function Event.AddListener(event, listener, object)
+    local list
+    if (listener_table[event] == nil) then
+        list = {}
+        listener_table[event] = list
+    else
+        list = listener_table[event]
+    end
+    if (object ~= nil) then
+        table.insert(list, {object = object, listener = listener})
+    else
+        if (Event.HaveContain(list, listener) == false) then
+            table.insert(list, listener)
+        end
+    end
+end
+function Event.HaveContain(listName, elem)
+    for i = 1, #listName do
+        if (elem == listName[i]) then
+            return true
+        end
+    end
+    return false
+end
+
+function Event.RemoveListener(event, listener)
+    if (listener_table[event] ~= nil) then
+        local list = listener_table[event]
+        for i = 1, #list do
+            local item = list[i]
+            local temp
+            print(type(item), "function")
+            if (type(item) == "table") then
+                temp = item
+            elseif (type(item) == "function") then
+                temp = item
+            else
+                temp = listener
+            end
+            if (temp == listener) then
+                table.remove(list, i)
+                if (#list == 0) then
+                    listener_table[event] = nil
+                end
+                break
+            end
+        end
+    end
+end
+
+function Event.DispenseEvent(event, data)
+    if (listener_table[event] ~= nil) then
+        local list = listener_table[event]
+        local new = {}
+        for i = 1, #list do
+            table.insert(new, list[i])
+        end
+        for i = 1, #new do
+            local item = new[i]
+            if (type(item) == "table") then
+                item.listener(item.object, event, data)
+            else
+                item(nil, event, data)
+                --print("接受消息个数" .. event)
+            end
+        end
+    end
+end
+
+return Event

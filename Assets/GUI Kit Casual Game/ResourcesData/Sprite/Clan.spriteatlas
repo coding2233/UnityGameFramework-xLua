@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Clan
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 879b178b46ee84f48871353be335cbf1, type: 3}
+    totalSpriteSurfaceArea: 1031005
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 3e36b570a407647f18e279be6421bc72, type: 3}
+  - {fileID: 21300000, guid: 637ab351ff85143458dfe95ab1d59554, type: 3}
+  - {fileID: 21300000, guid: 5b892932452be475cb2e10ea22938115, type: 3}
+  - {fileID: 21300000, guid: cdb1dd72cb0ea4961be65e38cc22918c, type: 3}
+  - {fileID: 21300000, guid: 81843e8272c8d4858a6477b3d3ceac28, type: 3}
+  - {fileID: 21300000, guid: 563ca0f21bfce408b86459e92e3deaa1, type: 3}
+  - {fileID: 21300000, guid: f46c20033f2c549bcb8dd8a3d65ac1a0, type: 3}
+  - {fileID: 21300000, guid: b7ba11948c4b242239d59ab8d59c9e9f, type: 3}
+  - {fileID: 21300000, guid: d0fae145ff3f146a6ac05ee91b21abb4, type: 3}
+  - {fileID: 21300000, guid: 35b4f3b51c8fc4c48ba3f7750be46e4b, type: 3}
+  - {fileID: 21300000, guid: d11220f556bb1497684c774733cb6a8c, type: 3}
+  - {fileID: 21300000, guid: 9fba6a86432714d318be2f4983f49b79, type: 3}
+  - {fileID: 21300000, guid: cb873b07dc75243c1942d89018500c32, type: 3}
+  - {fileID: 21300000, guid: 3da068978045a400cb4954722a0dbe2e, type: 3}
+  - {fileID: 21300000, guid: 0daf4da7abc044e2b9b26b6438bee49a, type: 3}
+  - {fileID: 21300000, guid: 23a7ada7b766e48bfa104de40abaa853, type: 3}
+  - {fileID: 21300000, guid: b32b4808a0d8b411a907f3a809ebca51, type: 3}
+  - {fileID: 21300000, guid: 01388e084f08a42709215c4650bd004b, type: 3}
+  - {fileID: 21300000, guid: d1189dc81467841748594f779bb37822, type: 3}
+  - {fileID: 21300000, guid: 0358e94906c704657ab9ca0a8ce5a588, type: 3}
+  - {fileID: 21300000, guid: 8c35201ab90e548489bbcec22209ceaf, type: 3}
+  - {fileID: 21300000, guid: 93e41e0b9f6ac4539a805762c0faae78, type: 3}
+  - {fileID: 21300000, guid: e2531dbb210c447358dfd4dd637545c5, type: 3}
+  - {fileID: 21300000, guid: fd8eea8c88f00490ab5a9a0e8bbe446f, type: 3}
+  - {fileID: 21300000, guid: 32b0480dca1584fd99cd7bbea1266f55, type: 3}
+  - {fileID: 21300000, guid: 97af439d5b4004d96b2dadfe95b1b414, type: 3}
+  - {fileID: 21300000, guid: 5ef957ddb3b004127bc24457da886047, type: 3}
+  - {fileID: 21300000, guid: 11682c1eab384411d9d22f54d5e646a7, type: 3}
+  - {fileID: 21300000, guid: c50a0f6e42d5c4abeb157b1b97e14ae8, type: 3}
+  - {fileID: 21300000, guid: aef20f8e21ef14da9ba50e7d8df50510, type: 3}
+  - {fileID: 21300000, guid: 8e00845f7485c4c0cae22ef3fa875d60, type: 3}
+  - {fileID: 21300000, guid: 0357d37ff2ce1443485aa680e89d82f0, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - clan_info_bg
+  - clan_img_s_3
+  - clan_img_s_2
+  - clan_info_icon_member
+  - clan_img_s_0
+  - clan_symbol_3
+  - clan_symbol_s_1
+  - clan_img_2
+  - clan_lv_bar_bg
+  - clan_symbol_s_4
+  - clan_img_0
+  - clan_info_icon_ranking
+  - clan_symbol_4
+  - clan_lv_bar
+  - clan_symbol_s_2
+  - clan_frame_s
+  - clan_img_3
+  - clan_symbol_s_0
+  - clan_info_divide_line
+  - clan_symbol_2
+  - clan_symbol_0
+  - clan_frame
+  - btn_icon_search
+  - clan_img_s_1
+  - clan_img_1
+  - list_bg
+  - clan_img_s_4
+  - clan_list_focus
+  - clan_symbol_s_3
+  - clan_symbol_1
+  - clan_img_4
+  - clan_info_bg
+  m_Tag: Clan
+  m_IsVariant: 0

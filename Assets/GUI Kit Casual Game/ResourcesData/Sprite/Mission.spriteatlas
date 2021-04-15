@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Mission
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 905f757f8bb774773bc3e82060e3f824, type: 3}
+    totalSpriteSurfaceArea: 641115
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 460f4830064ce4dc8b3534b94a4f636a, type: 3}
+  - {fileID: 21300000, guid: f7c5d8e142c9f4c7592b2bb7d4d18ad5, type: 3}
+  - {fileID: 21300000, guid: 9d29f17266a7746ce95c45716aee9f6c, type: 3}
+  - {fileID: 21300000, guid: cda87792b516f4e0d8bf7d3ef5cdbae9, type: 3}
+  - {fileID: 21300000, guid: 67969f734195d4619aab1f08027f0b58, type: 3}
+  - {fileID: 21300000, guid: c3060093b5d684047a11461e7f1e59d3, type: 3}
+  - {fileID: 21300000, guid: d90db856e8ba14151a120cb6feb6bc8e, type: 3}
+  - {fileID: 21300000, guid: f112bf86ca05c44cc9611554ff2857b5, type: 3}
+  - {fileID: 21300000, guid: ad4fb1a6ddb8c4b3b8a9bd726af4f0d8, type: 3}
+  - {fileID: 21300000, guid: 7d4c1f07557354a049424648dd8f1a88, type: 3}
+  - {fileID: 21300000, guid: 96d4d4384de924045abe5d240e8b191a, type: 3}
+  - {fileID: 21300000, guid: be6d65483b1a64fe6962cf3e06fb9ded, type: 3}
+  - {fileID: 21300000, guid: 3e8bb429ce32e4057875dca9a44a38aa, type: 3}
+  - {fileID: 21300000, guid: 59a6ec29f18a14d9497453eadf418456, type: 3}
+  - {fileID: 21300000, guid: 0194274b6383e402a8facb4fa8c8425a, type: 3}
+  - {fileID: 21300000, guid: c249affb68c10448491cf5f21db84c12, type: 3}
+  - {fileID: 21300000, guid: a3b5933c788cc48a4ad1eccad6499632, type: 3}
+  - {fileID: 21300000, guid: 658a4fdc592974780b58272c015e36e5, type: 3}
+  - {fileID: 21300000, guid: ccb9cb3d26ff0491da27678834d72789, type: 3}
+  - {fileID: 21300000, guid: 048d137da78a041979d9dc4c6af017a2, type: 3}
+  - {fileID: 21300000, guid: 061e147d676e74bac9cce5b73d150a15, type: 3}
+  - {fileID: 21300000, guid: 4c78129e98b2f43ab97f160e39362aea, type: 3}
+  - {fileID: 21300000, guid: 14bb7dbe03b4c4f1999e45ec89aafdb5, type: 3}
+  - {fileID: 21300000, guid: 35e4ceee666464b0ab5525eef8ac4e24, type: 3}
+  - {fileID: 21300000, guid: 267c0f3f80b3248eba5b2ce935fbc434, type: 3}
+  - {fileID: 21300000, guid: ecb1889fcd79d4365999c3f814fa913f, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - mission_reward_bg_yellow
+  - mission_info_bg
+  - mission_reward_icon_energy
+  - mission_reward_icon_gem
+  - mission_prg_bar
+  - mission_reward_icon_gold
+  - mission_prg_bg
+  - mission_list_bg_default
+  - mission_list_reward_chest
+  - mission_list_reward_bg_s
+  - mission_reward_bg_green
+  - mission_list_reward_bg_n
+  - mission_list_reward_ax
+  - mission_reward_icon_glove
+  - mission_list_reward_gem
+  - mission_icon_pouch
+  - mission_list_reward_rune
+  - mission_icon_crown
+  - mission_list_bg_complete
+  - mission_icon_book
+  - mission_reward_bg_purple
+  - mission_icon_tv
+  - mission_reward_icon_chest
+  - mission_list_reward_gold
+  - mission_reward_bg_gray
+  - mission_icon_trophy
+  m_Tag: Mission
+  m_IsVariant: 0

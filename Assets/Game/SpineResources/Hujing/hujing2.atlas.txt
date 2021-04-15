@@ -1,0 +1,67 @@
+
+hujing2.png
+size: 1924,1514
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+2
+  rotate: true
+  xy: 336, 1134
+  size: 378, 862
+  orig: 383, 868
+  offset: 1, 5
+  index: -1
+chuan
+  rotate: false
+  xy: 2, 1306
+  size: 332, 206
+  orig: 334, 208
+  offset: 1, 1
+  index: -1
+haimian
+  rotate: false
+  xy: 2, 721
+  size: 1920, 411
+  orig: 1922, 413
+  offset: 1, 1
+  index: -1
+langhua
+  rotate: false
+  xy: 2, 2
+  size: 1398, 717
+  orig: 1398, 717
+  offset: 0, 0
+  index: -1
+
+hujing22.png
+size: 1924,1812
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+0
+  rotate: false
+  xy: 2, 730
+  size: 1920, 1080
+  orig: 1922, 1082
+  offset: 1, 1
+  index: -1
+hujing
+  rotate: true
+  xy: 2, 2
+  size: 726, 974
+  orig: 730, 983
+  offset: 0, 0
+  index: -1
+
+hujing23.png
+size: 1924,1084
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+beijing
+  rotate: false
+  xy: 2, 2
+  size: 1920, 1080
+  orig: 1922, 1082
+  offset: 1, 1
+  index: -1

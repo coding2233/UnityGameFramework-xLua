@@ -1,0 +1,281 @@
+﻿local Watermelon = class("Watermelon", UIView):New()
+local this = Watermelon
+
+local _selfTransform = nil
+
+-- 所有的预设
+local _prefabs = {}
+-- 内容的面板
+---@type Transfrom
+local _contentPanel = nil
+-- 所有的水果
+local _items = {}
+-- 起点坐标
+local _worldStartPos = Vector3.zero
+-- 当前创建的水果
+local _createItem = nil
+-- 是否正在掉落
+local _isDrop = false
+--水果对象池
+local _itemPools = {}
+--游戏结束
+local _gameOver = false
+--- 激活的item
+local _activeItems = {}
+-- 得分
+local _score = 0
+-- 最高得分
+local _highScore = 0
+
+function this:OnInit(transform, uiContext)
+end
+
+function this:OnEnter(transform, uiContext, callback, userData)
+    transform:Find("GameContent/Panel_Menu/Button"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            this:GameInit()
+        end
+    )
+
+    _selfTransform = transform
+    GE.Input.gyro.enabled = true
+
+    _highScore = GE.PlayerPrefs.GetInt("MM-Watermelon-High-Score", 0)
+
+    local prefabs = transform:Find("GameContent/Panel_Prefab"):GetComponentsInChildren(typeof(UGUI.Image), true)
+    _prefabs = {}
+    for i = 0, prefabs.Length - 1 do
+        table.insert(_prefabs, prefabs[i])
+    end
+    _contentPanel = transform:Find("GameContent/Panel_Content")
+    _worldStartPos = _contentPanel.localToWorldMatrix:MultiplyPoint(_contentPanel:Find("start").localPosition)
+
+    this:GameInit()
+end
+
+function this:OnUpdate(uiContext, deltaTime)
+    -- if GE.SystemInfo.supportsGyroscope then
+    --     local ea = Input.gyro.attitude
+    --     print("Input.gyro @@", ea, Input.gyro.rotationRate, Input.gyro.rotationRateUnbiased)
+    --     -- _selfTransform:Rotate(-Vector3.forward, Input.gyro.rotationRateUnbiased.z)
+    --     _selfTransform.localRotation =
+    --         _selfTransform.localRotation * GE.Quaternion.Euler(0, 0, Input.gyro.rotationRateUnbiased.z)
+    -- -- _selfTransform.localRotation = GE.Quaternion.Euler(0, 0, ea.z - 90)
+    -- -- _selfTransform.localRotation =
+    -- --     GE.Quaternion.Lerp(_selfTransform.localRotation, GE.Quaternion.Euler(0, 0, ea.z - 90), deltaTime)
+    -- end
+end
+
+function this:OnExit(uiContext)
+    GE.Input.gyro.enabled = false
+end
+
+function this:OnFree(transform, uiContext)
+end
+
+------------------------------------------------------------------------------------
+
+function this:StartGame()
+end
+
+function this:Puase()
+end
+
+function this:Continue()
+end
+
+function this:OnCollisionEnter2D(transform, otherTransform)
+    if _gameOver then
+        return
+    end
+    if _createItem ~= nil then
+        if _createItem == transform or otherTransform == _createItem then
+            _createItem = nil
+            _isDrop = false
+            this:CreateItem()
+        end
+    end
+
+    local selfImage = transform:GetComponent(typeof(UGUI.Image))
+    local otherImage = otherTransform:GetComponent(typeof(UGUI.Image))
+
+    if selfImage == nil or otherImage == nil then
+        if transform.name == "Image_Under" or otherTransform.name == "Image_Under" then
+            AudioSystem.UISound:Play("knock", false, "Watermelon")
+        end
+        return
+    end
+
+    if selfImage.sprite == otherImage.sprite then
+        if not transform.gameObject.activeSelf or not otherTransform.gameObject.activeSelf then
+            return
+        end
+
+        -- print("----OnCollisionEnter2D", selfImage.sprite.name, selfImage.name, otherImage.name)
+        local spriteIndex = tonumber(selfImage.sprite.name)
+        if spriteIndex < #_prefabs then
+            local worldPos = selfImage.transform.position
+            this:ReleaseItem(selfImage.gameObject)
+            this:ReleaseItem(otherImage.gameObject)
+            -- GameObject.Destroy(selfImage.gameObject)
+            -- GameObject.Destroy(otherImage.gameObject)
+            this:CreateItem(spriteIndex + 1, worldPos)
+            AudioSystem.UISound:Play("water", false, "Watermelon")
+            this:SetScore(spriteIndex * 2)
+        end
+    end
+end
+
+function this:OnTriggerStay2D(transform, otherTransform)
+    if _gameOver then
+        return
+    end
+    if _createItem == transform or _createItem == otherTransform then
+        return
+    end
+    if transform.name == "redline" or otherTransform.name == "redline" then
+        print("Game Over")
+        this:GameEnd()
+    end
+end
+
+function this:OnDrag(transform, eventData, globalPoint)
+    if _gameOver then
+        return
+    end
+    if _createItem == nil then
+        return
+    end
+    if _isDrop then
+        return
+    end
+    local moveRectTrans = transform:GetComponent(typeof(GE.RectTransform))
+    local result = false
+    --是否满足转换条件
+    local rayCast = eventData.pointerCurrentRaycast
+    if eventData.pressEventCamera ~= nil and rayCast ~= nil and rayCast.gameObject ~= nil then
+        result, globalPoint =
+            RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            moveRectTrans,
+            Vector2(Input.mousePosition.x, Input.mousePosition.y),
+            eventData.pressEventCamera
+        )
+    end
+    if result then
+        _createItem.anchoredPosition = Vector2(globalPoint.x, _createItem.anchoredPosition.y)
+    end
+end
+
+function this:OnEndDrag(transform, eventData)
+    if _gameOver then
+        return
+    end
+    if _createItem ~= nil and not _isDrop then
+        _createItem:GetComponent(typeof(GE.Rigidbody2D)).simulated = true
+        _isDrop = true
+    end
+end
+
+function this:OnPointerClick(transform, eventData)
+    if _gameOver then
+        return
+    end
+
+    this:OnEndDrag(transform, eventData)
+end
+
+-- function this:OnCollisionStay2D(transform, otherTransform)
+-- end
+
+-- function this:OnCollisionExit2D(transform, otherTransform)
+-- end
+
+-- 创建水果
+function this:CreateItem(createIndex, worldPos)
+    local index = math.random(1, 5)
+    if createIndex ~= nil then
+        index = createIndex
+    end
+    if worldPos == nil then
+        worldPos = _worldStartPos
+    end
+
+    local fruit = this:GetItem(_prefabs[index].gameObject)
+    -- fruit.transform.localScale = Vector3.one
+    fruit.transform.position = worldPos
+    if createIndex == nil then
+        _createItem = fruit.transform
+    else
+        fruit:GetComponent(typeof(GE.Rigidbody2D)).simulated = true
+    end
+    fruit.gameObject:SetActive(true)
+end
+
+function this:GetItem(prefab)
+    local items = _itemPools[prefab]
+    local item = nil
+    if items ~= nil and #items > 0 then
+        item = items[1]
+        table.remove(items, 1)
+    else
+        item = GameObject.Instantiate(prefab, _contentPanel)
+        item.transform.localScale = prefab.transform.localScale
+    end
+    item.gameObject:SetActive(true)
+    _activeItems[item] = true
+    return item
+end
+
+function this:ReleaseItem(item)
+    for i = 1, #_prefabs do
+        if item.name == _prefabs[i].name .. "(Clone)" then
+            local items = _itemPools[_prefabs[i].gameObject]
+            if items == nil then
+                items = {}
+            end
+            _activeItems[item] = false
+            item.gameObject:SetActive(false)
+            item:GetComponent(typeof(GE.Rigidbody2D)).simulated = false
+            table.insert(items, item)
+            _itemPools[_prefabs[i].gameObject] = items
+            return
+        end
+    end
+end
+
+function this:GameInit()
+    _selfTransform:Find("GameContent/Panel_Menu").gameObject:SetActive(false)
+    _activeItems = {}
+    _gameOver = false
+    _createItem = nil
+    _isDrop = false
+    _itemPools = {}
+    _score = 0
+    _gameOver = false
+    this:SetScore(0)
+    this:CreateItem()
+end
+
+function this:GameEnd()
+    _gameOver = true
+    for key, value in pairs(_activeItems) do
+        local sprite = key:GetComponent(typeof(UGUI.Image)).sprite
+        local score = tonumber(sprite.name)
+        this:SetScore(score)
+        this:ReleaseItem(key)
+    end
+    _selfTransform:Find("GameContent/Panel_Menu").gameObject:SetActive(true)
+end
+
+---设置得分
+function this:SetScore(score)
+    _score = _score + score
+    if _score > _highScore then
+        _highScore = _score
+        GE.PlayerPrefs.SetInt("MM-Watermelon-High-Score", _highScore)
+    end
+    _contentPanel:Find("Text (3)"):GetComponent(typeof(UGUI.Text)).text = tostring(_score)
+    _contentPanel:Find("Text (1)"):GetComponent(typeof(UGUI.Text)).text = tostring(_highScore)
+end
+
+return this

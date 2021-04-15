@@ -1,0 +1,109 @@
+--- 通用功能
+Utility = {}
+local this = Utility
+
+--- 游戏服务器的名称 Test / Official
+this.AppServerName = GF.Utility.AppServerName
+
+this.GetRuntimePlatformName = function(target)
+    if target == nil then
+        target = true
+    end
+    return GF.Utility.GetRuntimePlatformName(target)
+end
+
+--- 游戏状态
+this.State = {
+    LaunchState = "LaunchState",
+    MiniGameState = "MiniGameState",
+    LoadState = "LoadState"
+}
+
+--- ui名称对应
+this.UI = {
+    MainUIView = "MainUIView",
+    FreeTrainingForm = "FreeTrainingForm",
+    CommonTipForm = "CommonTipForm",
+    CommonTipForm2 = "CommonTipForm2",
+    SystemSettingForm = "SystemSettingForm",
+    SettingNicknameForm = "SettingNicknameForm",
+    SpaceGalaxyChoseForm = "SpaceGalaxyChoseForm",
+    SpaceThroughForm = "SpaceThroughForm"
+}
+
+--- 资源路径
+this.AssetPath = {}
+
+--- 获取到UI的资源路径
+---@param name string
+function this.AssetPath:GetDataTable(name)
+    return string.format("Assets/Game/DataTable/%s.txt", name)
+end
+
+--- 获取到UI的资源路径
+---@param name string
+function this.AssetPath:GetUI(name)
+    return string.format("Assets/Game/UI/%s.prefab", name)
+end
+--- 获取到GameUI的资源路径
+---@param name string
+function this.AssetPath:GetGameUI(name)
+    return string.format("Assets/Game/MiniGames/%s/%s.prefab", name, name)
+end
+
+--- 获取UI的动态Sprite路径
+function this.AssetPath:GetDynamicSprite(name)
+    return string.format("Assets/Game/Texture/UISprites/Dynamic/%s", name)
+end
+
+--- 获取UI的动态Sprite路径
+function this.AssetPath:GetDynamicUIItem(name)
+    return string.format("Assets/Game/UIItem/Dynamic/%s.prefab", name)
+end
+
+--- 获取游戏的图标
+function this.AssetPath:GetGameIcon(name)
+    return string.format("Assets/Game/Texture/Icon_MiniGames/%s.jpg", name)
+end
+
+---获取背音乐的路径
+function this.AssetPath:GetMusic(name, gameName)
+    if gameName == nil then
+        return this.AssetPath:GetAudio(string.format("Music/%s", name))
+    else
+        return string.format("Assets/Game/MiniGames/%s/Audio/Music/%s.mp3", gameName, name)
+    end
+end
+
+---获取Sound的路径
+function this.AssetPath:GetSound(name, gameName)
+    if gameName == nil then
+        return this.AssetPath:GetAudio(string.format("Sound/%s", name))
+    else
+        return string.format("Assets/Game/MiniGames/%s/Audio/Sound/%s.mp3", gameName, name)
+    end
+end
+
+---获取UISound的路径
+function this.AssetPath:GetUISound(name, gameName)
+    if gameName == nil then
+        return this.AssetPath:GetAudio(string.format("UISound/%s", name))
+    else
+        return string.format("Assets/Game/MiniGames/%s/Audio/UISound/%s.mp3", gameName, name)
+    end
+end
+
+--- 获取默认音频的路径
+function this.AssetPath:GetAudio(name)
+    return string.format("Assets/Game/Audio/%s.mp3", name)
+end
+
+--- 获取GameUI的动态Sprite路径
+function this.AssetPath:GetGameDynamicSprite(gameName, spriteName)
+    return string.format("Assets/Game/MiniGames/%s/DynamicSprite/%s", gameName, spriteName)
+end
+
+--- 获取Shader的路径
+function this.AssetPath:GetShader(shaderName)
+    return string.format("Assets/Game/Shader/%s.shader", shaderName)
+end

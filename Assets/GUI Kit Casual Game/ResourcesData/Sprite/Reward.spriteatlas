@@ -1,0 +1,116 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Reward
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 6b20be28215e542c2a71007fbfefd0ba, type: 3}
+    totalSpriteSurfaceArea: 763989
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 8707475047dfe4c8ebafa3eced6bcfa2, type: 3}
+  - {fileID: 21300000, guid: 64d2d46074db547bcb6b4ed04c69dbd8, type: 3}
+  - {fileID: 21300000, guid: 6ad57a614386a431d9387cb2293ea99c, type: 3}
+  - {fileID: 21300000, guid: 5b54fa0236ad44c709b9851dfffe87e4, type: 3}
+  - {fileID: 21300000, guid: f17de7626605c475d9704403eaed2ab2, type: 3}
+  - {fileID: 21300000, guid: dad74013a0ec24e3ca38d2b98cfa5f62, type: 3}
+  - {fileID: 21300000, guid: b52e36637f421420e94dcb0d4b1059fe, type: 3}
+  - {fileID: 21300000, guid: 9416cda36695646258360b3882365668, type: 3}
+  - {fileID: 21300000, guid: fdac3944552db40448f2f7470489888f, type: 3}
+  - {fileID: 21300000, guid: 26a1b164ae87748f78e202691df33e55, type: 3}
+  - {fileID: 21300000, guid: 03911bb6df5894a4ca4b5543901dc0e8, type: 3}
+  - {fileID: 21300000, guid: eccb4f17cc3e240e1a4d88de7a6ac478, type: 3}
+  - {fileID: 21300000, guid: 515c6c47b85414bc68c47db3da4e7e07, type: 3}
+  - {fileID: 21300000, guid: e2d5a1a754bad41da8a24fdabf908717, type: 3}
+  - {fileID: 21300000, guid: 72cf9608bf17a4510b03715a42431a14, type: 3}
+  - {fileID: 21300000, guid: 8ac66c789fc9f4f948481681c22aab69, type: 3}
+  - {fileID: 21300000, guid: 338362a81ebce4b478c3844ee94a3109, type: 3}
+  - {fileID: 21300000, guid: fa3b5af8b8a824631a410c89b9a37527, type: 3}
+  - {fileID: 21300000, guid: 90f353797d755409781deecf54870f07, type: 3}
+  - {fileID: 21300000, guid: 07c7db4a0d9934d12b5fd6eab09baa74, type: 3}
+  - {fileID: 21300000, guid: cbcfb7fa0ecd54e4f8f646e7cad06abe, type: 3}
+  - {fileID: 21300000, guid: 7a5cefdc871c749e2ac97673e7dd3c4f, type: 3}
+  - {fileID: 21300000, guid: b6975c3de651f42babaed097a5f3312b, type: 3}
+  - {fileID: 21300000, guid: 8986eb0e903a74f6b91f7ef5d7eb204b, type: 3}
+  - {fileID: 21300000, guid: 24519d9e5e416492cb02278ecb464d63, type: 3}
+  - {fileID: 21300000, guid: 9edf88ae67e094b3cb3b788b80b98798, type: 3}
+  - {fileID: 21300000, guid: 42f7f15f106c94250b08d8a43540c943, type: 3}
+  - {fileID: 21300000, guid: 31c85e6f1caf54385b18aa90295dd6c4, type: 3}
+  - {fileID: 21300000, guid: f965acaf030bc408bb107241ad5d371b, type: 3}
+  - {fileID: 21300000, guid: 33fe47cf57cd44758a7a8573ea549012, type: 3}
+  - {fileID: 21300000, guid: 88a1cbcfc07604b8bb6294fbbbcff649, type: 3}
+  - {fileID: 21300000, guid: a64ef0df0b327478497db1e7a451fb16, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - reward_month_icon_gold
+  - reward_month_icon_rune_2
+  - reward_week_icon_chest_0
+  - reward_month_icon_rune_3
+  - reward_month_icon_energy
+  - reward_month_icon_chest_1
+  - reward_week_stamp
+  - reward_month_icon_chest_0
+  - reward_month_icon_clover
+  - reward_month_icon_gem
+  - reward_week_icon_chest_1
+  - reward_month_icon_book
+  - tip_bg
+  - reward_week_icon_rune
+  - reward_month_frame_purple
+  - reward_month_icon_ax
+  - reward_month_icon_glove
+  - reward_month_icon_rune_0
+  - reward_week_frame_purple
+  - reward_month_stamp
+  - reward_month_icon_rune_1
+  - reward_week_icon_gold
+  - reward_month_icon_skin_1
+  - reward_month_frame_dim
+  - reward_week_frame_blue
+  - reward_month_frame_blue
+  - particle_rainbow
+  - reward_week_frame_focus
+  - reward_week_frame_dim
+  - reward_month_frame_focus
+  - reward_month_icon_skin_0
+  - reward_week_icon_gem
+  m_Tag: Reward
+  m_IsVariant: 0

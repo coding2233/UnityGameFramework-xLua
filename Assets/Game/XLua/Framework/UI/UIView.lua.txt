@@ -1,0 +1,56 @@
+-- UIView的界面
+UIView = {}
+
+local this = UIView
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnInit(transform, uiContext)
+end
+
+--- 界面释放
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnFree(transform, uiContext)
+end
+
+--- 更新
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param deltaTime number
+function this:OnUpdate(uiContext, deltaTime)
+end
+
+--- 进入
+---@param transform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this:OnEnter(transform, uiContext, callback, userData)
+end
+
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnExit(uiContext)
+end
+--- 暂停
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnPause(uiContext)
+end
+
+--- 恢复
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnResume(uiContext)
+end
+
+--- 动画进入
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this:OnAnimationStart(uiContext, uiAnimation)
+end
+
+--- 动画退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this:OnAnimationComplete(uiContext, uiAnimation)
+end

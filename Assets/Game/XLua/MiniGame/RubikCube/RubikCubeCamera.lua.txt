@@ -1,0 +1,58 @@
+local RubikCubeCamera = {}
+RubikCubeCamera.__index = RubikCubeCamera
+local this = RubikCubeCamera
+local _mathf = CS.UnityEngine.Mathf
+
+local _x = 45.0
+local _y = 30.0
+local _distance = 0.05
+local _xSpeed = 3.0
+local _ySpeed = 3.0
+local _mSpeed = 0.5
+local _yMinLimit = -89.0
+local _yMaxLimit = 89.0
+local _minDistance = 0.05
+local _maxDistance = 0.25
+
+--- 摄像机控制
+function this:Control(rubikCube, camera, deltaTime)
+    this:CalculateAngle()
+    this:SwitchAngle(rubikCube, camera, deltaTime)
+    camera:LookAt(rubikCube.position)
+end
+
+function this:CalculateAngle()
+    -- 鼠标右键旋转
+    if Input.GetMouseButton(1) then
+        _x = _x + Input.GetAxis("Mouse X") * _xSpeed
+        _y = _y - Input.GetAxis("Mouse Y") * _ySpeed
+    end
+    -- 鼠标滚轮拉近
+    if Input.GetAxisRaw("Mouse ScrollWheel") ~= 0 then
+        _distance = _distance - Input.GetAxis("Mouse ScrollWheel") * _mSpeed
+    end
+    -- 限制y轴旋转值
+    _y = this:ClampYAngle(_y, _yMinLimit, _yMaxLimit)
+    -- 限制视角距离
+    _distance = _mathf.Clamp(_distance, _minDistance, _maxDistance)
+end
+
+function this:SwitchAngle(rubikCube, camera, deltaTime)
+    local rot = Quaternion.Euler(_y, _x, 0)
+    local dis = Vector3(0, 0, _distance * -1)
+    local pos = rubikCube.position + rot * dis
+    camera.position = Vector3.Lerp(camera.position, pos, deltaTime * 3)
+    camera.rotation = Quaternion.Lerp(camera.rotation, rot, deltaTime * 3)
+end
+
+function this:ClampYAngle(angle, min, max)
+    if angle < -360 then
+        angle = angle + 360
+    end
+    if angle > 360 then
+        angle = angle - 360
+    end
+    return _mathf.Clamp(angle, min, max)
+end
+
+return this

@@ -1,0 +1,31 @@
+--button 工具
+
+toolButton = {}
+local this = toolButton
+
+function toolButton.AddEvent(button, functionCallback)
+    button.onClick:RemoveAllListeners()
+    button.onClick:AddListener(
+        function()
+            -- body
+            functionCallback()
+        end
+    )
+end
+--游戏界面点击返回按钮
+function toolButton.BackBtnAddEvent(button, functionCallback)
+    button.onClick:RemoveAllListeners()
+    button.onClick:AddListener(
+        function()
+            toolutility.PlayUISound(1013)
+            -- body
+            toolutility.Log("点击返回")
+            functionCallback()
+        end
+    )
+end
+function toolButton.ClearEvent(button)
+    button.onClick:RemoveAllListeners()
+end
+
+return toolButton

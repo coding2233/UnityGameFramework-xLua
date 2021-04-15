@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Chat
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 49f61c3892c0c4e49bb222a51b286505, type: 3}
+    totalSpriteSurfaceArea: 607246
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 3f91c1a02b27d47c88a8fd1be83aa083, type: 3}
+  - {fileID: 21300000, guid: e10e2e63255044d738e79d5744af16aa, type: 3}
+  - {fileID: 21300000, guid: 1c4cc3242e0544967b6eb69d898a306c, type: 3}
+  - {fileID: 21300000, guid: 9cdb56d43f12e4ce6b038f2cb2f92601, type: 3}
+  - {fileID: 21300000, guid: 75a88e452128d49d293c6dc5da2b17d5, type: 3}
+  - {fileID: 21300000, guid: 74114cc50585c4f6785798e3d7f07fc8, type: 3}
+  - {fileID: 21300000, guid: 5a8078061e365472e9705f99ec93021b, type: 3}
+  - {fileID: 21300000, guid: 91343437293ce45ac84f9583191fd0bd, type: 3}
+  - {fileID: 21300000, guid: 88214a3a666014e50aa619bf5a0c5aee, type: 3}
+  - {fileID: 21300000, guid: 77946dda098d145d6acdeda75d6b85ea, type: 3}
+  - {fileID: 21300000, guid: 6a84fe7d00c0247719b41d0998c03ab0, type: 3}
+  - {fileID: 21300000, guid: 85ed19fdcb4464a16985784c2a69cc61, type: 3}
+  - {fileID: 21300000, guid: 5336c3be568974b6db77d266cbebe5fb, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - icon_clan
+  - popup_bg
+  - btn_close
+  - shadow_top
+  - text_field
+  - speech_bubble_white
+  - speech_bubble_pink
+  - join_bg
+  - icon_thumbnail
+  - btn_emoji
+  - speech_bubble_blue
+  - shadow_bottom
+  - popup_bg_top
+  m_Tag: Chat
+  m_IsVariant: 0

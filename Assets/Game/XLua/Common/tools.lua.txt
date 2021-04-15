@@ -1,0 +1,462 @@
+tools = {}
+
+local ByteArray = require "ByteArray"
+--格式化数字
+--超过6位数，截断万位，用万字替代
+--超过9位数，截断亿位，用亿字替代
+function tools:FormatNumToString(num)
+    local s = num
+    local len = string.len(tostring(num))
+
+    if len >= 6 and len < 9 then
+        if len <= 8 then
+            s = string.format("%.1f", num / 10000) .. "万"
+        else
+            s = string.format("%.1f", num / 10000) .. "万"
+        end
+    elseif len >= 9 then
+        if len <= 10 then
+            s = string.format("%.2f", num / 100000000) .. "亿"
+        else
+            s = string.format("%.2f", num / 100000000) .. "亿"
+        end
+    end
+    return s
+end
+
+function tools:NumToChip(num)
+    local s = num
+    local len = string.len(tostring(num))
+
+    if len >= 6 and len < 9 then
+        if len <= 8 then
+            s = string.format("%.1f", num / 10000) .. "W"
+        else
+            s = string.format("%.1f", num / 10000) .. "W"
+        end
+    elseif len >= 9 then
+        if len <= 10 then
+            s = string.format("%.2f", num / 100000000) .. "亿"
+        else
+            s = string.format("%.2f", num / 100000000) .. "亿"
+        end
+    end
+    return s
+end
+
+function tools:HeadUrl(name)
+    if name == nil or name == "" then
+        return ""
+    end
+    return "http://u3dpay.94004.com/Files/" .. (name or "") .. ".png"
+end
+
+function math.mod(a, b)
+    return a - math.floor(a / b) * b
+end
+
+function tools:MOD(a, b)
+    return a - math.floor(a / b) * b
+end
+
+string.split = function(s, p)
+    local rt = {}
+    string.gsub(
+        s,
+        "[^" .. p .. "]+",
+        function(w)
+            table.insert(rt, w)
+        end
+    )
+    return rt
+end
+
+function tools:StringToBytes(s)
+    local str = ByteArray.toString(s, 10, "-")
+    local strArray = string.split(str, "-")
+
+    local cardArray = {}
+    for k, v in pairs(strArray) do
+        cardArray[k] = tonumber(v)
+    end
+    return cardArray
+end
+
+function tools:encodeCardData(cards)
+    local tool = ByteArray.New()
+    LuaMsgManager:print_r(cards)
+    for k, card in pairs(cards) do
+        tool:writeByte(card)
+    end
+    return tool:getBytes()
+end
+
+local function charsize(ch)
+    if not ch then
+        return 0
+    elseif ch >= 252 then
+        return 6
+    elseif ch >= 248 and ch < 252 then
+        return 5
+    elseif ch >= 240 and ch < 248 then
+        return 4
+    elseif ch >= 224 and ch < 240 then
+        return 3
+    elseif ch >= 192 and ch < 224 then
+        return 2
+    elseif ch < 192 then
+        return 1
+    end
+end
+
+-- 计算utf8字符串字符数, 各种字符都按一个字符计算
+-- 例如utf8len("1你好") => 3
+function tools:utf8len(str)
+    local len = 0
+    local aNum = 0 --字母个数
+    local hNum = 0 --汉字个数
+    local currentIndex = 1
+    while currentIndex <= #str do
+        local char = string.byte(str, currentIndex)
+        local cs = charsize(char)
+        currentIndex = currentIndex + cs
+        len = len + 1
+        if cs == 1 then
+            aNum = aNum + 1
+        elseif cs >= 2 then
+            hNum = hNum + 1
+        end
+    end
+    return len, aNum, hNum
+end
+
+-- 截取utf8 字符串
+-- str:            要截取的字符串
+-- startChar:    开始字符下标,从1开始
+-- numChars:    要截取的字符长度
+function tools:utf8sub(str, startChar, numChars)
+    local startIndex = 1
+    while startChar > 1 do
+        local char = string.byte(str, startIndex)
+        startIndex = startIndex + chsize(char)
+        startChar = startChar - 1
+    end
+
+    local currentIndex = startIndex
+
+    while numChars > 0 and currentIndex <= #str do
+        local char = string.byte(str, currentIndex)
+        currentIndex = currentIndex + chsize(char)
+        numChars = numChars - 1
+    end
+    return str:sub(startIndex, currentIndex - 1)
+end
+
+function tools:TableToStr(t)
+    if t == nil then
+        return ""
+    end
+    local retstr = "{"
+
+    local i = 1
+    for key, value in pairs(t) do
+        local signal = ","
+        if i == 1 then
+            signal = ""
+        end
+
+        if key == i then
+            retstr = retstr .. signal .. ToStringEx(value)
+        else
+            if type(key) == "number" or type(key) == "string" then
+                retstr = retstr .. signal .. "[" .. ToStringEx(key) .. "]=" .. ToStringEx(value)
+            else
+                if type(key) == "userdata" then
+                    retstr =
+                        retstr .. signal .. "*s" .. TableToStr(getmetatable(key)) .. "*e" .. "=" .. ToStringEx(value)
+                else
+                    retstr = retstr .. signal .. key .. "=" .. ToStringEx(value)
+                end
+            end
+        end
+
+        i = i + 1
+    end
+
+    retstr = retstr .. "}"
+    return retstr
+end
+
+function tools:unicode_to_utf8(convertStr)
+    if type(convertStr) ~= "string" then
+        return convertStr
+    end
+
+    local resultStr = ""
+    local i = 1
+    while true do
+        local num1 = string.byte(convertStr, i)
+        local unicode
+
+        if num1 ~= nil and string.sub(convertStr, i, i + 1) == "\\u" then
+            unicode = tonumber("0x" .. string.sub(convertStr, i + 2, i + 5))
+            i = i + 6
+        elseif num1 ~= nil then
+            unicode = num1
+            i = i + 1
+        else
+            break
+        end
+
+        if unicode <= 127 then
+            resultStr = resultStr .. string.char(bit.band(unicode, 127))
+        elseif unicode >= 128 and unicode <= 2047 then
+            resultStr = resultStr .. string.char(bit.bor(192, bit.band(bit.brshift(unicode, 6), 31)))
+            resultStr = resultStr .. string.char(bit.bor(128, bit.band(unicode, 63)))
+        elseif unicode >= 2048 and unicode <= 65535 then
+            resultStr = resultStr .. string.char(bit.bor(224, bit.band(bit.brshift(unicode, 12), 15)))
+            resultStr = resultStr .. string.char(bit.bor(128, bit.band(bit.brshift(unicode, 6), 63)))
+            resultStr = resultStr .. string.char(bit.bor(128, bit.band(unicode, 63)))
+        end
+    end
+    resultStr = resultStr .. "\0"
+    return resultStr
+end
+
+function tools:utf8_to_unicode(convertStr)
+    if type(convertStr) ~= "string" then
+        return convertStr
+    end
+
+    local resultStr = ""
+    local i = 1
+    local num1 = string.byte(convertStr, i)
+
+    while num1 ~= nil do
+        local tempVar1, tempVar2
+        if num1 >= 0 and num1 <= 127 then
+            tempVar1 = num1
+            tempVar2 = 0
+        elseif bit.band(num1, 224) == 192 then
+            local t1 = 0
+            local t2 = 0
+            t1 = bit.band(num1, bit.brshift(255, 3))
+            i = i + 1
+            num1 = string.byte(convertStr, i)
+            t2 = bit.band(num1, bit.brshift(255, 2))
+
+            tempVar1 = bit.bor(t2, bit.blshift(bit.band(t1, bit.brshift(255, 6)), 6))
+
+            tempVar2 = bit.brshift(t1, 2)
+        elseif bit.band(num1, 240) == 224 then
+            local t1 = 0
+            local t2 = 0
+            local t3 = 0
+
+            t1 = bit.band(num1, bit.brshift(255, 3))
+            i = i + 1
+            num1 = string.byte(convertStr, i)
+            t2 = bit.band(num1, bit.brshift(255, 2))
+            i = i + 1
+            num1 = string.byte(convertStr, i)
+            t3 = bit.band(num1, bit.brshift(255, 2))
+
+            tempVar1 = bit.bor(bit.blshift(bit.band(t2, bit.brshift(255, 6)), 6), t3)
+            tempVar2 = bit.bor(bit.blshift(t1, 4), bit.brshift(t2, 2))
+        end
+
+        resultStr = resultStr .. string.format("\\u%02x%02x", tempVar2, tempVar1)
+        i = i + 1
+        num1 = string.byte(convertStr, i)
+    end
+    return resultStr
+end
+
+function tools:NameToU8(convertStr)
+    --convertStr = string.gsub(convertStr,"\\u","\\\\u")
+    return tools:unicode_to_utf8(convertStr)
+end
+
+--获取字典table的长度
+function tools:GetTableLength(t)
+    local len = 0
+    if t ~= nil and t ~= {} then
+        for k, v in pairs(t) do
+            len = len + 1
+        end
+    end
+    return len
+end
+
+--字典的中是否有需要的key
+function tools:ContainsKey(t, key)
+    if t == nil or key == nil then
+        return false
+    end
+    for k, v in pairs(t) do
+        if k == key then
+            return true
+        end
+    end
+    return false
+end
+
+--字典中是否有需要的值
+function tools:ContainsValue(t, value)
+    if t == nil or value == nil then
+        return false
+    end
+    for k, v in pairs(t) do
+        if v == value then
+            return true
+        end
+    end
+    return false
+end
+
+--- 获取字符长度（中文算2个字符）
+-- @param string str 原始字符串
+-- @return length 字符宽度
+function tools.Strlen(str)
+    local bytes = {string.byte(str, 1, #str)}
+    local length, begin = 0, false
+    for _, byte in ipairs(bytes) do
+        if byte < 128 or byte >= 192 then
+            begin = false
+            length = length + 1
+        elseif not begin then
+            begin = true
+            length = length + 1
+        end
+    end
+    return length
+end
+
+--输入框敏感词检测，返回true表示有敏感词
+function tools.InputSenstive(inputstr)
+    local dtmgck
+    Resource:LoadDataTable(
+        "mgck",
+        function(result, path, data)
+            if result then
+                dtmgck = data
+            end
+        end
+    )
+    for i = 1, dtmgck.Count do
+        local mgc = dtmgck[i]:GetData("Content"):ToString()
+        if string.find(inputstr, mgc) ~= nil then
+            UI.OpenCommonTipForm({2, "小旺感到有些为难……"})
+            return true
+        end
+    end
+    return false
+end
+
+-- 最小数值和最大数值指定返回值的范围。
+-- @function [parent=#math] clamp
+function tools.clamp(v, minValue, maxValue)
+    if v < minValue then
+        return minValue
+    end
+    if (v > maxValue) then
+        return maxValue
+    end
+    return v
+end
+
+RD_Type = {
+    String = "String",
+    Int = "Int",
+    Bool = "Bool",
+    Float = "Float",
+    Long = "Long",
+    Double = "Double",
+    Vector2 = "Vector2",
+    Vector3 = "Vector3",
+    Color = "Color"
+}
+--- rd_Type为全局变量
+function tools.ReadData(rawData, name, rd_type)
+    if rawData == nil then
+        toolutility.Log("传入data为空，无法获取对应数据")
+        return
+    end
+    if rd_type == RD_Type.String then
+        return rawData:GetData(name):ToString()
+    elseif rd_type == RD_Type.Int then
+        return rawData:GetData(name):ToInt()
+    elseif rd_type == RD_Type.Bool then
+        return rawData:GetData(name):ToBool()
+    elseif rd_type == RD_Type.Float then
+        return rawData:GetData(name):ToFloat()
+    elseif rd_type == RD_Type.Long then
+        return rawData:GetData(name):ToLong()
+    elseif rd_type == RD_Type.Double then
+        return rawData:GetData(name):ToDouble()
+    elseif rd_type == RD_Type.Vector2 then
+        return rawData:GetData(name):ToVector2()
+    elseif rd_type == RD_Type.Vector3 then
+        return rawData:GetData(name):ToVector3()
+    elseif rd_type == RD_Type.Color then
+        return rawData:GetData(name):ToColor()
+    end
+end
+
+---将秒数转化为时分秒
+---@param totletime string
+---@return str string
+function tools.Sec_to_hms(totletime)
+    local str = ""
+    str = ""
+    --os.date转换的文本会默认小时为早上8点……，所以如果不超过一个小时，就不设置小时了……
+
+    if totletime < 3600 then
+        str = os.date("00:%M:%S", math.floor(tonumber(totletime)))
+    else
+        str = os.date("%H:%M:%S", math.floor(tonumber(totletime)))
+    end
+
+    return str
+end
+
+---随机打乱数组
+function tools.Random_array(arr)
+	local tmp, index
+	for i=1, #arr-1 do
+		index = math.random(i, #arr)
+		if i ~= index then
+			tmp = arr[index]
+			arr[index] = arr[i]
+			arr[i] = tmp
+		end
+	end
+end
+
+---table中删除指定元素(非根据索引)
+---@param  array 要操作的表
+---@param  value 删除的value值
+---@param  removeadll 是否删除所有相同的值
+---@return 返回删除值的个数
+function tools.Removebyvalue(array, value, removeadll)
+    --deleteNum用于接收/返回删除个数; i/max 构成控制while循环
+    local deleteNum,i,max=0,1,#array
+    while i<=max do
+        if array[i] == value then
+            --    通过索引操作表的删除元素
+            table.remove(array,i)
+            --    标记删除次数
+            deleteNum = deleteNum+1 
+            i = i-1
+            --    控制while循环操作
+            max = max-1
+            --    判断是否删除所有相同的value值
+            if not removeadll then break end
+        end
+        i= i+1
+    end
+    --    返回删除次数
+    return deleteNum
+end
+
+return tools

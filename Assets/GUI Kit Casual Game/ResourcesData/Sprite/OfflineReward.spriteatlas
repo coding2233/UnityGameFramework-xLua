@@ -1,0 +1,78 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!687078895 &4343727234628468602
+SpriteAtlas:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: OfflineReward
+  m_EditorData:
+    serializedVersion: 2
+    textureSettings:
+      serializedVersion: 2
+      anisoLevel: 1
+      compressionQuality: 50
+      maxTextureSize: 2048
+      textureCompression: 0
+      filterMode: 1
+      generateMipMaps: 0
+      readable: 0
+      crunchedCompression: 0
+      sRGB: 1
+    platformSettings:
+    - serializedVersion: 3
+      m_BuildTarget: WebGL
+      m_MaxTextureSize: 2048
+      m_ResizeAlgorithm: 0
+      m_TextureFormat: 4
+      m_TextureCompression: 1
+      m_CompressionQuality: 50
+      m_CrunchedCompression: 0
+      m_AllowsAlphaSplitting: 0
+      m_Overridden: 1
+      m_AndroidETC2FallbackOverride: 0
+      m_ForceMaximumCompressionQuality_BC6H_BC7: 0
+    packingSettings:
+      serializedVersion: 2
+      padding: 4
+      blockOffset: 1
+      allowAlphaSplitting: 0
+      enableRotation: 1
+      enableTightPacking: 0
+    variantMultiplier: 1
+    packables:
+    - {fileID: 102900000, guid: 000909184e5304f119c90c7838a387d2, type: 3}
+    totalSpriteSurfaceArea: 1143990
+    bindAsDefault: 1
+  m_MasterAtlas: {fileID: 0}
+  m_PackedSprites:
+  - {fileID: 21300000, guid: 6cc7c4110305e45418586f0466ddd2b2, type: 3}
+  - {fileID: 21300000, guid: 9e60e4c19a24d4f9ab3b882467e3ff28, type: 3}
+  - {fileID: 21300000, guid: b7ae2ab2d0f9048be835ec1542e1ca47, type: 3}
+  - {fileID: 21300000, guid: eb98a803640584a0c86d2f0232294325, type: 3}
+  - {fileID: 21300000, guid: d790827655d49426fb2aec6c6fc9fc18, type: 3}
+  - {fileID: 21300000, guid: 6731b0963109040fcb82ad50cbbef63c, type: 3}
+  - {fileID: 21300000, guid: 455d14777d4904404b4f056333d64766, type: 3}
+  - {fileID: 21300000, guid: f143e6b7f1ee14c9c8385475d718d2e6, type: 3}
+  - {fileID: 21300000, guid: 5be23c1877e9a40e28a1f3e28352d894, type: 3}
+  - {fileID: 21300000, guid: 9486317a5007c4a7a8fad68173188178, type: 3}
+  - {fileID: 21300000, guid: 52bb615b446bc43a2974460d87ecef3d, type: 3}
+  - {fileID: 21300000, guid: a9e8057e4267c4f57875a26c240facbf, type: 3}
+  - {fileID: 21300000, guid: 53a1ea3f1d6424c05b8510d75554f3f5, type: 3}
+  m_PackedSpriteNamesToIndex:
+  - offline_prg_bar
+  - title_bg_red
+  - offline_reward_gem
+  - offline_glow
+  - offline_reward_gold
+  - title_bg_orange
+  - info_bg_focus
+  - title_bg_green
+  - title_bg_blue
+  - slider_pointer
+  - info_bg
+  - offline_prg_bg
+  - title_bg_purple
+  m_Tag: OfflineReward
+  m_IsVariant: 0

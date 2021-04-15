@@ -1,10 +1,18 @@
 {
   "dependencies": {
-    "com.unity.assetbundlebrowser": {
-      "version": "1.7.0",
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
+    "com.unity.ads": {
+      "version": "3.4.9",
       "depth": 0,
       "source": "registry",
-      "dependencies": {},
+      "dependencies": {
+        "com.unity.ugui": "1.0.0"
+      },
       "url": "https://packages.unity.cn"
     },
     "com.unity.collab-proxy": {

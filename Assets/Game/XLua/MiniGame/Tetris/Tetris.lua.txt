@@ -1,0 +1,567 @@
+local Tetris = class("Tetris", UIView)
+
+local this = Tetris
+
+--- 方块类
+local Block = require "TetrisBlock"
+--- 全局配置
+local Config = require "TetrisConfig"
+
+--- 游戏界面
+local _gamePanel = nil
+--- 方块界面
+local _blockPanel = nil
+--- 预览小地图界面
+local _previewPanel = nil
+--- 得分显示面板
+local _scorePanel = nil
+--- 得分显示框
+local _scoreText = nil
+--- 消除行显示框
+local _lineText = nil
+--- 游戏结束界面
+local _gameOverPanel = nil
+--- 预览小地图
+local _previewMap = {}
+
+--- 地图
+local _map = {}
+--- 地图宽度
+local _width = 10
+--- 地图高度
+local _height = 20
+--- 组合方块的出生点x坐标
+local _startX = 0
+--- 组合方块的出生点y坐标
+local _startY = 0
+--- 当前组合方块x坐标
+local _curX = 1
+--- 当前组合方块y坐标
+local _curY = 1
+
+--- 当前游戏状态
+local _currentState = Config.State.End
+--- 当前得分
+local _score = 0
+--- 当前消除行
+local _line = 0
+--- 当前的组合方块形状
+local _currentShape = 0
+--- 当前的组合方块方向
+local _currentDir = 0
+--- 当前的组合方块
+local _currentBlocks = nil
+--- 下一个组合方块形状
+local _nextShape = 0
+--- 下一个组合方块方向
+local _nextDis = 0
+--- 计时器
+local _timer = 0
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnInit(transform, uiContext)
+end
+
+--- 界面释放
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnFree(transform, uiContext)
+end
+
+--- 更新
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param deltaTime number
+function this:OnUpdate(uiContext, deltaTime)
+    this:GameLoop(deltaTime)
+end
+
+--- 进入
+---@param transform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this:OnEnter(transform, uiContext, callback, userData)
+    _gamePanel = transform:GetTransform("GamePanel")
+    _blockPanel = _gamePanel:GetTransform("BlockPanel")
+    _previewPanel = _gamePanel:GetTransform("PreviewPanel")
+    _scorePanel = _gamePanel:GetTransform("ScorePanel")
+    _scoreText = _scorePanel:GetTransform("ScoreText"):GetComponent("Text")
+    _lineText = _scorePanel:GetTransform("LineText"):GetComponent("Text")
+    _gameOverPanel = transform:GetTransform("GameOverPanel")
+    for i = 1, 16 do
+        _previewMap[i] = _previewPanel:GetTransform(tostring(i)):GetComponent("Image")
+    end
+    this:SetGameState(Config.State.Play)
+end
+
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnExit(uiContext)
+    _gamePanel = nil
+    _blockPanel = nil
+    _previewPanel = nil
+    _scorePanel = nil
+    _scoreText = nil
+    _lineText = nil
+    _gameOverPanel = nil
+    _previewMap = {}
+    if _map ~= {} then
+        this:EndGame()
+    end
+end
+--- 暂停
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnPause(uiContext)
+end
+
+--- 恢复
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnResume(uiContext)
+end
+
+--- 动画进入
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this:OnAnimationStart(uiContext, uiAnimation)
+end
+
+--- 动画退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param uiAnimation CS.Wanderer.GameFramework.IUIAnimation
+function this:OnAnimationComplete(uiContext, uiAnimation)
+end
+
+-- 功能==================================================================================================================
+
+--- 设置游戏状态
+function this:SetGameState(state)
+    _gamePanel.gameObject:Hide()
+    _gameOverPanel.gameObject:Hide()
+    _currentState = state
+    if _currentState == Config.State.Play then
+        AudioSystem.Music:Play("TetrisBG", true, "Tetris")
+        _gamePanel.gameObject:Show()
+        this:BeginGame()
+    elseif _currentState == Config.State.End then
+        AudioSystem.Music:Stop()
+        _gameOverPanel.gameObject:Show()
+        local highScore = GE.PlayerPrefs.GetInt("MM-Tetris-High-Score", 0)
+        local highLine = GE.PlayerPrefs.GetInt("MM-Tetris-High-Line", 0)
+        if highScore < _score then
+            highScore = _score
+            highLine = _line
+        end
+        GE.PlayerPrefs.SetInt("MM-Tetris-High-Score", highScore)
+        GE.PlayerPrefs.SetInt("MM-Tetris-High-Line", highLine)
+        local lineText = _gameOverPanel:GetTransform("LineText"):GetComponent("Text")
+        local scoreText = _gameOverPanel:GetTransform("ScoreText"):GetComponent("Text")
+        local highLineText = _gameOverPanel:GetTransform("HighLineText"):GetComponent("Text")
+        local highScoreText = _gameOverPanel:GetTransform("HighScoreText"):GetComponent("Text")
+        lineText.text = tostring(_line)
+        scoreText.text = tostring(_score)
+        highLineText.text = tostring(highLine)
+        highScoreText.text = tostring(highScore)
+        this:EndGame()
+    end
+end
+
+--- 开始游戏
+function this:BeginGame()
+    this:InitMap(10, 16)
+    if this:CreateBlocks(math.random(1, 7), math.random(1, 4)) then
+        this:CreateNextBlocks()
+    end
+    _score = 0
+    _line = 0
+    _scoreText.text = tostring(_score)
+    _lineText.text = tostring(_line)
+    Config.MoveDownTime = 0.8
+end
+
+--- 结束游戏
+function this:EndGame()
+    _currentBlocks = nil
+    this:ClearMap()
+end
+
+--- 游戏主循环
+function this:GameLoop(deltaTime)
+    if _currentState == Config.State.Play then
+        if _timer < Config.MoveDownTime then
+            _timer = _timer + deltaTime
+        else
+            _timer = 0
+            if this:MoveDown() == false then
+                this:CalculationScore()
+                if this:CreateBlocks(_nextShape, _nextDis) then
+                    this:CreateNextBlocks()
+                end
+            end
+        end
+    end
+end
+
+--- 初始化地图
+function this:InitMap(w, h)
+    _width = w
+    _height = h
+    _startX = (_width - 4) / 2
+    local tem = _gamePanel:GetTransform("BlockTem")
+    local start = Vector2.zero
+    start.x = -(_width / 2 * Config.BlockSize - Config.BlockSize * 0.5)
+    start.y = 0
+    for i = 1, _width do
+        _map[i] = {}
+        for j = 1, _height do
+            local go = GameObject.Instantiate(tem.gameObject)
+            go.transform:SetParent(_blockPanel)
+            go.transform.localPosition = Vector3.zero
+            go.transform.localScale = Vector3.one
+            go:Show()
+            local pos = Vector2.zero
+            pos.x = start.x + (i - 1) * Config.BlockSize
+            pos.y = start.y - (j - 1) * Config.BlockSize
+            _map[i][j] = Block:Create(go, i, j, pos)
+        end
+    end
+end
+
+--- 清理地图
+function this:ClearMap()
+    for i = 1, #_map do
+        local m = _map[i]
+        if m ~= nil then
+            for j = 1, #m do
+                m[j]:Clear()
+            end
+        end
+    end
+    _map = {}
+end
+
+--- 创建当前组合方块
+function this:CreateBlocks(shape, dir)
+    _currentShape = shape
+    _currentDir = dir
+    _currentBlocks = nil
+    _currentBlocks = {}
+    _curX = _startX
+    _curY = _startY
+    local i = 1
+    for x = 1, 4 do
+        for y = 1, 4 do
+            if Config.Shapes[_currentShape][_currentDir][x][y] == 1 then
+                _currentBlocks[i] = _map[_startX + x][_startY + y]
+                if _currentBlocks[i]:GetSolid() == 1 then
+                    this:SetGameState(Config.State.End)
+                    return false
+                else
+                    _currentBlocks[i]:SetSolid(1)
+                    i = i + 1
+                end
+            end
+        end
+    end
+    return true
+end
+
+--- 创建下一个组合方块
+function this:CreateNextBlocks()
+    _nextShape = math.random(1, 7)
+    _nextDis = math.random(1, 4)
+    for x = 1, 4 do
+        for y = 1, 4 do
+            if Config.Shapes[_nextShape][_nextDis][x][y] == 1 then
+                _previewMap[(x - 1) * 4 + y].color = Color.white
+            else
+                _previewMap[(x - 1) * 4 + y].color = Color(1, 1, 1, 0.2)
+            end
+        end
+    end
+end
+
+--- 组合方块下落（返回false则停留）
+function this:MoveDown()
+    -- 如果到达底部，则停留
+    if this:IsReachBottom() then
+        return false
+    end
+
+    -- 组合方块设置为空心，准备下落一格
+    this:SetCurrentBlocksSolid(0)
+
+    -- 如果准备下落的位置已存在实心方格，则停留
+    for i = 1, #(_currentBlocks) do
+        if _map[_currentBlocks[i].x][_currentBlocks[i].y + 1]:GetSolid() == 1 then
+            -- 组合方块还原到当前位置
+            this:SetCurrentBlocksSolid(1)
+            return false
+        end
+    end
+
+    -- 组合方块下落一格
+    for i = 1, #(_currentBlocks) do
+        _currentBlocks[i] = _map[_currentBlocks[i].x][_currentBlocks[i].y + 1]
+        _currentBlocks[i]:SetSolid(1)
+    end
+    _curY = _curY + 1
+    return true
+end
+
+--- 组合方块左移
+function this:MoveLeft()
+    -- 如果到达最左边，则无法再左移
+    if this:IsReachLeft() then
+        return
+    end
+
+    -- 组合方块设置为空心，准备左移一格
+    this:SetCurrentBlocksSolid(0)
+
+    -- 如果准备左移的位置已存在实心方格，则无法再左移
+    for i = 1, #(_currentBlocks) do
+        if _map[_currentBlocks[i].x - 1][_currentBlocks[i].y]:GetSolid() == 1 then
+            -- 组合方块还原到当前位置
+            this:SetCurrentBlocksSolid(1)
+            return
+        end
+    end
+
+    -- 组合方块左移一格
+    for i = 1, #(_currentBlocks) do
+        _currentBlocks[i] = _map[_currentBlocks[i].x - 1][_currentBlocks[i].y]
+        _currentBlocks[i]:SetSolid(1)
+    end
+    _curX = _curX - 1
+    return
+end
+
+--- 组合方块右移
+function this:MoveRight()
+    -- 如果到达最右边，则无法再右移
+    if this:IsReachRight() then
+        return
+    end
+
+    -- 组合方块设置为空心，准备右移一格
+    this:SetCurrentBlocksSolid(0)
+
+    -- 如果准备右移的位置已存在实心方格，则无法再右移
+    for i = 1, #(_currentBlocks) do
+        if _map[_currentBlocks[i].x + 1][_currentBlocks[i].y]:GetSolid() == 1 then
+            -- 组合方块还原到当前位置
+            this:SetCurrentBlocksSolid(1)
+            return
+        end
+    end
+
+    -- 组合方块右移一格
+    for i = 1, #(_currentBlocks) do
+        _currentBlocks[i] = _map[_currentBlocks[i].x + 1][_currentBlocks[i].y]
+        _currentBlocks[i]:SetSolid(1)
+    end
+    _curX = _curX + 1
+    return
+end
+
+--- 组合方块变形
+function this:ChangeShape()
+    -- 如果方块超出左侧、右侧或底部，则无法变形
+    for i = 1, #(_currentBlocks) do
+        if _currentBlocks[i].x < 1 or _currentBlocks[i].x > _width or _currentBlocks[i].y > _height then
+            return
+        end
+    end
+
+    -- 变形到其他形状
+    if _currentDir < 4 then
+        _currentDir = _currentDir + 1
+    else
+        _currentDir = 1
+    end
+
+    -- 如果变形后的方块超出左侧、右侧或底部，则无法变形
+    for x = 1, 4 do
+        for y = 1, 4 do
+            if Config.Shapes[_currentShape][_currentDir][x][y] == 1 then
+                if _curX + x < 1 or _curX + x > _width or _curY + y > _height then
+                    return
+                end
+            end
+        end
+    end
+
+    -- 组合方块设置为空心，准备变形
+    this:SetCurrentBlocksSolid(0)
+
+    -- 如果准备变形的位置已存在实心方格，则无法变形
+    for x = 1, 4 do
+        for y = 1, 4 do
+            if Config.Shapes[_currentShape][_currentDir][x][y] == 1 then
+                if _map[_curX + x][_curY + y]:GetSolid() == 1 then
+                    -- 组合方块还原到当前形状
+                    this:SetCurrentBlocksSolid(1)
+                    return
+                end
+            end
+        end
+    end
+
+    -- 组合方块变形
+    local index = 1
+    for x = 1, 4 do
+        for y = 1, 4 do
+            if Config.Shapes[_currentShape][_currentDir][x][y] == 1 then
+                _currentBlocks[index] = _map[_curX + x][_curY + y]
+                _currentBlocks[index]:SetSolid(1)
+                index = index + 1
+            end
+        end
+    end
+    return
+end
+
+--- 计算可消除的行，并累计得分
+function this:CalculationScore()
+    local rows = 0
+    -- 遍历所有行
+    for y = 1, _height do
+        local count = 0
+        for x = 1, _width do
+            if _map[x][y]:GetSolid() == 1 then
+                count = count + 1
+            end
+        end
+        -- 如果本行的所有方块都是实心，则消除
+        if count == _width then
+            -- 本行的所有方块消除，变为空心
+            for x = 1, _width do
+                _map[x][y]:SetSolid(0)
+            end
+            -- 累计消除一行
+            rows = rows + 1
+            -- 清理空白行
+            this:ClearNoneLine(y)
+        end
+    end
+    -- 得分
+    _line = _line + rows
+    _score = _score + rows * rows * 10
+    if _line > 9999999 then
+        _line = 9999999
+    end
+    if _score > 9999999 then
+        _score = 9999999
+    end
+    _lineText.text = tostring(_line)
+    _scoreText.text = tostring(_score)
+end
+
+--- 清理空白行
+function this:ClearNoneLine(line)
+    for y = line - 1, 1, -1 do
+        for x = 1, _width do
+            if _map[x][y]:GetSolid() == 1 then
+                _map[x][y]:SetSolid(0)
+                _map[x][y + 1]:SetSolid(1)
+            end
+        end
+    end
+    AudioSystem.UISound:Play("Clear", false, "Tetris")
+end
+
+--- 设置当前组合方块是否为实心
+function this:SetCurrentBlocksSolid(solid)
+    if _currentBlocks == nil then
+        return
+    end
+    for i = 1, #(_currentBlocks) do
+        _currentBlocks[i]:SetSolid(solid)
+    end
+end
+
+--- 当前组合方块是否到达底部
+function this:IsReachBottom()
+    if _currentBlocks == nil then
+        return true
+    end
+    for i = 1, #(_currentBlocks) do
+        if _currentBlocks[i].y == _height then
+            return true
+        end
+    end
+    return false
+end
+
+--- 当前组合方块是否到达左侧
+function this:IsReachLeft()
+    if _currentBlocks == nil then
+        return true
+    end
+    for i = 1, #(_currentBlocks) do
+        if _currentBlocks[i].x == 1 then
+            return true
+        end
+    end
+    return false
+end
+
+--- 当前组合方块是否到达右侧
+function this:IsReachRight()
+    if _currentBlocks == nil then
+        return true
+    end
+    for i = 1, #(_currentBlocks) do
+        if _currentBlocks[i].x == _width then
+            return true
+        end
+    end
+    return false
+end
+
+-- 事件==================================================================================================================
+
+--- 点击事件
+function this:OnPointerClick(target, eventData, mospos)
+    if target.name == "Button_LeftMove" then
+        if _currentState == Config.State.Play then
+            AudioSystem.UISound:Play("ButtonClick", false, "Tetris")
+            this:MoveLeft()
+        end
+    elseif target.name == "Button_RightMove" then
+        if _currentState == Config.State.Play then
+            AudioSystem.UISound:Play("ButtonClick", false, "Tetris")
+            this:MoveRight()
+        end
+    elseif target.name == "Button_ChangeShape" then
+        if _currentState == Config.State.Play then
+            AudioSystem.UISound:Play("ButtonClick", false, "Tetris")
+            this:ChangeShape()
+        end
+    elseif target.name == "Button_Restart" then
+        AudioSystem.UISound:Play("ButtonClick", false, "Tetris")
+        this:SetGameState(Config.State.Play)
+    end
+end
+
+--- 按下事件
+function this:OnPointerDown(target, eventData, mospos)
+    if target.name == "Button_DownMove" then
+        if _currentState == Config.State.Play then
+            Config.MoveDownTime = 0.08
+        end
+    end
+end
+
+--- 抬起事件
+function this:OnPointerUp(target, eventData, mospos)
+    if target.name == "Button_DownMove" then
+        if _currentState == Config.State.Play then
+            Config.MoveDownTime = 0.8
+        end
+    end
+end
+
+return this

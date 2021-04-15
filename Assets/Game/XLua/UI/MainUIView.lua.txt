@@ -1,0 +1,141 @@
+local MainUIView = class("MainUIView", UIView):New()
+local this = MainUIView
+
+local _item = nil
+local _items = {}
+
+local _itemMore=nil
+local _itemMoreIndex=0
+
+local _stateCallback = nil
+
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnInit(transform, uiContext)
+    _item = transform:Find("Scroll View/Viewport/Content/Item").gameObject
+    _itemMore=transform:Find("Scroll View/Viewport/Content/Item_More")
+    _itemMore.gameObject:SetActive(true)
+    _itemMore:GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            _itemMoreIndex=_itemMoreIndex+1
+            if _itemMoreIndex>20 then
+                GameMode.Debugger:SetDebuggerEnable(true)
+            end
+        end
+    )
+end
+
+--- 界面释放
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnFree(transform, uiContext)
+end
+
+--- 更新
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param deltaTime number
+function this:OnUpdate(uiContext, deltaTime)
+end
+
+function this:ShowAds()
+    -- 播放广告
+    GameMode.Ads:Show(
+        "mainui",
+        function()
+        end,
+        function(result)
+            print("---------------------------")
+            -- this:ShowAds()
+        end,
+        true,
+        GE.Advertisements.BannerPosition.CENTER
+    )
+end
+
+--- 进入
+---@param transform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this:OnEnter(transform, uiContext, callback, userData)
+    this:ShowAds()
+
+    AudioSystem.Music:Play("Hold on a Sec", true)
+    _stateCallback = callback
+    if #_items > 0 then
+        return
+    end
+    Resource:LoadDataTable(
+        "MiniGames",
+        function(result, assetPath, iDataTable)
+            if result then
+                for key, value in pairs(iDataTable) do
+                    local item = this:CloneItem()
+                    item.transform:Find("Text_Name"):GetComponent(typeof(GF.LocalizationText)).Text = iDataTable[value]:get_Item("GameName"):ToString()
+                    item.transform:Find("Text_Type"):GetComponent(typeof(Text)).text =
+                        iDataTable[value]:get_Item("Type"):ToString()
+                    item.transform:Find("Text_Score"):GetComponent(typeof(Text)).text =
+                        iDataTable[value]:get_Item("Score"):ToString()
+                        item.transform:Find("Lock").gameObject:SetActive(iDataTable[value]:get_Item("Lock"):ToBool())
+                    local iconName = iDataTable[value]:get_Item("Icon"):ToString()
+                    Resource:LoadGameIcon(
+                        iconName,
+                        function(tex)
+                            item.transform:Find("Mask/Image"):GetComponent(typeof(UGUI.RawImage)).texture = tex
+                        end
+                    )
+                    item:GetComponent(typeof(UGUI.Button)):OnClick(
+                        function()
+                            this:OnItemClick(item, iDataTable[value])
+                            _itemMoreIndex=0
+                        end
+                    )
+                    item:SetActive(true)
+                    table.insert(_items, item)
+                end
+                -- 设置最后的一个显示
+                _itemMore:SetAsLastSibling()
+            end
+        end
+    )
+end
+
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnExit(uiContext)
+    AudioSystem.Music:Stop()
+end
+--- 暂停
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnPause(uiContext)
+    -- AudioSystem.Music:Pause()
+end
+
+--- 恢复
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnResume(uiContext)
+    -- AudioSystem.Music:Resume()
+end
+
+--- 克隆Item
+function this:CloneItem()
+    local itemClone = GameObject.Instantiate(_item)
+    itemClone.transform:SetParent(_item.transform.parent)
+    itemClone.transform.localScale = Vector3.one
+    itemClone.transform.localPosition = Vector3.zero
+    return itemClone
+end
+
+-- 点击按钮
+function this:OnItemClick(item, config)
+    print("item click", config:get_Item("GameName"):ToString(), config:get_Item("AssetName"):ToString())
+    if config:get_Item("Lock"):ToBool() then
+        return
+    end
+    Node:Set("GAME_CONFIG", config)
+    _stateCallback(config:get_Item("AssetName"):ToString())
+end
+
+return this

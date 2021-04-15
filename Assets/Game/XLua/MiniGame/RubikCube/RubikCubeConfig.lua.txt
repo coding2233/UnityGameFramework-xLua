@@ -1,0 +1,15 @@
+local RubikCubeConfig = {}
+RubikCubeConfig.__index = RubikCubeConfig
+local this = RubikCubeConfig
+
+--- 方块颜色
+this.BlockColor = {
+    Red = "Red",
+    Blue = "Blue",
+    Green = "Green",
+    Orange = "Orange",
+    Violet = "Violet",
+    Yellow = "Yellow"
+}
+
+return this

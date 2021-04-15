@@ -1,0 +1,71 @@
+Texture2DCache = {}
+local this = Texture2DCache
+
+this.pool = {}
+this.max = 10
+this.count = 0
+
+---获取资源
+---@param url string
+---@param callback function
+this.GetTexture2D = function(url, callback)
+    if this.pool[url] ~= nil then
+        callback(this.GetFromCache(url))
+    else
+        -- 下载新的 Texture2D
+        GameMode.WebRequest:RequestTexture2D(
+            url,
+            function(tex2d)
+                callback(tex2d)
+                if tex2d ~= nil then
+                    this.SetCache(url, tex2d)
+                end
+            end
+        )
+    end
+end
+
+---设置缓存池
+---@param url string
+---@param tex2d UnityEngine.Texture2D
+this.SetCache = function(url, tex2d)
+    this.count = this.count + 1
+    -- 移除时间最老的缓存资源
+    if this.count > this.max then
+        -- 检索最小的
+        local minTime = nil
+        local minKey = nil
+        for key, value in pairs(this.pool) do
+            if minTime == nil then
+                minTime = value.time
+                minKey = key
+            else
+                if minTime < value.time then
+                    minTime = value.time
+                    minKey = key
+                end
+            end
+        end
+        -- 清除多余的缓存
+        if minKey ~= nil then
+            local temp = this.pool[minKey]
+            temp.tex2d = nil
+            temp.time = nil
+            this.pool[minKey] = nil
+            this.count = this.max
+        end
+    end
+    -- 增加新的缓存
+    local cache = {}
+    cache.tex2d = tex2d
+    cache.time = os.time()
+    this.pool[url] = cache
+end
+
+---从缓存中拿去Texture2D
+---@param  url string
+this.GetFromCache = function(url)
+    local cache = this.pool[url]
+    cache.time = os.time()
+    return cache.tex2d
+end

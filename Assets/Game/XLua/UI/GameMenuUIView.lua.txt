@@ -1,0 +1,65 @@
+local GameMenuUIView = class("GameMenuUIView", UIView):New()
+local this = GameMenuUIView
+
+local _selfTransform = nil
+
+--- 界面初始化
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnInit(transform, uiContext)
+    _selfTransform = transform
+end
+
+--- 界面释放
+---@param transform UnityEngine.Transfrom
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnFree(transform, uiContext)
+end
+
+--- 更新
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param deltaTime number
+function this:OnUpdate(uiContext, deltaTime)
+end
+
+--- 进入
+---@param transform UnityEngine.Transform
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+---@param callback System.Action<string>
+---@param userData table
+function this:OnEnter(transform, uiContext, callback, userData)
+    local popueMenu =  transform:Find("Popup_Menu").gameObject
+    transform:Find("Button_Back"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            popueMenu:SetActive(true)
+        end
+    )
+    transform:Find("Popup_Menu/Popup/Button_Later"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            popueMenu:SetActive(false)
+        end
+    )
+    transform:Find("Popup_Menu/Popup/Button_Sure"):GetComponent(typeof(UGUI.Button)):OnClick(
+        function()
+            popueMenu:SetActive(false)
+            callback("back")
+        end
+    )
+end
+
+--- 退出
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnExit(uiContext)
+end
+--- 暂停
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnPause(uiContext)
+    _selfTransform:GetComponent(typeof(GE.CanvasGroup)).blocksRaycasts = true
+end
+
+--- 恢复
+---@param uiContext CS.Wanderer.GameFramework.IUIContext
+function this:OnResume(uiContext)
+end
+
+return this

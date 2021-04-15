@@ -1,0 +1,54 @@
+local Template = class("Template", UIView):New()
+local this = Template
+
+
+function this:OnInit(transform, uiContext)
+end
+
+function this:OnEnter(transform, uiContext, callback, userData)
+end
+
+function this:OnUpdate(uiContext, deltaTime)
+end
+
+function this:OnExit(uiContext)
+end
+
+function this:OnFree(transform, uiContext)
+end
+
+------------------------------------------------------------------------------------
+
+function this:OnPointerDown(transform, eventdata, mousepos)
+end
+
+function this:OnPointerUp(transform, eventdata, mousepos)
+end
+
+function this:OnPointerClick(transform, eventdata, mousepos)
+end
+
+function this:OnBeginDrag(transform, eventdata, mousepos)
+end
+
+function this:OnDrag(transform, eventdata, mousepos)
+end
+
+function this:OnEndDrag(transform, eventdata, mousepos)
+end
+
+function this:OnTriggerEnter2D(selfTrans, targetTrans)
+end
+
+------------------------------------------------------------------------------------
+
+function this:StartGame()
+end
+
+function this:Puase()
+end
+
+function this:Continue()
+end
+
+return this

@@ -1,0 +1,656 @@
+-- 用户数据
+-- local json = (require 'json')
+local userinfo = {}
+
+---@param tourist  bool  -- true :非游客  false :游客
+local tourist = true
+
+---@param curAccount string -- 上一次是什么账号状态，游客或者会员
+local lastAccount = nil
+
+---当前选择的是哪个星球 1：启蒙 2：基础 3：进阶 4：拓展
+local gamePart
+---当前选择的是哪个星系 1：
+local Galaxy = 1
+---唯一标识
+local onlySign = nil
+
+local playMainGuide
+local guideState = 3
+---app当前运行时  自由模式处于的选择界面 1 一年级游戏  2 二年级游戏 3 三年级游戏  4 经典游戏
+local gradeIndex = 1
+---当前正在玩耍游戏的gameid 不区分年级用于游戏结束时点击下一个游戏时使用
+local currentGameIndex = 0
+local PlayerPrefs = CS.UnityEngine.PlayerPrefs
+---当前是否已经设置了昵称
+local setedNickName = false
+---当前玩耍游戏的下一个游戏的游戏信息
+local nextGameInfo = {
+    GameIndex,
+    Remarks,
+    GameId, --游戏id索引
+    MusicId, --背景音乐
+    AssetName, --界面名称
+    Currency, --虚拟币 每关完成之后获取的金币值
+    Credit, --完成游戏后获得的学分
+    imagePicture, --每个关卡对应的图片名称
+    isLocked, --游戏是否已经被解锁  0 已经解锁 1 尚未解锁
+    VipLock,
+    RadioStr
+}
+local USRINFO = {
+    --会员信息
+    memberinfo = {
+        uId = 27743, --用户id
+        mPhone, --用户手机号  15736040298
+        wxOpenid, --微信openid
+        nickName = "旺狗狗", --用户昵称
+        wxName,
+        memberStatus = 0, --会员状态
+        headId = 0, --头像id
+        totalcoin, --用户道具星星数量
+        starscount = 0, --星星数量
+        invitecode = "", --自己邀请码
+        address = {}, --收货地址
+        realName, --真实姓名
+        inviterId, --上级邀请人id
+        invitecode,
+        invitenumber = "",
+        vipTime = 1590561410, --vipTime 有效时间
+        vipLevel, --vip等级
+        dou, --豆豆数量
+        sex, --性别 1 男 2女
+        babyName, --宝宝名字
+        age, --宝宝年龄
+        learning, --宝宝学段
+        roleID = 1, --本地头像id （固定六个头像  部分需要解锁拥有）
+        vipType = 3, --vip type viplevel 用户类型（1普通用户 2月费会员 3年费会员4试用会员）
+        userinfo_status = 1, --用户账号状态 账户状态1-正常，2-限制
+        --短 token
+        --	token_data = '839c85724a703aa6a57f47c54ff176f0',
+        --长 token
+        loginCount,
+        --登录次数  如果是第一次  弹出宝宝资料填写内容
+        user_token = "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJTTUIzQkUiLCJpZCI6MTA3MywicGxheWVyaWQiOjI3MTQ3LCJleHAiOjE1ODk0NDA1Njh9.JAVHfRnPB25ZPactF9gIoxvWzz-cXf8Kp_moVL8t_qI",
+        freeModelocked, --自由模式 是否解锁
+        alipayAccount, --支付宝账户
+        alipayName, --支付宝姓名
+        babyCorn --宝宝币
+    }
+    --游戏本地角色ID,主界面左上角角色头像、主界面右下角色显示
+    --游戏本地角色ID,主界面左上角角色头像、主界面右下角色显示
+}
+
+--声音状态
+--0 = false 静音     1 = true 开启
+local soundState = {
+    bgMusicMute = nil,
+    gameSoundMute = nil,
+    voiceGuideMute = nil,
+    isOpenShake = nil
+}
+local currentUiform
+
+local firstOpenMain = true
+--- 存储游客数据到userinfo
+---@param data table 服务器返回的游客数据
+function userinfo.SetTouristData(data)
+    if data ~= nil then
+        if data.roleId ~= nil then
+            USRINFO["memberinfo"]["roleID"] = data.roleId
+        end
+    end
+end
+
+---设置登录信息到userinfo
+function userinfo.SetTouristLoginInfo(sign, token)
+    USRINFO["memberinfo"]["uId"] = sign
+    USRINFO["memberinfo"]["user_token"] = token
+end
+
+---保存唯一标识到本地
+function userinfo.SaveTouristSign(sign, token)
+    if sign ~= nil and token ~= nil then
+        local sign1 = PlayerPrefs.GetString("TouristSign")
+
+        if sign1 == nil or sign1 == "" or sign == "" then
+            PlayerPrefs.SetString("TouristSign", sign)
+        end
+        PlayerPrefs.SetString("TouristToken", token)
+    else
+        Log.Info("唯一标识为nil或token为nil，无法保存")
+    end
+end
+---获取本地唯一标识和token
+---@return table  返回表,key ["sign"]:playerId，["token"] :token
+function userinfo.GetTouristSign()
+    local tab = {}
+    local Touristid = PlayerPrefs.GetString("TouristSign")
+    local Touristtoken = PlayerPrefs.GetString("TouristToken")
+    tab["sign"] = Touristid
+    tab["token"] = Touristtoken
+    USRINFO["memberinfo"]["uId"] = Touristid
+    USRINFO["memberinfo"]["user_token"] = Touristtoken
+    return tab
+end
+
+--- 获取是否是游客登录
+---@return bool  false :游客  true : 非游客
+function userinfo.GetTouristState()
+    return tourist
+end
+
+---通过PlayerPrefs 存储到本地
+---@param state  number  游客:1 非游客:0
+function userinfo.SetCurAccountState(state)
+    if state ~= nil then
+        if state == 0 then
+            tourist = true
+        elseif state == 1 then
+            tourist = false
+        end
+        PlayerPrefs.SetInt("CurAccount", state)
+    else
+        Log.Info("当前的账号状态为nil，无法保存")
+    end
+end
+
+---获取上次登录的账户状态
+---@return number  游客: 1  会员:0
+function userinfo.GetLastAccountState()
+    lastAccount = PlayerPrefs.GetInt("CurAccount")
+    return lastAccount
+end
+
+--0 = false 关闭Mute     1 = true 开启Mute
+function userinfo.SetBgMute(bg)
+    if bg == true then
+        soundState.bgMusicMute = "1"
+        PlayerPrefs.SetString("bgMusicMute", "1")
+    else
+        soundState.bgMusicMute = "0"
+        PlayerPrefs.SetString("bgMusicMute", "0")
+    end
+end
+function userinfo.SetGameMute(game)
+    if game == true then
+        soundState.gameSoundMute = "1"
+        PlayerPrefs.SetString("gameSoundMute", "1")
+    else
+        soundState.gameSoundMute = "0"
+        PlayerPrefs.SetString("gameSoundMute", "0")
+    end
+end
+function userinfo.SetGuideMute(guide)
+    if guide == true then
+        soundState.voiceGuideMute = "1"
+        PlayerPrefs.SetString("voiceGuideMute", "1")
+    else
+        soundState.voiceGuideMute = "0"
+        PlayerPrefs.SetString("voiceGuideMute", "0")
+    end
+end
+function userinfo.SetShake(shake)
+    if shake == true then
+        soundState.isOpenShake = "1"
+        PlayerPrefs.SetString("isOpenShake", "1")
+    else
+        soundState.isOpenShake = "0"
+        PlayerPrefs.SetString("isOpenShake", "0")
+    end
+end
+
+--从本地获取声音信息
+function userinfo.InitSoundState()
+    local bg = PlayerPrefs.GetString("bgMusicMute")
+    local game = PlayerPrefs.GetString("gameSoundMute")
+    local guide = PlayerPrefs.GetString("voiceGuideMute")
+    local shake = PlayerPrefs.GetString("isOpenShake")
+
+    if bg == "" or game == "" or guide == "" or shake == "" then
+        PlayerPrefs.SetString("bgMusicMute", "0")
+        PlayerPrefs.SetString("gameSoundMute", "0")
+        PlayerPrefs.SetString("voiceGuideMute", "0")
+        PlayerPrefs.SetString("isOpenShake", "0")
+
+        soundState.bgMusicMute = "0"
+        soundState.gameSoundMute = "0"
+        soundState.voiceGuideMute = "0"
+        soundState.isOpenShake = "0"
+    else
+        soundState.bgMusicMute = bg
+        soundState.gameSoundMute = game
+        soundState.voiceGuideMute = guide
+        soundState.isOpenShake = shake
+    end
+
+    if soundState.bgMusicMute == "0" then
+        AudioSystem.Music:SetMute(false)
+    else
+        AudioSystem.Music:SetMute(true)
+    end
+    if soundState.gameSoundMute == "0" then
+        AudioSystem.UISound:SetMute(false)
+    else
+        AudioSystem.UISound:SetMute(true)
+    end
+    if soundState.voiceGuideMute == "0" then
+        AudioSystem.Sound:SetMute(false)
+    else
+        AudioSystem.Sound:SetMute(true)
+    end
+    if soundState.isOpenShake == "0" then --TODO-----
+    else
+    end
+
+    print("Audio Init Done...........")
+end
+
+--获取声音
+function userinfo.GetSoundState()
+    local state = {
+        bg = nil,
+        game = nil,
+        guide = nil,
+        shake = nil
+    }
+    if soundState.bgMusicMute == "0" then
+        state.bg = false
+    else
+        state.bg = true
+    end
+    if soundState.gameSoundMute == "0" then
+        state.game = false
+    else
+        state.game = true
+    end
+    if soundState.voiceGuideMute == "0" then
+        state.guide = false
+    else
+        state.guide = true
+    end
+    if soundState.isOpenShake == "0" then
+        state.shake = false
+    else
+        state.shake = true
+    end
+
+    print(" Get    bgMusicMute:  ", state.bg)
+    print(" Get    gameSoundMute:  ", state.game)
+    print(" GeT    voice GuideMute:  ", state.guide)
+    print(" GeT    ShakeState:  ", state.shake)
+
+    return state
+end
+
+--修改支付宝信息
+function userinfo.SetAlipayInfo(info)
+    USRINFO["memberinfo"]["alipayAccount"] = info.account
+    USRINFO["memberinfo"]["alipayName"] = info.realName
+end
+
+-- 设置登陆信息
+function userinfo.set_loginInfo(tab_login)
+    -- body
+    USRINFO["memberinfo"]["uId"] = tab_login["playerid"]
+
+    --长数据 toke
+    USRINFO["memberinfo"]["user_token"] = tab_login["authorization"]
+    --短数据 token
+    --USRINFO['memberinfo']['token_data'] = tab_login['data']['token']
+
+    userinfo.SaveLoginData(USRINFO["memberinfo"]["uId"], USRINFO["memberinfo"]["user_token"])
+end
+
+function userinfo.initLoginData(player_id, user_token, token_data)
+    USRINFO["memberinfo"]["uId"] = player_id
+
+    --长数据 toke
+    USRINFO["memberinfo"]["user_token"] = user_token
+    --短数据 token
+    --USRINFO['memberinfo']['token_data'] = token_data
+end
+
+-- 设置用户信息
+function userinfo.set_userinfo(tab_userinfo)
+    -- body
+    --设置用户信息
+    userinfo.SetGradeIndex(1)
+    local tab_memberinfo = tab_userinfo["data"]["wggMembersPojo"]
+
+    USRINFO["memberinfo"]["nickName"] = tab_userinfo["data"]["nickName"]
+    USRINFO["memberinfo"]["wxName"] = tab_userinfo["data"]["wxName"]
+    USRINFO["memberinfo"]["sex"] = tab_userinfo["data"]["sex"]
+    USRINFO["memberinfo"]["wxOpenid"] = tab_userinfo["data"]["wxOpenID"]
+    USRINFO["memberinfo"]["headId"] = tab_userinfo["data"]["avatar"]
+    USRINFO["memberinfo"]["loginCount"] = tab_userinfo["data"]["loginCount"]
+    USRINFO["memberinfo"]["babyName"] = tab_userinfo["data"]["babyName"]
+    USRINFO["memberinfo"]["learning"] = tab_userinfo["data"]["learning"]
+    USRINFO["memberinfo"]["age"] = tab_userinfo["data"]["age"]
+    USRINFO["memberinfo"]["roleID"] = tab_userinfo["data"]["avatar"]
+    USRINFO["memberinfo"]["invitecode"] = tab_userinfo["data"]["invitecode"]
+    USRINFO["memberinfo"]["uId"] = tab_memberinfo["playerid"]
+    USRINFO["memberinfo"]["mPhone"] = tab_userinfo.data.phone
+    USRINFO["memberinfo"]["babyCorn"] = tab_userinfo.data.babyCorn
+
+    --tab_memberinfo['mphone']
+    USRINFO["memberinfo"]["invitenumber"] = tab_memberinfo["invitenumber"]
+    USRINFO["memberinfo"]["invitecode"] = tab_memberinfo["invitecode"]
+    USRINFO["memberinfo"]["address"] = tab_memberinfo["address"]
+    USRINFO["memberinfo"]["realName"] = tab_memberinfo["realName"]
+    USRINFO["memberinfo"]["vipTime"] = tab_memberinfo["viptime"]
+    USRINFO["memberinfo"]["inviterId"] = tab_memberinfo["inviterid"]
+    USRINFO["memberinfo"]["dou"] = tab_memberinfo["dou"]
+    USRINFO["memberinfo"]["vipType"] = tonumber(tab_memberinfo["vipType"])
+    USRINFO["memberinfo"]["vipLevel"] = tab_memberinfo["viplevel"]
+    USRINFO["memberinfo"]["alipayAccount"] = tab_memberinfo["alipayAccount"]
+    USRINFO["memberinfo"]["alipayName"] = tab_memberinfo["alipayName"]
+
+    --USRINFO['memberinfo'] = tab_userinfo --更改roleID,tab_userinfo直接传roleID
+    --globalData.UserInfo = userinfo.get_memberinfo()
+
+    Log.Info("设置用户信息成功")
+end
+
+--- 获取邀请码
+function userinfo.GetInviteCode()
+    return USRINFO["memberinfo"]["invitecode"]
+end
+
+function userinfo.GetBabyCoin()
+    return USRINFO["memberinfo"]["babyCorn"]
+end
+
+--更改menberinfo某个键的值
+function userinfo.ChangeUserInfoByKey(key, newvalue)
+    for k, v in pairs(#USRINFO.memberinfo) do
+        if tostring(k) == tostring(key) then
+            v = newvalue
+        end
+    end
+end
+
+function userinfo.SaveLoginData(userid, user_token, loginCount)
+    -- body
+    PlayerPrefs.SetString("userId", userid)
+    PlayerPrefs.SetString("user_token", user_token)
+
+    Log.Info(PlayerPrefs.GetString("userId", nil))
+    Log.Info(PlayerPrefs.GetString("user_token", nil))
+    --	Log.Info(PlayerPrefs.GetString('token_data',nil))
+    Log.Info("储存登陆数据成功")
+end
+
+function userinfo.GetLoginData()
+    -- body
+    local userId = PlayerPrefs.GetString("userId", nil)
+    local userToken = PlayerPrefs.GetString("user_token", nil)
+    local logincount = PlayerPrefs.GetString("loginCount", nil)
+    --	local toeknData = PlayerPrefs.GetString('token_data',nil)
+
+    local result = {
+        playerid = userId,
+        user_token = userToken,
+        loginCount = logincount
+        --token_data = toeknData
+    }
+    return result
+end
+
+--- 设置信息到userinfo中
+function userinfo.SetUserLoginInfo(uid, token, logincount)
+    USRINFO["memberinfo"]["uId"] = uid
+    USRINFO["memberinfo"]["user_token"] = token
+    USRINFO["memberinfo"]["loginCount"] = logincount
+end
+
+--- 获取token
+function userinfo.GetToken()
+    return USRINFO["memberinfo"]["user_token"]
+end
+
+--- 获取playerid
+function userinfo.GetPlayerId()
+    return USRINFO["memberinfo"]["uId"]
+end
+
+--设置小宝信息
+function userinfo.SetBabyInfo(babyinfo)
+    USRINFO["memberinfo"]["babyName"] = babyinfo.babyName
+    Log.Info(USRINFO["memberinfo"]["babyName"], "存储的宝宝名称")
+    USRINFO["memberinfo"]["age"] = babyinfo.age
+    Log.Info(USRINFO["memberinfo"]["age"], "存储的age")
+    USRINFO["memberinfo"]["learning"] = babyinfo.grade
+    Log.Info(USRINFO["memberinfo"]["learning"], "存储的grade")
+end
+
+function userinfo.SetBabyName(name)
+    USRINFO["memberinfo"]["babyName"] = name
+end
+
+function userinfo.GetBabyName()
+    return USRINFO["memberinfo"]["babyName"]
+end
+
+--设置手机号
+function userinfo.SetPhoneNumber(phoneNum)
+    USRINFO["memberinfo"]["mPhone"] = phoneNum
+end
+
+--设置小宝昵称
+function userinfo.SetNickName(nickName)
+    USRINFO["memberinfo"]["nickName"] = nickName
+end
+--设置微信openid
+function userinfo.SetWxOpenid(openid)
+    USRINFO["memberinfo"]["wxOpenid"] = openid
+end
+
+--获取会员信息
+function userinfo.get_memberinfo()
+    -- body
+    return USRINFO["memberinfo"]
+end
+
+--获取主角ID
+function userinfo.Get_roleID()
+    -- body
+    if USRINFO.memberinfo["roleID"] == "0" or USRINFO.memberinfo["roleID"] == nil or USRINFO.memberinfo["roleID"] == "" then
+        USRINFO.memberinfo["roleID"] = 1
+    end
+    return USRINFO.memberinfo.roleID
+end
+
+--设置主角ID
+function userinfo.Set_roleID(roleid)
+    USRINFO.memberinfo["roleID"] = roleid
+end
+
+-- 获取收益 type 查询类型 1-today,2-month,3-all 默认all
+-- income可以体现的余额
+function userinfo.GetProfit(type, function_callback)
+    HttpRequest.UserBrokerageInfo(
+        type,
+        function(result)
+            -- body
+            Log.Info("用户分销信息及收益: " .. result)
+            local tab_data = nil
+            local tab_result = myjson.decode(result, 0)
+            if tab_result["data"] ~= nil then
+                tab_data = {
+                    total_money = tab_result["data"]["total_money"],
+                    timer = "0000.00.00-0000.00.00",
+                    plusnum = tab_result["data"]["plusnum"],
+                    invitenum = tonumber(tab_result["data"]["plusnum"]) + tonumber(tab_result["data"]["indplusnum"]) +
+                        tonumber(tab_result["data"]["yxnum"]) +
+                        tonumber(tab_result["data"]["indyxnum"]) +
+                        tonumber(tab_result["data"]["hxinnum"]) +
+                        tonumber(tab_result["data"]["indhxinnum"]),
+                    income = tab_result["data"]["income"]
+                }
+            end
+            function_callback(tab_data)
+        end
+    )
+end
+
+-- 查询用户佣金详情列表
+function userinfo.QueryBrokerage(function_callback)
+    HttpRequest.UserBrokerage(
+        function(result)
+            -- body
+            -- Log.Info('查询用户佣金详情列表查询: '..result)
+            local tab_result = myjson.decode(result, 0)
+            local tab_AllData = {}
+
+            if tab_result["data"] ~= nil then
+                for i = 1, #tab_result["data"] do
+                    local item = tab_result["data"][i]
+                    local tab_data = {
+                        id = item["fid"],
+                        amount = item["amount"],
+                        create_time = item["create_time"]
+                    }
+                    table.insert(tab_AllData, tab_data)
+                end
+            end
+            function_callback(tab_AllData)
+        end
+    )
+end
+
+-- 获取任务列表
+function userinfo.GetTaskList(function_callback)
+    -- body
+    HttpRequest.GetTaskList(
+        function(result)
+            -- body
+            Log.Info("响应获取任务列表 " .. result)
+            local tab_result = myjson.decode(result, 0)
+            function_callback(tab_result)
+        end
+    )
+end
+
+function userinfo.ReceiveTaskReward(task_id, function_callback)
+    -- body
+    HttpRequest.ReceiveTaskReward(
+        task_id,
+        function(result)
+            -- body
+            Log.Info("响应领取任务奖励 " .. result)
+            local tab_result = myjson.decode(result, 0)
+            function_callback(tab_result)
+        end
+    )
+end
+
+--判断自己现在还是不是会员，用现在时间戳和会员到期时间戳对比
+function userinfo.IsVipNow()
+    local timestemp = tonumber(GameEntry.Lua:GeTtimeStamp()) --现在时间戳
+    local vipTime = tonumber(USRINFO.memberinfo.vipTime)
+    if vipTime == nil then
+        vipTime = 0
+    end
+    if vipTime - timestemp > 0 then
+        if (userinfo.GetTouristState() == true) then
+            return true
+        else
+            return false
+        end
+    else
+        return false
+    end
+end
+---设置引导进度 1 需要引导星球冒险 2 星球引导已完成需要引导课堂 3 引导已完成
+function userinfo.SetGuideState(state)
+    guideState = state
+end
+---获取引导进度 1 需要引导星球冒险 2 星球引导已完成需要引导课堂 3 引导已完成
+function userinfo.GetGuideState()
+    return guideState
+end
+--判断当前是否第一次注册进入大厅（跳过或者完成播放 算是完成  否则 也需要引导）
+function userinfo.isFirstRegistration(finshGuide)
+    if (playMainGuide == true) then --当前如果已经播放完成或者跳过引导  表示已经完成引导
+        return false
+    end
+    local logincount = USRINFO.memberinfo.loginCount
+    print(logincount, "获取到的登录次数")
+    if (logincount == 1) then --新用户
+        return true
+    elseif (logincount ~= 1) then
+        if (finshGuide == nil) then
+            local getValue = PlayerPrefs.GetString("mainGuide")
+            if (getValue == nil or getValue == "") then
+                PlayerPrefs.SetString("mainGuide", "have")
+                return true --当前没有跳过或者完成播放
+            else
+                return false --当前不是第一次
+            end
+        else --跳过或者播放完成得时候 设置一个值
+            PlayerPrefs.SetString("mainGuide", "have")
+        end
+    end
+end
+function userinfo.SetplayMainGuideFalse()
+    playMainGuide = false
+end
+function userinfo.SetplayMainGuideTrue()
+    playMainGuide = true
+end
+function userinfo.SetGradeIndex(indexValue)
+    gradeIndex = indexValue
+end
+function userinfo.GetGradeIndex()
+    return gradeIndex
+end
+
+---设置选择的星球
+function userinfo.SetGamePart(partIndex)
+    gamePart = partIndex
+    print("设置值", gamePart)
+    print("设置值", partIndex)
+end
+function userinfo.GetGamePart()
+    print("获取值", gamePart)
+    return gamePart
+end
+
+function userinfo.GetStarPart()
+    print("获取值", Galaxy)
+    return Galaxy
+end
+---设置下一个游戏信息游戏
+function userinfo.SetNextGameInfo(gameninfo)
+    nextGameInfo.GameIndex = gameninfo.GameIndex
+    nextGameInfo.Remarks = gameninfo.Remarks
+    nextGameInfo.GameId = gameninfo.GameId --游戏id索引
+    nextGameInfo.MusicId = gameninfo.MusicId --背景音乐
+    nextGameInfo.AssetName = gameninfo.AssetName --界面名称
+    nextGameInfo.Currency = gameninfo.Currency --虚拟币 每关完成之后获取的金币值
+    nextGameInfo.Credit = gameninfo.Credit --完成游戏后获得的学分
+    nextGameInfo.imagePicture = gameninfo.imagePicture --每个关卡对应的图片名称
+    nextGameInfo.isLocked = gameninfo.isLocked --游戏是否已经被解锁  0 已经解锁 1 尚未解锁
+    nextGameInfo.VipLock = gameninfo.VipLock
+    nextGameInfo.RadioStr = gameninfo.RadioStr
+end
+---获取下一个游戏的信息
+function userinfo.GetNextGameInfo()
+    return nextGameInfo
+end
+
+function userinfo.IsFirstOpenMain()
+    return firstOpenMain
+end
+function userinfo.SetFirstOpenMain()
+    firstOpenMain = false
+end
+
+function userinfo.HaveSetNickName()
+    setedNickName = true
+end
+function userinfo.GetNickNameState()
+    return setedNickName
+end
+return userinfo

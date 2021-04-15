@@ -1,0 +1,192 @@
+kind: pipeline
+type: ssh # 使用SSH
+name: ssh-test
+server:
+  host: *******
+  user: ********
+  password:
+    from_secret: DRONE_SSH_PASSWORD # Secrets保存的密码
+
+trigger:
+  branch:
+  - main
+  event:
+  - push
+
+steps:
+  - name: hello-mac
+    commands:
+      - echo Hello Drone For Mac!!
+      - df -h
+      - pwd
+      - ls -alh /usr/local/bin
+      - /usr/local/bin/drone-scp --help
+      - /usr/local/bin/drone-ssh --help
+  - name: clone-submodule-cache
+    commands:
+      - git version
+      - git submodule update --recursive --init
+      - curl -O http://file.********/chfs/shared/files/work/kw-library.tar.xz
+      - tar -Jxf kw-library.tar.xz
+  - name: build-android-asset
+    environment:
+      UNITY_USERNAME:
+        from_secret: DRONE_UNITY_EMAIL
+      UNITY_PASSWORD:
+        from_secret: DRONE_UNITY_PASSWORD
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - export UNITY_DIR=$(pwd)
+      - export BUILD_TARGET=android
+      - export BUILD_PATH=$UNITY_DIR/build/asset/$BUILD_TARGET/
+      - chmod +x ./.ci/ci_build.sh
+      - ./.ci/ci_build.sh /Applications/Unity/Hub/Editor/2019.4.8f1/Unity.app/Contents/MacOS/Unity Wanderer.GameFramework.CommandBuild.BuildAsset
+  - name: build-android-apk
+    environment:
+      UNITY_USERNAME:
+        from_secret: DRONE_UNITY_EMAIL
+      UNITY_PASSWORD:
+        from_secret: DRONE_UNITY_PASSWORD
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - export UNITY_DIR=$(pwd)
+      - export BUILD_TARGET=android
+      - export BUILD_PATH=$UNITY_DIR/build/$BUILD_TARGET/
+      - chmod +x ./.ci/ci_build.sh
+      - ./.ci/ci_build.sh /Applications/Unity/Hub/Editor/2019.4.8f1/Unity.app/Contents/MacOS/Unity Wanderer.GameFramework.CommandBuild.BuildPlayer
+  - name: build-osx-asset
+    environment:
+      UNITY_USERNAME:
+        from_secret: DRONE_UNITY_EMAIL
+      UNITY_PASSWORD:
+        from_secret: DRONE_UNITY_PASSWORD
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - export UNITY_DIR=$(pwd)
+      - export BUILD_TARGET=osx
+      - export BUILD_PATH=$UNITY_DIR/build/asset/$BUILD_TARGET/
+      - chmod +x ./.ci/ci_build.sh
+      - ./.ci/ci_build.sh /Applications/Unity/Hub/Editor/2019.4.8f1/Unity.app/Contents/MacOS/Unity Wanderer.GameFramework.CommandBuild.BuildAsset
+  - name: build-osx-player
+    environment:
+      UNITY_USERNAME:
+        from_secret: DRONE_UNITY_EMAIL
+      UNITY_PASSWORD:
+        from_secret: DRONE_UNITY_PASSWORD
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - export UNITY_DIR=$(pwd)
+      - export BUILD_TARGET=osx
+      - export BUILD_PATH=$UNITY_DIR/build/$BUILD_TARGET/
+      - chmod +x ./.ci/ci_build.sh
+      - ./.ci/ci_build.sh /Applications/Unity/Hub/Editor/2019.4.8f1/Unity.app/Contents/MacOS/Unity Wanderer.GameFramework.CommandBuild.BuildPlayer
+  - name: build-linux-asset
+    environment:
+      UNITY_USERNAME:
+        from_secret: DRONE_UNITY_EMAIL
+      UNITY_PASSWORD:
+        from_secret: DRONE_UNITY_PASSWORD
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - export UNITY_DIR=$(pwd)
+      - export BUILD_TARGET=linux
+      - export BUILD_PATH=$UNITY_DIR/build/asset/$BUILD_TARGET/
+      - chmod +x ./.ci/ci_build.sh
+      - ./.ci/ci_build.sh /Applications/Unity/Hub/Editor/2019.4.8f1/Unity.app/Contents/MacOS/Unity Wanderer.GameFramework.CommandBuild.BuildAsset
+  - name: build-linux-player
+    environment:
+      UNITY_USERNAME:
+        from_secret: DRONE_UNITY_EMAIL
+      UNITY_PASSWORD:
+        from_secret: DRONE_UNITY_PASSWORD
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - export UNITY_DIR=$(pwd)
+      - export BUILD_TARGET=linux
+      - export BUILD_PATH=$UNITY_DIR/build/$BUILD_TARGET/
+      - chmod +x ./.ci/ci_build.sh
+      - ./.ci/ci_build.sh /Applications/Unity/Hub/Editor/2019.4.8f1/Unity.app/Contents/MacOS/Unity Wanderer.GameFramework.CommandBuild.BuildPlayer
+  - name: build-windows-asset
+    environment:
+      UNITY_USERNAME:
+        from_secret: DRONE_UNITY_EMAIL
+      UNITY_PASSWORD:
+        from_secret: DRONE_UNITY_PASSWORD
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - export UNITY_DIR=$(pwd)
+      - export BUILD_TARGET=windows
+      - export BUILD_PATH=$UNITY_DIR/build/asset/$BUILD_TARGET/
+      - chmod +x ./.ci/ci_build.sh
+      - ./.ci/ci_build.sh /Applications/Unity/Hub/Editor/2019.4.8f1/Unity.app/Contents/MacOS/Unity Wanderer.GameFramework.CommandBuild.BuildAsset
+  - name: build-windows-player
+    environment:
+      UNITY_USERNAME:
+        from_secret: DRONE_UNITY_EMAIL
+      UNITY_PASSWORD:
+        from_secret: DRONE_UNITY_PASSWORD
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - export UNITY_DIR=$(pwd)
+      - export BUILD_TARGET=windows
+      - export BUILD_PATH=$UNITY_DIR/build/$BUILD_TARGET/
+      - chmod +x ./.ci/ci_build.sh
+      - ./.ci/ci_build.sh /Applications/Unity/Hub/Editor/2019.4.8f1/Unity.app/Contents/MacOS/Unity Wanderer.GameFramework.CommandBuild.BuildPlayer
+  - name: upload-android-asset
+    commands:
+      - export ossmac=./tools/ossutil64/
+      - chmod +x $ossmac/ossutilmac64
+      - $ossmac/ossutilmac64 cp -r ./build/asset/android/*/ oss://unity-res-mini-games/android --config-file $ossmac/.ossutilconfig -u
+      - rm -rf ./build/asset/android/
+  - name: upload-mac-asset
+    commands:
+      - export ossmac=./tools/ossutil64/
+      - chmod +x $ossmac/ossutilmac64
+      - $ossmac/ossutilmac64 cp -r ./build/asset/osx/*/ oss://unity-res-mini-games/osx --config-file $ossmac/.ossutilconfig -u
+      - rm -rf ./build/asset/osx/
+  - name: upload-linux-asset
+    commands:
+      - export ossmac=./tools/ossutil64/
+      - chmod +x $ossmac/ossutilmac64
+      - $ossmac/ossutilmac64 cp -r ./build/asset/linux/*/ oss://unity-res-mini-games/linux --config-file $ossmac/.ossutilconfig -u
+      - rm -rf ./build/asset/linux/
+  - name: upload-windows-asset
+    commands:
+      - export ossmac=./tools/ossutil64/
+      - chmod +x $ossmac/ossutilmac64
+      - $ossmac/ossutilmac64 cp -r ./build/asset/windows/*/ oss://unity-res-mini-games/windows --config-file $ossmac/.ossutilconfig -u
+      - rm -rf ./build/asset/windows/
+  - name: Upload to prepare
+    commands:
+      - rm -rf build/asset/
+      - cp -r .ci/itch build/
+      - tar -zcvf build.tar.gz build/
+  - name: drone-scp files
+    environment:
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - /usr/local/bin/drone-scp --host ******** --username root --password ******** --target /opt/primitive --source ./build.tar.gz
+  - name: drone-ssh itch-butler
+    environment:
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - /usr/local/bin/drone-ssh --host ******** --username root --password ******** --script "cd /opt/primitive && tar -zxvf build.tar.gz && rm build.tar.gz && cd ./build && ls -alh && chmod +x ./itch/itch_push.sh && ./itch/itch_push.sh && rm -rf /opt/primitive"
+  - name: cache-backup
+    environment:
+      WANDERER_PWD:
+        from_secret: DRONE_WANDERER_PWD
+    commands:
+      - tar -Jcvf kw-library.tar.xz Library/
+      - curl -T kw-library.tar.xz --url http://file.********/webdav/work/kw-library.tar.xz -u "********:********"
+      - rm kw-library.tar.xz && rm -rf Library/
+      - rm build.tar.gz

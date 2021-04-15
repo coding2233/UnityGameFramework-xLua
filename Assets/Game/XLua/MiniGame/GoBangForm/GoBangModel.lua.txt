@@ -1,0 +1,366 @@
+local GoBangModel = {}
+local this = GoBangModel
+
+local Config = require "GoBangConfig"
+
+--- 判定连珠的四个方向表
+local horizontalPos = {} --横
+local verticalPos = {} --竖
+local leftObliquePos = {} --左斜
+local rightObliquePos = {} --右斜
+
+--- 计算位置
+function this:CalcPos(pos)
+    -- local x = math.floor(pos.x - ((Screen.width - Config.Board_W) / 2))
+    -- local y = math.floor(pos.y - ((Screen.height - Config.Board_H) / 2))
+    local x = pos.x
+    local y = pos.y
+
+    local gridNum_X = math.floor(x / Config.Board_Grid)
+    local gridNum_Y = math.floor(y / Config.Board_Grid)
+    local mod_x = math.mod(x, Config.Board_Grid)
+    if mod_x > Config.Board_Grid / 2 then
+        x = Config.Board_Grid * gridNum_X + Config.Board_Grid
+    else
+        x = Config.Board_Grid * gridNum_X
+    end
+    local mod_y = math.mod(y, Config.Board_Grid)
+    if mod_y > Config.Board_Grid / 2 then
+        y = Config.Board_Grid * gridNum_Y + Config.Board_Grid
+    else
+        y = Config.Board_Grid * gridNum_Y
+    end
+    if x < 0 then
+        x = 0
+    end
+    if x > Config.Board_W then
+        x = Config.Board_W
+    end
+    if y < 0 then
+        y = 0
+    end
+    if y > Config.Board_H then
+        y = Config.Board_H
+    end
+    return Vector2(x, y)
+end
+
+--- 计算每个轴的判定坐标 [5子相连]
+function this:CalcAxisIndex(curPiecesPos_X, curPiecesPos_Y)
+    horizontalPos = {}
+    local index = 1
+    --- 横轴 ——
+    for i = 1, 9 do
+        if i < 5 then
+            if curPiecesPos_X - (5 - i) >= 0 and curPiecesPos_X - (5 - i) <= Config.Board_W_Num then
+                horizontalPos[index] = {x = curPiecesPos_X - (5 - i), y = curPiecesPos_Y}
+                index = index + 1
+            end
+        elseif i > 5 then
+            if curPiecesPos_X + (i - 5) >= 0 and curPiecesPos_X + (i - 5) <= Config.Board_W_Num then
+                horizontalPos[index] = {x = curPiecesPos_X + (i - 5), y = curPiecesPos_Y}
+                index = index + 1
+            end
+        elseif i == 5 then
+            horizontalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 竖轴 |
+    verticalPos = {}
+    index = 1
+    for i = 1, 9 do
+        if i < 5 then
+            if curPiecesPos_Y - (5 - i) >= 0 and curPiecesPos_Y - (5 - i) <= Config.Board_H_Num then
+                verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y - (5 - i)}
+                index = index + 1
+            end
+        elseif i > 5 then
+            if curPiecesPos_Y + (i - 5) >= 0 and curPiecesPos_Y + (i - 5) <= Config.Board_H_Num then
+                verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y + (i - 5)}
+                index = index + 1
+            end
+        elseif i == 5 then
+            verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 左斜 \
+    leftObliquePos = {}
+    index = 1
+    for i = 1, 9 do
+        if i < 5 then
+            if
+                curPiecesPos_X - (5 - i) >= 0 and curPiecesPos_X - (5 - i) <= Config.Board_W_Num and
+                    curPiecesPos_Y + (5 - i) >= 0 and
+                    curPiecesPos_Y + (5 - i) <= Config.Board_H_Num
+             then
+                leftObliquePos[index] = {x = curPiecesPos_X - (5 - i), y = curPiecesPos_Y + (5 - i)}
+                index = index + 1
+            end
+        elseif i > 5 then
+            if
+                curPiecesPos_X + (i - 5) >= 0 and curPiecesPos_X + (i - 5) <= Config.Board_W_Num and
+                    curPiecesPos_Y - (i - 5) >= 0 and
+                    curPiecesPos_Y - (i - 5) <= Config.Board_H_Num
+             then
+                leftObliquePos[index] = {x = curPiecesPos_X + (i - 5), y = curPiecesPos_Y - (i - 5)}
+                index = index + 1
+            end
+        elseif i == 5 then
+            leftObliquePos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 右斜 /
+    rightObliquePos = {}
+    index = 1
+    for i = 1, 9 do
+        if i < 5 then
+            if
+                curPiecesPos_X - (5 - i) >= 0 and curPiecesPos_X - (5 - i) <= Config.Board_W_Num and
+                    curPiecesPos_Y - (5 - i) >= 0 and
+                    curPiecesPos_Y - (5 - i) <= Config.Board_H_Num
+             then
+                rightObliquePos[index] = {x = curPiecesPos_X - (5 - i), y = curPiecesPos_Y - (5 - i)}
+                index = index + 1
+            end
+        elseif i > 5 then
+            if
+                curPiecesPos_X + (i - 5) >= 0 and curPiecesPos_X + (i - 5) <= Config.Board_W_Num and
+                    curPiecesPos_Y + (i - 5) >= 0 and
+                    curPiecesPos_Y + (i - 5) <= Config.Board_H_Num
+             then
+                rightObliquePos[index] = {x = curPiecesPos_X + (i - 5), y = curPiecesPos_Y + (i - 5)}
+                index = index + 1
+            end
+        elseif i == 5 then
+            rightObliquePos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    return {
+        [Config.AxisType.Horizontal] = horizontalPos,
+        [Config.AxisType.Vertical] = verticalPos,
+        [Config.AxisType.LeftOblique] = leftObliquePos,
+        [Config.AxisType.RightOblique] = rightObliquePos
+    }
+end
+
+--- AI评估轴坐标 [11子权重判定]
+function this:AIAssessCalcAxisIndex(curPiecesPos_X, curPiecesPos_Y)
+    horizontalPos = {}
+    local index = 1
+    --- 横轴 ——
+    for i = 1, 11 do
+        if i < 6 then
+            if curPiecesPos_X - (6 - i) >= 0 and curPiecesPos_X - (6 - i) <= Config.Board_W_Num then
+                horizontalPos[index] = {x = curPiecesPos_X - (6 - i), y = curPiecesPos_Y}
+                index = index + 1
+            end
+        elseif i > 6 then
+            if curPiecesPos_X + (i - 6) >= 0 and curPiecesPos_X + (i - 6) <= Config.Board_W_Num then
+                horizontalPos[index] = {x = curPiecesPos_X + (i - 6), y = curPiecesPos_Y}
+                index = index + 1
+            end
+        elseif i == 6 then
+            horizontalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 竖轴 |
+    verticalPos = {}
+    index = 1
+    for i = 1, 11 do
+        if i < 6 then
+            if curPiecesPos_Y - (6 - i) >= 0 and curPiecesPos_Y - (6 - i) <= Config.Board_H_Num then
+                verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y - (6 - i)}
+                index = index + 1
+            end
+        elseif i > 6 then
+            if curPiecesPos_Y + (i - 6) >= 0 and curPiecesPos_Y + (i - 6) <= Config.Board_H_Num then
+                verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y + (i - 6)}
+                index = index + 1
+            end
+        elseif i == 6 then
+            verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 左斜 \
+    leftObliquePos = {}
+    index = 1
+    for i = 1, 11 do
+        if i < 6 then
+            if
+                curPiecesPos_X - (6 - i) >= 0 and curPiecesPos_X - (6 - i) <= Config.Board_W_Num and
+                    curPiecesPos_Y + (6 - i) >= 0 and
+                    curPiecesPos_Y + (6 - i) <= Config.Board_H_Num
+             then
+                leftObliquePos[index] = {x = curPiecesPos_X - (6 - i), y = curPiecesPos_Y + (6 - i)}
+                index = index + 1
+            end
+        elseif i > 6 then
+            if
+                curPiecesPos_X + (i - 6) >= 0 and curPiecesPos_X + (i - 6) <= Config.Board_W_Num and
+                    curPiecesPos_Y - (i - 6) >= 0 and
+                    curPiecesPos_Y - (i - 6) <= Config.Board_H_Num
+             then
+                leftObliquePos[index] = {x = curPiecesPos_X + (i - 6), y = curPiecesPos_Y - (i - 6)}
+                index = index + 1
+            end
+        elseif i == 6 then
+            leftObliquePos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 右斜 /
+    rightObliquePos = {}
+    index = 1
+    for i = 1, 11 do
+        if i < 6 then
+            if
+                curPiecesPos_X - (6 - i) >= 0 and curPiecesPos_X - (6 - i) <= Config.Board_W_Num and
+                    curPiecesPos_Y - (6 - i) >= 0 and
+                    curPiecesPos_Y - (6 - i) <= Config.Board_H_Num
+             then
+                rightObliquePos[index] = {x = curPiecesPos_X - (6 - i), y = curPiecesPos_Y - (6 - i)}
+                index = index + 1
+            end
+        elseif i > 6 then
+            if
+                curPiecesPos_X + (i - 6) >= 0 and curPiecesPos_X + (i - 6) <= Config.Board_W_Num and
+                    curPiecesPos_Y + (i - 6) >= 0 and
+                    curPiecesPos_Y + (i - 6) <= Config.Board_H_Num
+             then
+                rightObliquePos[index] = {x = curPiecesPos_X + (i - 6), y = curPiecesPos_Y + (i - 6)}
+                index = index + 1
+            end
+        elseif i == 6 then
+            rightObliquePos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    return {
+        [Config.AxisType.Horizontal] = horizontalPos,
+        [Config.AxisType.Vertical] = verticalPos,
+        [Config.AxisType.LeftOblique] = leftObliquePos,
+        [Config.AxisType.RightOblique] = rightObliquePos
+    }
+end
+
+--- AI落子整个轴的坐标 [整个轴]
+function this:AIMoveLaterAssessCalcAxisIndex(curPiecesPos_X, curPiecesPos_Y)
+    horizontalPos = {}
+    local index = 1
+    --- 横轴 ——
+    for i = 1, 30 do
+        if i < 15 then
+            if curPiecesPos_X - (15 - i) >= 0 and curPiecesPos_X - (15 - i) <= Config.Board_W_Num then
+                horizontalPos[index] = {x = curPiecesPos_X - (15 - i), y = curPiecesPos_Y}
+                index = index + 1
+            end
+        elseif i > 15 then
+            if curPiecesPos_X + (i - 15) >= 0 and curPiecesPos_X + (i - 15) <= Config.Board_W_Num then
+                horizontalPos[index] = {x = curPiecesPos_X + (i - 15), y = curPiecesPos_Y}
+                index = index + 1
+            end
+        elseif i == 15 then
+            horizontalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 竖轴 |
+    verticalPos = {}
+    index = 1
+    for i = 1, 30 do
+        if i < 15 then
+            if curPiecesPos_Y - (15 - i) >= 0 and curPiecesPos_Y - (15 - i) <= Config.Board_H_Num then
+                verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y - (15 - i)}
+                index = index + 1
+            end
+        elseif i > 15 then
+            if curPiecesPos_Y + (i - 15) >= 0 and curPiecesPos_Y + (i - 15) <= Config.Board_H_Num then
+                verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y + (i - 15)}
+                index = index + 1
+            end
+        elseif i == 15 then
+            verticalPos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 左斜 \
+    leftObliquePos = {}
+    index = 1
+    for i = 1, 30 do
+        if i < 15 then
+            if
+                curPiecesPos_X - (15 - i) >= 0 and curPiecesPos_X - (15 - i) <= Config.Board_W_Num and
+                    curPiecesPos_Y + (15 - i) >= 0 and
+                    curPiecesPos_Y + (15 - i) <= Config.Board_H_Num
+             then
+                leftObliquePos[index] = {x = curPiecesPos_X - (15 - i), y = curPiecesPos_Y + (15 - i)}
+                index = index + 1
+            end
+        elseif i > 15 then
+            if
+                curPiecesPos_X + (i - 15) >= 0 and curPiecesPos_X + (i - 15) <= Config.Board_W_Num and
+                    curPiecesPos_Y - (i - 15) >= 0 and
+                    curPiecesPos_Y - (i - 15) <= Config.Board_H_Num
+             then
+                leftObliquePos[index] = {x = curPiecesPos_X + (i - 15), y = curPiecesPos_Y - (i - 15)}
+                index = index + 1
+            end
+        elseif i == 15 then
+            leftObliquePos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    --- 右斜 /
+    rightObliquePos = {}
+    index = 1
+    for i = 1, 30 do
+        if i < 15 then
+            if
+                curPiecesPos_X - (15 - i) >= 0 and curPiecesPos_X - (15 - i) <= Config.Board_W_Num and
+                    curPiecesPos_Y - (15 - i) >= 0 and
+                    curPiecesPos_Y - (15 - i) <= Config.Board_H_Num
+             then
+                rightObliquePos[index] = {x = curPiecesPos_X - (15 - i), y = curPiecesPos_Y - (15 - i)}
+                index = index + 1
+            end
+        elseif i > 15 then
+            if
+                curPiecesPos_X + (i - 15) >= 0 and curPiecesPos_X + (i - 15) <= Config.Board_W_Num and
+                    curPiecesPos_Y + (i - 15) >= 0 and
+                    curPiecesPos_Y + (i - 15) <= Config.Board_H_Num
+             then
+                rightObliquePos[index] = {x = curPiecesPos_X + (i - 15), y = curPiecesPos_Y + (i - 15)}
+                index = index + 1
+            end
+        elseif i == 15 then
+            rightObliquePos[index] = {x = curPiecesPos_X, y = curPiecesPos_Y}
+            index = index + 1
+        end
+    end
+
+    return {
+        [Config.AxisType.Horizontal] = horizontalPos,
+        [Config.AxisType.Vertical] = verticalPos,
+        [Config.AxisType.LeftOblique] = leftObliquePos,
+        [Config.AxisType.RightOblique] = rightObliquePos
+    }
+end
+
+return this

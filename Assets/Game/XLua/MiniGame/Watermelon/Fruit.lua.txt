@@ -1,0 +1,15 @@
+-- 水果
+local Fruit = {}
+-- 合成
+function Fruit:Synthetic()
+end
+
+local FruitPool = {}
+local this = FruitPool
+
+function this:CreateFruit()
+    local fruit = {}
+    return fruit
+end
+
+return this

@@ -1,0 +1,40 @@
+local TetrisBlock = {}
+TetrisBlock.__index = TetrisBlock
+local this = TetrisBlock
+
+--- 创建一个方块
+function this:Create(obj, i, j, pos)
+    local t = {}
+    setmetatable(t, self)
+    t.isSolid = 0
+    t.entity = obj
+    t.image = t.entity:GetComponent("Image")
+    t.x = i
+    t.y = j
+    t.entity:GetComponent("RectTransform").anchoredPosition = pos
+    return t
+end
+
+--- 设置方块是否为实心
+function this:SetSolid(s)
+    self.isSolid = s
+    if self.isSolid == 1 then
+        self.image.color = Color.white
+    else
+        self.image.color = Color(1, 1, 1, 0.2)
+    end
+end
+
+--- 获取方块是否为实心
+function this:GetSolid()
+    return self.isSolid
+end
+
+--- 清理方块
+function this:Clear()
+    GameObject.Destroy(self.entity)
+    self.entity = nil
+    self.image = nil
+end
+
+return this
