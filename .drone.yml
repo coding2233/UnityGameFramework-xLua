@@ -144,25 +144,25 @@ steps:
     commands:
       - export ossmac=./tools/ossutil64/
       - chmod +x $ossmac/ossutilmac64
-      - $ossmac/ossutilmac64 cp -r ./build/asset/android/*/ oss://unity-res-mini-games/android --config-file $ossmac/.ossutilconfig -u
+      - $ossmac/ossutilmac64 cp -r ./build/asset/android/*/ *******/android --config-file $ossmac/.ossutilconfig -u
       - rm -rf ./build/asset/android/
   - name: upload-mac-asset
     commands:
       - export ossmac=./tools/ossutil64/
       - chmod +x $ossmac/ossutilmac64
-      - $ossmac/ossutilmac64 cp -r ./build/asset/osx/*/ oss://unity-res-mini-games/osx --config-file $ossmac/.ossutilconfig -u
+      - $ossmac/ossutilmac64 cp -r ./build/asset/osx/*/ *******/osx --config-file $ossmac/.ossutilconfig -u
       - rm -rf ./build/asset/osx/
   - name: upload-linux-asset
     commands:
       - export ossmac=./tools/ossutil64/
       - chmod +x $ossmac/ossutilmac64
-      - $ossmac/ossutilmac64 cp -r ./build/asset/linux/*/ oss://unity-res-mini-games/linux --config-file $ossmac/.ossutilconfig -u
+      - $ossmac/ossutilmac64 cp -r ./build/asset/linux/*/ *******/linux --config-file $ossmac/.ossutilconfig -u
       - rm -rf ./build/asset/linux/
   - name: upload-windows-asset
     commands:
       - export ossmac=./tools/ossutil64/
       - chmod +x $ossmac/ossutilmac64
-      - $ossmac/ossutilmac64 cp -r ./build/asset/windows/*/ oss://unity-res-mini-games/windows --config-file $ossmac/.ossutilconfig -u
+      - $ossmac/ossutilmac64 cp -r ./build/asset/windows/*/ *******/windows --config-file $ossmac/.ossutilconfig -u
       - rm -rf ./build/asset/windows/
   - name: Upload to prepare
     commands:

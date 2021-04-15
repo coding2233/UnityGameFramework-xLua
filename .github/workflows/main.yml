@@ -1,87 +1,87 @@
-name: Test Build
+# name: Test Build
 
-on: [push]
+# on: [push]
 
-env:
-    UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-    UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-    UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_UNITY_V2019_X }}
+# env:
+#     UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+#     UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+#     UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_UNITY_V2019_X }}
 
-jobs:
-    build-Windows:
+# jobs:
+#     build-Windows:
 
-        runs-on: ubuntu-latest
+#         runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                projectPath:
-                    - ./
-                unityVersion:
-                    - 2019.4.8f1
-                targetPlatform:
-                    - StandaloneWindows
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+#         strategy:
+#             matrix:
+#                 projectPath:
+#                     - ./
+#                 unityVersion:
+#                     - 2019.4.8f1
+#                 targetPlatform:
+#                     - StandaloneWindows
+#         steps:
+#             - name: Checkout
+#               uses: actions/checkout@v2
 
-            - name: cache
-              uses: actions/cache@v2
-              with:
-                  path: ${{ matrix.projectPath }}/Library
-                  key: ${{ runner.os }}-Library-MiniGames-Windows
+#             - name: cache
+#               uses: actions/cache@v2
+#               with:
+#                   path: ${{ matrix.projectPath }}/Library
+#                   key: ${{ runner.os }}-Library-MiniGames-Windows
                
-            - name: builder
-              uses: game-ci/unity-builder@v2.0-aplha-5
-              env:
-                  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-                  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-                  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_UNITY_V2019_X }}
-              with:
-                  projectPath: ${{ matrix.projectPath }}
-                  unityVersion: ${{ matrix.unityVersion }}
-                  targetPlatform: ${{ matrix.targetPlatform }}
+#             - name: builder
+#               uses: game-ci/unity-builder@v2.0-aplha-5
+#               env:
+#                   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+#                   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+#                   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_UNITY_V2019_X }}
+#               with:
+#                   projectPath: ${{ matrix.projectPath }}
+#                   unityVersion: ${{ matrix.unityVersion }}
+#                   targetPlatform: ${{ matrix.targetPlatform }}
             
-            - name: upload
-              uses: actions/upload-artifact@v1
-              with:
-                  name: Build
-                  path: build
+#             - name: upload
+#               uses: actions/upload-artifact@v1
+#               with:
+#                   name: Build
+#                   path: build
 
-    build-Android:
+#     build-Android:
 
-        runs-on: ubuntu-latest
+#         runs-on: ubuntu-latest
 
-        strategy:
-            matrix:
-                projectPath:
-                    - ./
-                unityVersion:
-                    - 2019.4.8f1
-                targetPlatform:
-                    - Android
-        steps:
-            - name: Checkout
-              uses: actions/checkout@v2
+#         strategy:
+#             matrix:
+#                 projectPath:
+#                     - ./
+#                 unityVersion:
+#                     - 2019.4.8f1
+#                 targetPlatform:
+#                     - Android
+#         steps:
+#             - name: Checkout
+#               uses: actions/checkout@v2
 
-            - name: cache
-              uses: actions/cache@v2
-              env:
-                  UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
-                  UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
-                  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_UNITY_V2019_X }}
-              with:
-                  path: ${{ matrix.projectPath }}/Library
-                  key: ${{ runner.os }}-Library-MiniGames-Android
+#             - name: cache
+#               uses: actions/cache@v2
+#               env:
+#                   UNITY_EMAIL: ${{ secrets.UNITY_EMAIL }}
+#                   UNITY_PASSWORD: ${{ secrets.UNITY_PASSWORD }}
+#                   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE_UNITY_V2019_X }}
+#               with:
+#                   path: ${{ matrix.projectPath }}/Library
+#                   key: ${{ runner.os }}-Library-MiniGames-Android
                
-            - name: builder
-              uses: game-ci/unity-builder@v2.0-aplha-5
-              with:
-                  projectPath: ${{ matrix.projectPath }}
-                  unityVersion: ${{ matrix.unityVersion }}
-                  targetPlatform: ${{ matrix.targetPlatform }}
+#             - name: builder
+#               uses: game-ci/unity-builder@v2.0-aplha-5
+#               with:
+#                   projectPath: ${{ matrix.projectPath }}
+#                   unityVersion: ${{ matrix.unityVersion }}
+#                   targetPlatform: ${{ matrix.targetPlatform }}
             
-            - name: upload
-              uses: actions/upload-artifact@v1
-              with:
-                  name: Build
-                  path: build
+#             - name: upload
+#               uses: actions/upload-artifact@v1
+#               with:
+#                   name: Build
+#                   path: build
