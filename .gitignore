@@ -67,3 +67,7 @@ sysinfo.txt
 crashlytics-build.properties
 
 tools/ToGithubDemo.py
+
+.vscode/
+.vsconfig
+
